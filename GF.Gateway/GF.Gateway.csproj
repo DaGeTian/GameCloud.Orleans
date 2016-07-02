@@ -126,6 +126,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impl\GatewayPlayerObserver.cs" />
     <Compile Include="Main\Gateway.cs" />
     <Compile Include="Impl\GatewayChannelHandler.cs" />
     <Compile Include="Impl\GatewaySession.cs" />

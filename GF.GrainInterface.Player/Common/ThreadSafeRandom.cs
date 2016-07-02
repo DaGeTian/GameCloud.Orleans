@@ -2,7 +2,7 @@
 // Has same API as System.Random but is thread safe, 
 // similar to the implementation by Steven Toub: http://blogs.msdn.com/b/pfxteam/archive/2014/10/20/9434171.aspx
 
-namespace GF.Orleans
+namespace GF.GrainInterface.Player
 {
     using System;
     using System.Runtime.CompilerServices;

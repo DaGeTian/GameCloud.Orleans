@@ -94,6 +94,8 @@
   <ItemGroup>
     <Compile Include="Common\ThreadSafeRandom.cs" />
     <Compile Include="GrainInterface\IGFPlayer.cs" />
+    <Compile Include="GrainInterface\IGFPlayerObserver.cs" />
+    <Compile Include="GrainInterface\IGFUCenterServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

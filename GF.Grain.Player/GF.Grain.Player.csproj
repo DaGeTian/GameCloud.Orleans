@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Grain\GFPlayer.cs" />
+    <Compile Include="Grain\GFUCenterServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +124,16 @@
     <Content Include="OrleansConfiguration.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GF.GrainInterface.Player\GF.GrainInterface.Player.csproj">
+      <Project>{a51cdcfe-0fa6-4d3f-bf70-b09ac70e0ef2}</Project>
+      <Name>GF.GrainInterface.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.csproj">
+      <Project>{82ddc043-35eb-4d2c-88bb-1566114872ae}</Project>
+      <Name>GF.Orleans.Storage.MongoDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

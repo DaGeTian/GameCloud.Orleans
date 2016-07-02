@@ -14,7 +14,7 @@ namespace GF.Gateway
     using DotNetty.Transport.Bootstrapping;
     using DotNetty.Transport.Channels;
     using DotNetty.Transport.Channels.Sockets;
-    using Orleans;
+    using global::Orleans;
 
     public class GatewayRunner
     {

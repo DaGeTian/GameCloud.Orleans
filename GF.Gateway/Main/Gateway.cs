@@ -8,15 +8,6 @@ namespace GF.Gateway
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using DotNetty.Buffers;
-    using DotNetty.Codecs;
-    using DotNetty.Common.Internal.Logging;
-    using DotNetty.Handlers.Logging;
-    using DotNetty.Handlers.Tls;
-    using DotNetty.Transport.Bootstrapping;
-    using DotNetty.Transport.Channels;
-    using DotNetty.Transport.Channels.Sockets;
-    using Orleans;
 
     public class Gateway
     {
