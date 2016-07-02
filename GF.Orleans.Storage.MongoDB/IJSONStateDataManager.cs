@@ -1,3 +1,5 @@
+// Copyright (c) Cragon. All rights reserved.
+
 namespace Orleans.Storage
 {
     using System;

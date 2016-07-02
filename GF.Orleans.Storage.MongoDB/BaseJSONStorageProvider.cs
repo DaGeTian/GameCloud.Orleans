@@ -1,3 +1,5 @@
+// Copyright (c) Cragon. All rights reserved.
+
 namespace Orleans.Storage
 {
     using System;
@@ -89,7 +91,7 @@ namespace Orleans.Storage
             }
 
             var grainTypeName = grainType.Split('.').Last();
-            
+
             var entityData = await DataManager.Read(grainTypeName, grainReference.ToKeyString());
             if (entityData != null)
             {
@@ -112,7 +114,7 @@ namespace Orleans.Storage
             }
 
             var grainTypeName = grainType.Split('.').Last();
-            
+
             var entityData = ConvertToStorageFormat(grainState);
             return DataManager.Write(grainTypeName, grainReference.ToKeyString(), entityData);
         }
@@ -132,7 +134,7 @@ namespace Orleans.Storage
             }
 
             var grainTypeName = grainType.Split('.').Last();
-            
+
             DataManager.Delete(grainTypeName, grainReference.ToKeyString());
             return TaskDone.Done;
         }
