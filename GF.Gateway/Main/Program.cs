@@ -17,6 +17,7 @@ namespace GF.Gateway
 
     class Program
     {
+        //---------------------------------------------------------------------
         static async Task RunGatewayAsync()
         {
             EbLog.NoteCallback = Console.WriteLine;
@@ -38,6 +39,7 @@ namespace GF.Gateway
             Console.WriteLine("Gateway Stop");
         }
 
+        //---------------------------------------------------------------------
         static void Main() => RunGatewayAsync().Wait();
     }
 }

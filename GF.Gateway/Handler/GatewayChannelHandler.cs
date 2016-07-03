@@ -15,15 +15,18 @@ namespace GF.Gateway
 
     public class GatewayChannelHandler : ChannelHandlerAdapter
     {
+        //---------------------------------------------------------------------
         private GatewaySessionFactory factory;
         private ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
             = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
 
+        //---------------------------------------------------------------------
         public GatewayChannelHandler(GatewaySessionFactory factory)
         {
             this.factory = factory;
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelActive(IChannelHandlerContext context)
         {
             var session = (GatewaySession)this.factory.createRpcSession(null);
@@ -32,6 +35,7 @@ namespace GF.Gateway
             session.ChannelActive(context);
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             GatewaySession session = null;
@@ -43,14 +47,17 @@ namespace GF.Gateway
             }
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelRegistered(IChannelHandlerContext context)
         {
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelUnregistered(IChannelHandlerContext context)
         {
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             var msg = message as IByteBuffer;
@@ -63,11 +70,13 @@ namespace GF.Gateway
             }
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelReadComplete(IChannelHandlerContext context)
         {
             context.Flush();
         }
 
+        //---------------------------------------------------------------------
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             Console.WriteLine("Exception: " + exception);

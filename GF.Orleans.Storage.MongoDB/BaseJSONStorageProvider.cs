@@ -19,6 +19,7 @@ namespace Orleans.Storage
     /// </summary>
     public abstract class BaseJSONStorageProvider : IStorageProvider
     {
+        //---------------------------------------------------------------------
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings();
 
         /// <summary>
@@ -40,6 +41,7 @@ namespace Orleans.Storage
         /// <remarks>The data manager is responsible for reading and writing JSON strings.</remarks>
         protected IJSONStateDataManager DataManager { get; set; }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Constructor
         /// </summary>
@@ -47,6 +49,7 @@ namespace Orleans.Storage
         {
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Initializes the storage provider.
         /// </summary>
@@ -60,6 +63,7 @@ namespace Orleans.Storage
             return TaskDone.Done;
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Closes the storage provider during silo shutdown.
         /// </summary>
@@ -75,6 +79,7 @@ namespace Orleans.Storage
             return TaskDone.Done;
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Reads persisted state from the backing store and deserializes it into the the target
         /// grain state object.
@@ -99,6 +104,7 @@ namespace Orleans.Storage
             }
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Writes the persisted state from a grain state object into its backing store.
         /// </summary>
@@ -119,6 +125,7 @@ namespace Orleans.Storage
             return DataManager.Write(grainTypeName, grainReference.ToKeyString(), entityData);
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Removes grain state from its backing store, if found.
         /// </summary>
@@ -139,6 +146,7 @@ namespace Orleans.Storage
             return TaskDone.Done;
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Serializes from a grain instance to a JSON document.
         /// </summary>
@@ -153,6 +161,7 @@ namespace Orleans.Storage
             return JsonConvert.SerializeObject(grainState.State, SerializerSettings);
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Constructs a grain state instance by deserializing a JSON document.
         /// </summary>

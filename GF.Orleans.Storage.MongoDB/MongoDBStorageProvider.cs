@@ -25,6 +25,7 @@ namespace Orleans.Storage
     /// </remarks>
     public class MongoDBStorage : BaseJSONStorageProvider
     {
+        //---------------------------------------------------------------------
         /// <summary>
         /// Database connection string
         /// </summary>
@@ -35,6 +36,7 @@ namespace Orleans.Storage
         /// </summary>
         public string Database { get; set; }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Initializes the storage provider.
         /// </summary>
@@ -61,8 +63,10 @@ namespace Orleans.Storage
     /// </summary>
     internal class GrainStateMongoDataManager : IJSONStateDataManager
     {
+        //---------------------------------------------------------------------
         private readonly IMongoDatabase _database;
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Constructor
         /// </summary>
@@ -74,6 +78,7 @@ namespace Orleans.Storage
             _database = client.GetDatabase(databaseName);
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Clean up.
         /// </summary>
@@ -81,6 +86,7 @@ namespace Orleans.Storage
         {
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Deletes a file representing a grain state object.
         /// </summary>
@@ -100,6 +106,7 @@ namespace Orleans.Storage
             return collection.DeleteManyAsync(builder);
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Reads a file representing a grain state object.
         /// </summary>
@@ -126,6 +133,7 @@ namespace Orleans.Storage
             return strwrtr.ToString();
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Writes a file representing a grain state object.
         /// </summary>
@@ -155,6 +163,7 @@ namespace Orleans.Storage
             }
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Gets a collection from the MongoDB database.
         /// </summary>
@@ -165,6 +174,7 @@ namespace Orleans.Storage
             return _database.GetCollection<BsonDocument>(name);
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Gets a collection from the MongoDB database and creates it if it
         /// does not already exist.

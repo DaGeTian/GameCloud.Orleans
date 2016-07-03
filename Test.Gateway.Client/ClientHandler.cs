@@ -11,10 +11,12 @@ namespace Test.Client
 
     public class ClientHandler : ChannelHandlerAdapter
     {
+        //---------------------------------------------------------------------
         private RpcSessionFactory factory;
         private ConcurrentDictionary<IChannelHandlerContext, ClientSession> mapSession
             = new ConcurrentDictionary<IChannelHandlerContext, ClientSession>();
 
+        //---------------------------------------------------------------------
         public ClientHandler(RpcSessionFactory factory)
         {
             this.factory = factory;
@@ -27,6 +29,7 @@ namespace Test.Client
             Console.WriteLine("Client send Msg!");
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelActive(IChannelHandlerContext context)
         {
             //context.WriteAndFlushAsync(this.initialMessage);
@@ -37,6 +40,7 @@ namespace Test.Client
             session.ChannelActive(context);
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             ClientSession session = null;
@@ -48,6 +52,7 @@ namespace Test.Client
             }
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             var byteBuffer = message as IByteBuffer;
@@ -59,11 +64,13 @@ namespace Test.Client
             context.WriteAsync(message);
         }
 
+        //---------------------------------------------------------------------
         public override void ChannelReadComplete(IChannelHandlerContext context)
         {
             context.Flush();
         }
 
+        //---------------------------------------------------------------------
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             context.CloseAsync();

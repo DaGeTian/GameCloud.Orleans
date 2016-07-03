@@ -15,15 +15,18 @@ namespace GF.Gateway
 
     public class GatewaySession : RpcSession
     {
+        //---------------------------------------------------------------------
         private IChannelHandlerContext context;
         private IGFClientObserver clientObserver;
         private IGFClientObserver clientObserverWeak;
         private Guid clientGuid;
 
+        //---------------------------------------------------------------------
         public GatewaySession(EntityMgr entity_mgr)
         {
         }
 
+        //---------------------------------------------------------------------
         public async void ChannelActive(IChannelHandlerContext context)
         {
             this.context = context;
@@ -41,6 +44,7 @@ namespace GF.Gateway
             });
         }
 
+        //---------------------------------------------------------------------
         public async void ChannelInactive(IChannelHandlerContext context)
         {
             var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
@@ -53,15 +57,18 @@ namespace GF.Gateway
             Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
         }
 
+        //---------------------------------------------------------------------
         public override bool isConnect()
         {
             return true;
         }
 
+        //---------------------------------------------------------------------
         public override void connect(string ip, int port)
         {
         }
 
+        //---------------------------------------------------------------------
         public override void send(ushort method_id, byte[] data)
         {
             if (this.context == null) return;
@@ -73,26 +80,23 @@ namespace GF.Gateway
             context.WriteAndFlushAsync(msg);
         }
 
+        //---------------------------------------------------------------------
         public override void onRecv(ushort method_id, byte[] data)
         {
-            if (this.context == null) return;
-
-            Console.WriteLine("GatewaySession.OnRecvData() MethodId=" + method_id);
-
-            // 转发给Orleans Server
-            var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-            grain_clientsession.Request(method_id, data);
         }
 
+        //---------------------------------------------------------------------
         public override void close()
         {
             context.CloseAsync();
         }
 
+        //---------------------------------------------------------------------
         public override void update(float elapsed_tm)
         {
         }
 
+        //---------------------------------------------------------------------
         public void onRecvData(byte[] data)
         {
             if (this.context == null) return;
@@ -108,9 +112,14 @@ namespace GF.Gateway
             }
             else buf = new byte[0];
 
-            onRpcMethod(method_id, buf);
+            Console.WriteLine("GatewaySession.onRecvData() MethodId=" + method_id);
+
+            // 收到Client请求数据，转发给Orleans Server
+            var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+            grain_clientsession.Request(method_id, data);
         }
 
+        //---------------------------------------------------------------------
         public void OnOrleansNotify(ushort method_id, byte[] data)
         {
             // 收到Orleans Server的推送数据，转发给Client
@@ -120,6 +129,7 @@ namespace GF.Gateway
 
     public class GatewaySessionFactory : RpcSessionFactory
     {
+        //---------------------------------------------------------------------
         public override RpcSession createRpcSession(EntityMgr entity_mgr)
         {
             return new GatewaySession(entity_mgr);

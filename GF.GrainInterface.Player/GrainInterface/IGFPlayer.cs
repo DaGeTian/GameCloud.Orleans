@@ -10,16 +10,6 @@ namespace GF.GrainInterface.Player
     using Orleans;
     using GF.Unity.Common;
 
-    [Serializable]
-    public class MethodData
-    {
-        public short method_id;
-        public byte[] param1;
-        public byte[] param2;
-        public byte[] param3;
-        public byte[] param4;
-    }
-
     public interface IGFPlayer : IGrainWithGuidKey
     {
         //---------------------------------------------------------------------

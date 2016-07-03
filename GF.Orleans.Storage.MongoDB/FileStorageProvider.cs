@@ -27,12 +27,14 @@ namespace Orleans.Storage
     /// </remarks>
     public class OrleansFileStorage : BaseJSONStorageProvider
     {
+        //---------------------------------------------------------------------
         /// <summary>
         /// The directory path, relative to the host of the silo. Set from
         /// configuration data during initialization.
         /// </summary>
         public string RootDirectory { get; set; }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Initializes the provider during silo startup.
         /// </summary>
@@ -60,8 +62,10 @@ namespace Orleans.Storage
     /// </summary>
     internal class GrainStateFileDataManager : IJSONStateDataManager
     {
+        //---------------------------------------------------------------------
         private readonly DirectoryInfo directory;
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Constructor
         /// </summary>
@@ -75,10 +79,12 @@ namespace Orleans.Storage
             }
         }
 
+        //---------------------------------------------------------------------
         public void Dispose()
         {
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Deletes a file representing a grain state object.
         /// </summary>
@@ -97,6 +103,7 @@ namespace Orleans.Storage
             return TaskDone.Done;
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Reads a file representing a grain state object.
         /// </summary>
@@ -115,6 +122,7 @@ namespace Orleans.Storage
             }
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Writes a file representing a grain state object.
         /// </summary>
@@ -132,6 +140,7 @@ namespace Orleans.Storage
             }
         }
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Returns the file path for storing that data with these keys.
         /// </summary>

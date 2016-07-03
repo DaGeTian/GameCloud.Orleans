@@ -11,12 +11,15 @@ namespace Test.Client
 
     public class ClientSession : RpcSession
     {
+        //---------------------------------------------------------------------
         private IChannelHandlerContext context;
 
+        //---------------------------------------------------------------------
         public ClientSession(EntityMgr entity_mgr)
         {
         }
 
+        //---------------------------------------------------------------------
         public void ChannelActive(IChannelHandlerContext context)
         {
             this.context = context;
@@ -24,19 +27,23 @@ namespace Test.Client
             rpc(20, "Hello");
         }
 
+        //---------------------------------------------------------------------
         public void ChannelInactive(IChannelHandlerContext context)
         {
         }
 
+        //---------------------------------------------------------------------
         public override bool isConnect()
         {
             return true;
         }
 
+        //---------------------------------------------------------------------
         public override void connect(string ip, int port)
         {
         }
 
+        //---------------------------------------------------------------------
         public override void send(ushort method_id, byte[] data)
         {
             IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(256);
@@ -46,19 +53,23 @@ namespace Test.Client
             context.WriteAndFlushAsync(msg);
         }
 
+        //---------------------------------------------------------------------
         public override void onRecv(ushort method_id, byte[] data)
         {
         }
 
+        //---------------------------------------------------------------------
         public override void close()
         {
             context.CloseAsync();
         }
 
+        //---------------------------------------------------------------------
         public override void update(float elapsed_tm)
         {
         }
 
+        //---------------------------------------------------------------------
         public void onRecvData(byte[] data)
         {
             ushort method_id = BitConverter.ToUInt16(data, 0);
@@ -78,6 +89,7 @@ namespace Test.Client
 
     public class ClientSessionFactory : RpcSessionFactory
     {
+        //---------------------------------------------------------------------
         public override RpcSession createRpcSession(EntityMgr entity_mgr)
         {
             return new ClientSession(entity_mgr);

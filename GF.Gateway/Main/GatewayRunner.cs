@@ -18,11 +18,13 @@ namespace GF.Gateway
 
     public class GatewayRunner
     {
+        //---------------------------------------------------------------------
         MultithreadEventLoopGroup bossGroup = new MultithreadEventLoopGroup(4);
         MultithreadEventLoopGroup workerGroup = new MultithreadEventLoopGroup(4);
         ServerBootstrap bootstrap = new ServerBootstrap();
         IChannel bootstrapChannel = null;
 
+        //---------------------------------------------------------------------
         public async Task Start(IPAddress ip_address, int port,
             string orleansClientConfigFile, GatewaySessionFactory factory)
         {
@@ -46,6 +48,7 @@ namespace GF.Gateway
             GrainClient.Initialize(orleansClientConfigFile);
         }
 
+        //---------------------------------------------------------------------
         public async Task Stop()
         {
             try

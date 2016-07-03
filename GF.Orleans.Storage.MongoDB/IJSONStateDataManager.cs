@@ -15,6 +15,7 @@ namespace Orleans.Storage
     /// </remarks>
     public interface IJSONStateDataManager : IDisposable
     {
+        //---------------------------------------------------------------------
         /// <summary>
         /// Deletes the grain state associated with a given key from the collection
         /// </summary>
@@ -22,6 +23,7 @@ namespace Orleans.Storage
         /// <param name="key">The primary key of the object to delete</param>
         System.Threading.Tasks.Task Delete(string collectionName, string key);
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Reads grain state from storage.
         /// </summary>
@@ -30,6 +32,7 @@ namespace Orleans.Storage
         /// <returns>A string containing a JSON representation of the entity, if it exists; null otherwise.</returns>
         System.Threading.Tasks.Task<string> Read(string collectionName, string key);
 
+        //---------------------------------------------------------------------
         /// <summary>
         /// Writes grain state to storage.
         /// </summary>
