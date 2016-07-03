@@ -5,27 +5,51 @@ namespace GF.Gateway
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
     using GF.Unity.Common;
+    using GF.GrainInterface.Player;
+    using global::Orleans;
 
     public class GatewaySession : RpcSession
     {
         private IChannelHandlerContext context;
+        private IGFClientObserver clientObserver;
+        private IGFClientObserver clientObserverWeak;
+        private Guid clientGuid;
 
         public GatewaySession(EntityMgr entity_mgr)
         {
         }
 
-        public void ChannelActive(IChannelHandlerContext context)
+        public async void ChannelActive(IChannelHandlerContext context)
         {
             this.context = context;
 
             Console.WriteLine("GatewaySession.ChannelActive() Name=" + context.Name);
+
+            var task = await Task.Factory.StartNew<Task>(async () =>
+            {
+                this.clientObserver = new GatewayClientObserver(this);
+                this.clientObserverWeak = await GrainClient.GrainFactory.CreateObjectReference<IGFClientObserver>(this.clientObserver);
+
+                this.clientGuid = Guid.NewGuid();
+                var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+                await grain_clientsession.SubClient(this.clientObserverWeak);
+            });
         }
 
-        public void ChannelInactive(IChannelHandlerContext context)
+        public async void ChannelInactive(IChannelHandlerContext context)
         {
+            var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+            await grain_clientsession.UnsubClient(this.clientObserverWeak);
+
+            this.context = null;
+            this.clientObserver = null;
+            this.clientObserverWeak = null;
+
             Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
         }
 
@@ -40,6 +64,8 @@ namespace GF.Gateway
 
         public override void send(ushort method_id, byte[] data)
         {
+            if (this.context == null) return;
+
             IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(256);
             msg.WriteBytes(BitConverter.GetBytes(method_id));
             if (data != null) msg.WriteBytes(data);
@@ -49,7 +75,13 @@ namespace GF.Gateway
 
         public override void onRecv(ushort method_id, byte[] data)
         {
+            if (this.context == null) return;
+
             Console.WriteLine("GatewaySession.OnRecvData() MethodId=" + method_id);
+
+            // 转发给Orleans Server
+            var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+            grain_clientsession.Request(method_id, data);
         }
 
         public override void close()
@@ -63,6 +95,8 @@ namespace GF.Gateway
 
         public void onRecvData(byte[] data)
         {
+            if (this.context == null) return;
+
             ushort method_id = BitConverter.ToUInt16(data, 0);
 
             byte[] buf = null;
@@ -75,6 +109,12 @@ namespace GF.Gateway
             else buf = new byte[0];
 
             onRpcMethod(method_id, buf);
+        }
+
+        public void OnOrleansNotify(ushort method_id, byte[] data)
+        {
+            // 收到Orleans Server的推送数据，转发给Client
+            send(method_id, data);
         }
     }
 

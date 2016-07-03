@@ -11,7 +11,7 @@ namespace GF.Grain.Player
     using GF.Unity.Common;
     using GF.GrainInterface.Player;
 
-    public class GFPlayer : IGFPlayer
+    public class GFPlayer : Grain, IGFPlayer
     {
         //---------------------------------------------------------------------
         // 进入游戏世界

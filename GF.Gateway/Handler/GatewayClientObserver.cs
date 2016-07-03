@@ -11,9 +11,19 @@ namespace GF.Gateway
 
     public class GatewayClientObserver : IGFClientObserver
     {
-        //-------------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        private GatewaySession session;
+
+        //---------------------------------------------------------------------
+        public GatewayClientObserver(GatewaySession session)
+        {
+            this.session = session;
+        }
+
+        //---------------------------------------------------------------------
         void IGFClientObserver.Notify(ushort method_id, byte[] data)
         {
+            this.session.OnOrleansNotify(method_id, data);
         }
     }
 }
