@@ -18,11 +18,13 @@ namespace Test.Client
 
     class Program
     {
+
         static async Task RunClientAsync()
         {
-            IPAddress host = IPAddress.Parse("192.168.1.226");
+            IPAddress host = IPAddress.Parse("192.168.0.10");
             int port = 5882;
 
+            var factory = new ClientSessionFactory();
             var group = new MultithreadEventLoopGroup();
 
             try
@@ -40,7 +42,7 @@ namespace Test.Client
                             ByteOrder.LittleEndian, 2, 0, false));
                         pipeline.AddLast(new LengthFieldBasedFrameDecoder(
                             ByteOrder.LittleEndian, ushort.MaxValue, 0, 2, 0, 2, true));
-                        pipeline.AddLast(new ClientHandler());
+                        pipeline.AddLast(new ClientHandler(factory));
                     }));
 
                 IChannel bootstrapChannel = await bootstrap.ConnectAsync(new IPEndPoint(host, port));

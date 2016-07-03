@@ -4,6 +4,7 @@ namespace GF.Gateway
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Net;
     using System.Text;
     using System.Threading;
@@ -15,8 +16,8 @@ namespace GF.Gateway
     public class GatewayChannelHandler : ChannelHandlerAdapter
     {
         private SessionHandlerFactory factory;
-        private Dictionary<IChannelHandlerContext, GatewaySession> mapSession
-            = new Dictionary<IChannelHandlerContext, GatewaySession>();
+        private ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
+            = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
 
         public GatewayChannelHandler(SessionHandlerFactory factory)
         {
@@ -35,6 +36,12 @@ namespace GF.Gateway
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
+            GatewaySession session = null;
+            mapSession.TryRemove(context, out session);
+            if (session != null)
+            {
+                session.ChannelInactive(context);
+            }
         }
 
         public override void ChannelRegistered(IChannelHandlerContext context)

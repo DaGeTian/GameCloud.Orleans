@@ -10,24 +10,16 @@ namespace GF.GrainInterface.Player
     using Orleans;
     using GF.Unity.Common;
 
-    [Serializable]
-    public class MethodData
-    {
-        public short method_id;
-        public byte[] param1;
-        public byte[] param2;
-        public byte[] param3;
-        public byte[] param4;
-    }
-
-    public interface IGFPlayer : IGrainWithGuidKey
+    public interface IGFClientSession : IGrainWithGuidKey
     {
         //---------------------------------------------------------------------
-        // 进入游戏世界
-        Task<EntityData> EnterWorld();
+        Task SubClient(IGFClientObserver sub);
 
         //---------------------------------------------------------------------
-        // 离开游戏世界
-        Task LeaveWorld();
+        Task UnsubClient(IGFClientObserver sub);
+
+        //---------------------------------------------------------------------
+        // 客户端请求
+        Task Request(ushort method_id, byte[] data);
     }
 }

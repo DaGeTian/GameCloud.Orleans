@@ -3,26 +3,49 @@
 namespace Test.Client
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Text;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
+    using GF.Unity.Common;
 
     public class ClientHandler : ChannelHandlerAdapter
     {
-        readonly IByteBuffer initialMessage;
+        private RpcSessionFactory factory;
+        private ConcurrentDictionary<IChannelHandlerContext, ClientSession> mapSession
+            = new ConcurrentDictionary<IChannelHandlerContext, ClientSession>();
 
-        public ClientHandler()
+        public ClientHandler(RpcSessionFactory factory)
         {
-            this.initialMessage = Unpooled.Buffer(256);
-            byte[] messageBytes = Encoding.UTF8.GetBytes("Hello world");
-            this.initialMessage.WriteBytes(messageBytes);
+            this.factory = factory;
+
+            //readonly IByteBuffer initialMessage;
+            //this.initialMessage = Unpooled.Buffer(256);
+            //byte[] messageBytes = Encoding.UTF8.GetBytes("Hello world");
+            //this.initialMessage.WriteBytes(messageBytes);
 
             Console.WriteLine("Client send Msg!");
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            context.WriteAndFlushAsync(this.initialMessage);
+            //context.WriteAndFlushAsync(this.initialMessage);
+
+            var session = (ClientSession)this.factory.createRpcSession(null);
+            mapSession[context] = session;
+
+            session.ChannelActive(context);
+        }
+
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            ClientSession session = null;
+            mapSession.TryRemove(context, out session);
+
+            if (session != null)
+            {
+                session.ChannelInactive(context);
+            }
         }
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
@@ -32,6 +55,7 @@ namespace Test.Client
             {
                 Console.WriteLine("Received from server: " + byteBuffer.ToString(Encoding.UTF8));
             }
+
             context.WriteAsync(message);
         }
 

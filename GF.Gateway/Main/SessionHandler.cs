@@ -23,28 +23,40 @@ namespace Test.Gateway
     {
         public override void OnDefRpcMethod()
         {
-            RpcSession.defRpcMethod<int, string>(2, _onRpcMethod1);
+            //RpcSession.defRpcMethod<int, string>(2, _onRpcMethod1);
         }
 
         public override void OnSocketError(object rec, SocketErrorEventArgs args)
         {
+            Console.WriteLine("GatewaySessionHandler.OnSocketError()");
         }
 
         public override void OnSocketConnected(object client, EventArgs args)
         {
+            string name = (string)client;
+
+            Console.WriteLine("GatewaySessionHandler.OnSocketConnected() Name=" + name);
         }
 
         public override void OnSocketClosed(object client, EventArgs args)
         {
+            string name = (string)client;
+
+            Console.WriteLine("GatewaySessionHandler.OnSocketClosed() Name=" + name);
         }
 
-        void _onRpcMethod1(int v, string info)
+        public override void OnRecvData(ushort method_id, byte[] data)
         {
-            Console.WriteLine(v);
-            Console.WriteLine(info);
-
-            this.RpcSession.rpc(1, 200, "Hi");
+            Console.WriteLine("GatewaySessionHandler.OnRecvData() MethodId=" + method_id);
         }
+
+        //void _onRpcMethod1(int v, string info)
+        //{
+        //    Console.WriteLine(v);
+        //    Console.WriteLine(info);
+
+        //    this.RpcSession.rpc(1, 200, "Hi");
+        //}
     }
 
     public class GatewaySessionHandlerFactory : SessionHandlerFactory

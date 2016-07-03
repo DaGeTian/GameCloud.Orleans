@@ -11,19 +11,23 @@ namespace GF.Grain.Player
     using GF.Unity.Common;
     using GF.GrainInterface.Player;
 
-    public class GFPlayer : IGFPlayer
+    public class GFClientSession : IGFClientSession
     {
         //---------------------------------------------------------------------
-        // 进入游戏世界
-        Task<EntityData> IGFPlayer.EnterWorld()
+        Task IGFClientSession.SubClient(IGFClientObserver sub)
         {
-            EntityData entityData = new EntityData();
-            return Task.FromResult(entityData);
+            return TaskDone.Done;
         }
 
         //---------------------------------------------------------------------
-        // 离开游戏世界
-        Task IGFPlayer.LeaveWorld()
+        Task IGFClientSession.UnsubClient(IGFClientObserver sub)
+        {
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        // 客户端请求
+        Task IGFClientSession.Request(ushort method_id, byte[] data)
         {
             return TaskDone.Done;
         }

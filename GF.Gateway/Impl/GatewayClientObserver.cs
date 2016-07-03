@@ -9,10 +9,10 @@ namespace GF.Gateway
     using System.Threading.Tasks;
     using GF.GrainInterface.Player;
 
-    public class GatewayPlayerObserver : IGFPlayerObserver
+    public class GatewayClientObserver : IGFClientObserver
     {
         //-------------------------------------------------------------------------
-        void IGFPlayerObserver.Notify(MethodData method_data)
+        void IGFClientObserver.Notify(ushort method_id, byte[] data)
         {
         }
     }

@@ -29,6 +29,8 @@ namespace GF.Gateway
         public abstract void OnSocketConnected(object client, EventArgs args);
 
         public abstract void OnSocketClosed(object client, EventArgs args);
+
+        public abstract void OnRecvData(ushort method_id, byte[] data);
     }
 
     public abstract class SessionHandlerFactory

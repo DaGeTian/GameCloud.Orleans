@@ -7,13 +7,10 @@ namespace GF.GrainInterface.Player
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Orleans;
-    using GF.Unity.Common;
 
-    public interface IGFUCenterServer : IGrainWithIntegerKey
+    public interface IGFClientObserver
     {
         //---------------------------------------------------------------------
-        // 客户端请求
-        Task<MethodData> Request(MethodData method_data);
+        void Notify(ushort method_id, byte[] data);
     }
 }
