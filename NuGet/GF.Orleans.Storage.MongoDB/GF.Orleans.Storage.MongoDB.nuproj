@@ -11,20 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>43b8e790-1060-4c67-ba2e-453dd6b11ab4</ProjectGuid>
+    <ProjectGuid>62bf4149-0fa0-4986-a937-4b18d22a1c71</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Grain.Player</Id>
-    <Version>1.00.002</Version>
-    <Title>GF.Grain.Player</Title>
+    <Id>GF.Orleans.Storage.MongoDB</Id>
+    <Version>1.0.0</Version>
+    <Title>GF.Orleans.Storage.MongoDB</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GF.Grain.Player</Summary>
-    <Description>GF.Grain.Player</Description>
+    <Summary>GF.Orleans.Storage.MongoDB</Summary>
+    <Description>GF.Orleans.Storage.MongoDB</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
@@ -32,14 +32,13 @@
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Grain.Player</Tags>
-    <DevelopmentDependency>true</DevelopmentDependency>
+    <Tags>GF.Orleans.Storage.MongoDB</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GF.Grain.Player\GF.Grain.Player.csproj" />
+    <ProjectReference Include="..\..\GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.csproj" />
   </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>

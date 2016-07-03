@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GF.Orleans.Storage.MongoDB, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GF.Orleans.Storage.MongoDB.1.0.0\lib\net461\GF.Orleans.Storage.MongoDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GF.Unity.Common, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GF.Unity.Common.1.00.003\lib\net461\GF.Unity.Common.dll</HintPath>
       <Private>True</Private>
@@ -48,6 +52,18 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.0.0\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.2.4\lib\net45\MongoDB.Bson.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.2.4\lib\net45\MongoDB.Driver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.2.4.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.2.4\lib\net45\MongoDB.Driver.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -129,10 +145,6 @@
     <ProjectReference Include="..\GF.GrainInterface.Player\GF.GrainInterface.Player.csproj">
       <Project>{a51cdcfe-0fa6-4d3f-bf70-b09ac70e0ef2}</Project>
       <Name>GF.GrainInterface.Player</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.csproj">
-      <Project>{82ddc043-35eb-4d2c-88bb-1566114872ae}</Project>
-      <Name>GF.Orleans.Storage.MongoDB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

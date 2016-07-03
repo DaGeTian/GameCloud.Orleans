@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Gateway.Client", "Test
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GF.Gateway", "NuGet\GF.Gateway\GF.Gateway.nuproj", "{20BF1364-332F-4D82-A989-036F5C7EDE09}"
 EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GF.Orleans.Storage.MongoDB", "NuGet\GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.nuproj", "{62BF4149-0FA0-4986-A937-4B18D22A1C71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{20BF1364-332F-4D82-A989-036F5C7EDE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20BF1364-332F-4D82-A989-036F5C7EDE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20BF1364-332F-4D82-A989-036F5C7EDE09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +73,6 @@ Global
 		{E002A250-F9F7-4C49-B33E-DC61BF0EA37D} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{43B8E790-1060-4C67-BA2E-453DD6B11AB4} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{20BF1364-332F-4D82-A989-036F5C7EDE09} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
+		{62BF4149-0FA0-4986-A937-4B18D22A1C71} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 	EndGlobalSection
 EndGlobal
