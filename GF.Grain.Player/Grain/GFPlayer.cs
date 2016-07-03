@@ -14,9 +14,14 @@ namespace GF.Grain.Player
     public class GFPlayer : Grain, IGFPlayer
     {
         //---------------------------------------------------------------------
+        public string ClientSessionGuid { get; private set; }
+
+        //---------------------------------------------------------------------
         // 进入游戏世界
-        Task<EntityData> IGFPlayer.EnterWorld()
+        Task<EntityData> IGFPlayer.EnterWorld(string clientSessionGuid)
         {
+            ClientSessionGuid = clientSessionGuid;
+
             EntityData entityData = new EntityData();
             return Task.FromResult(entityData);
         }
@@ -25,6 +30,8 @@ namespace GF.Grain.Player
         // 离开游戏世界
         Task IGFPlayer.LeaveWorld()
         {
+            ClientSessionGuid = string.Empty;
+
             return TaskDone.Done;
         }
     }

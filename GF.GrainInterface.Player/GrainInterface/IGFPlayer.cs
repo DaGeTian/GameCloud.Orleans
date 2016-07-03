@@ -14,7 +14,7 @@ namespace GF.GrainInterface.Player
     {
         //---------------------------------------------------------------------
         // 进入游戏世界
-        Task<EntityData> EnterWorld();
+        Task<EntityData> EnterWorld(string clientSessionGuid);
 
         //---------------------------------------------------------------------
         // 离开游戏世界

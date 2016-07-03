@@ -47,14 +47,17 @@ namespace GF.Gateway
         //---------------------------------------------------------------------
         public async void ChannelInactive(IChannelHandlerContext context)
         {
-            var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-            await grain_clientsession.UnsubClient(this.clientObserverWeak);
+            var task = await Task.Factory.StartNew<Task>(async () =>
+            {
+                var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+                await grain_clientsession.UnsubClient(this.clientObserverWeak);
 
-            this.context = null;
-            this.clientObserver = null;
-            this.clientObserverWeak = null;
+                this.context = null;
+                this.clientObserver = null;
+                this.clientObserverWeak = null;
 
-            Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
+                Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
+            });
         }
 
         //---------------------------------------------------------------------
@@ -71,8 +74,6 @@ namespace GF.Gateway
         //---------------------------------------------------------------------
         public override void send(ushort method_id, byte[] data)
         {
-            if (this.context == null) return;
-
             IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(256);
             msg.WriteBytes(BitConverter.GetBytes(method_id));
             if (data != null) msg.WriteBytes(data);
@@ -99,8 +100,6 @@ namespace GF.Gateway
         //---------------------------------------------------------------------
         public void onRecvData(byte[] data)
         {
-            if (this.context == null) return;
-
             ushort method_id = BitConverter.ToUInt16(data, 0);
 
             byte[] buf = null;
@@ -114,9 +113,12 @@ namespace GF.Gateway
 
             Console.WriteLine("GatewaySession.onRecvData() MethodId=" + method_id);
 
-            // 收到Client请求数据，转发给Orleans Server
-            var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-            grain_clientsession.Request(method_id, data);
+            Task.Factory.StartNew(() =>
+            {
+                // 收到Client请求数据，转发给Orleans Server
+                var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+                grain_clientsession.Request(method_id, data);
+            });
         }
 
         //---------------------------------------------------------------------
