@@ -34,6 +34,18 @@
       <HintPath>..\packages\GF.Orleans.Storage.MongoDB.1.0.0\lib\net461\GF.Orleans.Storage.MongoDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GF.UCenter.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GF.UCenter.SDK.AppServer.1.00.000\lib\net461\GF.UCenter.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GF.UCenter.Common.Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GF.UCenter.SDK.AppServer.1.00.000\lib\net461\GF.UCenter.Common.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GF.UCenter.SDK.AppServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GF.UCenter.SDK.AppServer.1.00.000\lib\net461\GF.UCenter.SDK.AppServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GF.Unity.Common, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GF.Unity.Common.1.00.003\lib\net461\GF.Unity.Common.dll</HintPath>
       <Private>True</Private>
