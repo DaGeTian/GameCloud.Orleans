@@ -12,20 +12,18 @@ namespace GF.Gateway
     public class Gateway
     {
         public static Gateway Instance { get; private set; }
-        public GatewaySessionFactory GatewaySessionFactory { get { return this.gatewaySessionFactory; } }
 
-        GatewaySessionFactory gatewaySessionFactory = new GatewaySessionFactory();
-        GatewayRunner gatewayRunner = new GatewayRunner();
+        private GatewaySessionFactory gatewaySessionFactory = new GatewaySessionFactory();
+        private GatewayRunner gatewayRunner = new GatewayRunner();
 
         public Gateway()
         {
             Instance = this;
         }
 
-        public Task Start(IPAddress ip_address, int port,
-            string orleansClientConfigFile, SessionHandlerFactory factory)
+        public Task Start(IPAddress ip_address, int port, string orleansClientConfigFile)
         {
-            return this.gatewayRunner.Start(ip_address, port, orleansClientConfigFile, factory);
+            return this.gatewayRunner.Start(ip_address, port, orleansClientConfigFile, gatewaySessionFactory);
         }
 
         public Task Stop()

@@ -24,7 +24,7 @@ namespace GF.Gateway
         IChannel bootstrapChannel = null;
 
         public async Task Start(IPAddress ip_address, int port,
-            string orleansClientConfigFile, SessionHandlerFactory factory)
+            string orleansClientConfigFile, GatewaySessionFactory factory)
         {
             bootstrap
                     .Group(bossGroup, workerGroup)

@@ -12,29 +12,21 @@ namespace GF.Gateway
     public class GatewaySession : RpcSession
     {
         private IChannelHandlerContext context;
-        private SessionHandler handler;
 
         public GatewaySession(EntityMgr entity_mgr)
         {
-            //mSocket.OnSocketConnected += _onSocketConnected;
-            //mSocket.OnSocketClosed += _onSocketClosed;
-            //mSocket.OnSocketError += _onSocketError;
         }
 
-        public void ChannelActive(IChannelHandlerContext context, SessionHandler handler)
+        public void ChannelActive(IChannelHandlerContext context)
         {
             this.context = context;
-            this.handler = handler;
 
-            handler.RpcSession = this;
-            handler.OnDefRpcMethod();
-
-            handler.OnSocketConnected(context.Name, null);
+            Console.WriteLine("GatewaySession.ChannelActive() Name=" + context.Name);
         }
 
         public void ChannelInactive(IChannelHandlerContext context)
         {
-            handler.OnSocketClosed(context.Name, null);
+            Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
         }
 
         public override bool isConnect()
@@ -57,7 +49,7 @@ namespace GF.Gateway
 
         public override void onRecv(ushort method_id, byte[] data)
         {
-            handler.OnRecvData(method_id, data);
+            Console.WriteLine("GatewaySession.OnRecvData() MethodId=" + method_id);
         }
 
         public override void close()
@@ -83,30 +75,6 @@ namespace GF.Gateway
             else buf = new byte[0];
 
             onRpcMethod(method_id, buf);
-        }
-
-        void _onSocketError(object rec, SocketErrorEventArgs args)
-        {
-            if (OnSocketError != null)
-            {
-                OnSocketError(this, args);
-            }
-        }
-
-        void _onSocketConnected(object client, EventArgs args)
-        {
-            if (OnSocketConnected != null)
-            {
-                OnSocketConnected(this, args);
-            }
-        }
-
-        void _onSocketClosed(object client, EventArgs args)
-        {
-            if (OnSocketClosed != null)
-            {
-                OnSocketClosed(this, args);
-            }
         }
     }
 

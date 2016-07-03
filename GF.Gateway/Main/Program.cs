@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-namespace Test.Gateway
+namespace GF.Gateway
 {
     using DotNetty.Codecs;
     using DotNetty.Common.Internal.Logging;
@@ -14,7 +14,6 @@ namespace Test.Gateway
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using GF.Gateway;
 
     class Program
     {
@@ -26,9 +25,9 @@ namespace Test.Gateway
 
             IPAddress host = IPAddress.Parse("192.168.0.10");
             int port = 5882;
+
             Gateway gateway = new Gateway();
-            GatewaySessionHandlerFactory factory = new GatewaySessionHandlerFactory();
-            await gateway.Start(host, port, "ClientConfiguration.xml", factory);
+            await gateway.Start(host, port, "ClientConfiguration.xml");
 
             Console.WriteLine("Gateway Start ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
             Console.WriteLine("按回车键退出。。。");

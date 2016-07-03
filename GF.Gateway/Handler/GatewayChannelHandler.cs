@@ -15,29 +15,28 @@ namespace GF.Gateway
 
     public class GatewayChannelHandler : ChannelHandlerAdapter
     {
-        private SessionHandlerFactory factory;
+        private GatewaySessionFactory factory;
         private ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
             = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
 
-        public GatewayChannelHandler(SessionHandlerFactory factory)
+        public GatewayChannelHandler(GatewaySessionFactory factory)
         {
             this.factory = factory;
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            var handler = this.factory.CreateSessionHandler();
-            var session = (GatewaySession)Gateway.Instance.GatewaySessionFactory.createRpcSession(null);
-
-            session.ChannelActive(context, handler);
-
+            var session = (GatewaySession)this.factory.createRpcSession(null);
             mapSession[context] = session;
+
+            session.ChannelActive(context);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             GatewaySession session = null;
             mapSession.TryRemove(context, out session);
+
             if (session != null)
             {
                 session.ChannelInactive(context);
