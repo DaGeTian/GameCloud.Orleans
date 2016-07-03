@@ -54,7 +54,6 @@ artifacts/
 *.pdb
 *.pgc
 *.pgd
-*.rsp
 *.sbr
 *.tlb
 *.tli
@@ -250,3 +249,11 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Unity3D
+/GF.Unity.Orleans/Library/
+/GF.Unity.Orleans/Temp/
+/GF.Unity.Orleans/GF.Unity.Orleans.CSharp.Editor.csproj
+/GF.Unity.Orleans/GF.Unity.Orleans.CSharp.Plugins.csproj
+/GF.Unity.Orleans/GF.Unity.Orleans.CSharp.csproj
+/GF.Unity.Orleans/GF.Unity.Orleans.sln
