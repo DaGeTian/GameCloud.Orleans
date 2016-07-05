@@ -7,10 +7,12 @@ namespace GF.Unity.Sample
     using System.Text;
     using UnityEngine;
     using GF.Unity.Common;
+    using GF.Unity.Orleans;
 
     public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, new()
     {
         //---------------------------------------------------------------------
+        public ClientOrleans<DefOrleans> CoOrleans { get; private set; }
 
         //---------------------------------------------------------------------
         public override void init()
@@ -19,8 +21,7 @@ namespace GF.Unity.Sample
 
             EntityMgr.getDefaultEventPublisher().addHandler(Entity);
 
-            // AutoPatcher示例
-            //EntityMgr.createEntity<EtSampleAutoPatcher>(null, Entity);
+            EntityMgr.createEntity<EtOrleans>(null, Entity);
         }
 
         //---------------------------------------------------------------------

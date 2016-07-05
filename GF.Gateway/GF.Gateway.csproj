@@ -146,6 +146,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GF.GrainCommon.Player\GF.GrainCommon.Player.csproj">
+      <Project>{be4108d7-7dcb-4b92-99fb-bdc8022d49ae}</Project>
+      <Name>GF.GrainCommon.Player</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GF.GrainInterface.Player\GF.GrainInterface.Player.csproj">
       <Project>{a51cdcfe-0fa6-4d3f-bf70-b09ac70e0ef2}</Project>
       <Name>GF.GrainInterface.Player</Name>
