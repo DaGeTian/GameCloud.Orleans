@@ -31,7 +31,7 @@ namespace GF.GrainCommon.Player
         EnterWorldTokenError,// 角色进入游戏，Token错误
         EnterWorldTokenExpire,// 角色进入游戏，Token过期
         EnterWorldNotExistPlayer,// 角色进入游戏，角色不存在
-        EnterWorldAlready,// 已经进入世界
+        EnterWorldAlready,// 相同角色已经进入世界，重复进入
     }
 
     public enum GFRequestId : byte

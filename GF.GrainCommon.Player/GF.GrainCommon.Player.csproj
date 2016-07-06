@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ThreadSafeRandom.cs" />
     <Compile Include="GFCommonType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

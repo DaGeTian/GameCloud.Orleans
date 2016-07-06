@@ -38,7 +38,7 @@
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GF.Gateway\GF.Orleans.Gateway.csproj" />
+    <ProjectReference Include="..\..\GF.Orleans.Gateway\GF.Orleans.Gateway.csproj" />
   </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>
