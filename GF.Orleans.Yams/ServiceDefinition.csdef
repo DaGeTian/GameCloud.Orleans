@@ -1,27 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="GF.Orleans.Yams" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2015-04.2.6">
-  <WorkerRole name="GF.Orleans.YamsWorkerRole" vmsize="Small">
-    <Runtime executionContext="elevated" />
-    <Imports>
-      <Import moduleName="RemoteAccess" />
-      <Import moduleName="RemoteForwarder" />
-    </Imports>
+  <WorkerRole name="GF.Orleans.YamsWorkerRole" vmsize="ExtraSmall">
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
       <Setting name="StorageDataConnectionString" />
       <Setting name="UpdateFrequencyInSeconds" />
       <Setting name="ApplicationRestartCount" />
     </ConfigurationSettings>
     <Endpoints>
-      <InputEndpoint name="HttpIn" protocol="http" port="80" />
-      <InternalEndpoint name="TcpEndpoints" protocol="tcp">
-        <FixedPortRange min="81" max="400" />
-      </InternalEndpoint>
+      <InputEndpoint name="HttpIn" protocol="http" port="80" localPort="8080" />
     </Endpoints>
     <LocalResources>
-      <LocalStorage name="LocalStoreDirectory" cleanOnRoleRecycle="false" />
+      <LocalStorage name="LocalStoreDirectory" cleanOnRoleRecycle="true" sizeInMB="1000" />
     </LocalResources>
-    <Startup>
-    </Startup>
   </WorkerRole>
 </ServiceDefinition>

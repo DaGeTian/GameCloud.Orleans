@@ -17,7 +17,7 @@ namespace GF.Orleans.YamsWorkerRole
     using Etg.Yams.Azure.Utils;
     using Etg.Yams.Utils;
 
-    public class WorkerRole : RoleEntryPoint
+    public class YamsWorkerRole : RoleEntryPoint
     {
         //---------------------------------------------------------------------
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -105,8 +105,14 @@ namespace GF.Orleans.YamsWorkerRole
 
                 Trace.TraceInformation("Yams has started. Looking for apps with deploymentId:" + yamsConfig.ClusterDeploymentId);
 
-                while (true)
+                //while (true)
+                //{
+                //    await Task.Delay(1000);
+                //}
+
+                while (!cancellationToken.IsCancellationRequested)
                 {
+                    //Trace.TraceInformation("Working");
                     await Task.Delay(1000);
                 }
             }

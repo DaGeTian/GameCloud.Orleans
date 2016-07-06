@@ -1,0 +1,14 @@
+{
+  "Applications": [
+    {
+      "Id": "hello.webapi",
+      "Version": "1.00.000",
+      "DeploymentIds": [ "MY_DEPLOYMENT_ID" ]
+    },
+    {
+      "Id": "hello.orleans",
+      "Version": "1.00.000",
+      "DeploymentIds": [ "MY_DEPLOYMENT_ID" ]
+    }
+  ]
+}
