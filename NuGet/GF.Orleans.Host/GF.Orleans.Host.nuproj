@@ -11,34 +11,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>20bf1364-332f-4d82-a989-036f5c7ede09</ProjectGuid>
+    <ProjectGuid>5681e606-2398-42c0-b69e-3fc4f37c03d0</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Gateway</Id>
-    <Version>1.00.002</Version>
-    <Title>GF.Gateway</Title>
-    <Authors>Cragon</Authors>
-    <Owners>Cragon</Owners>
-    <Summary>GF.Gateway</Summary>
-    <Description>GF.Gateway</Description>
+    <Id>GF.Orleans.Host</Id>
+    <Version>1.0.0</Version>
+    <Title>GF.Orleans.Host</Title>
+    <Authors>lion</Authors>
+    <Owners>lion</Owners>
+    <Summary>GF.Orleans.Host</Summary>
+    <Description>GF.Orleans.Host</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
     </ProjectUrl>
     <LicenseUrl>
     </LicenseUrl>
-    <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Gateway</Tags>
+    <Copyright>Copyright © lion</Copyright>
+    <Tags>GF.Orleans.Host</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\GF.Gateway\GF.Gateway.csproj" />
   </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>
