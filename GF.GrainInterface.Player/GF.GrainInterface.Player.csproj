@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ThreadSafeRandom.cs" />
     <Compile Include="GrainInterface\IGFPlayer.cs" />
     <Compile Include="GrainInterface\IGFClientObserver.cs" />
     <Compile Include="GrainInterface\IGFClientSession.cs" />
