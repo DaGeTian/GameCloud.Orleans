@@ -72,6 +72,43 @@ namespace GF.Grain.Player
         {
             Logger.Info("Request() MethodId={0}", method_id);
 
+            if (method_id < 100)
+            {
+            }
+            else
+            {
+            }
+
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task IGFClientSession.GetPlayerList()
+        {
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task IGFClientSession.NewPlayer()
+        {
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task IGFClientSession.DeletePlayer()
+        {
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task IGFClientSession.EnterWorld()
+        {
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task IGFClientSession.LeaveWorld()
+        {
             return TaskDone.Done;
         }
     }
