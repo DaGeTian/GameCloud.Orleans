@@ -18,13 +18,13 @@
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Gateway</Id>
-    <Version>1.00.002</Version>
-    <Title>GF.Gateway</Title>
+    <Id>GF.Orleans.Gateway</Id>
+    <Version>1.00.000</Version>
+    <Title>GF.Orleans.Gateway</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GF.Gateway</Summary>
-    <Description>GF.Gateway</Description>
+    <Summary>GF.Orleans.Gateway</Summary>
+    <Description>GF.Orleans.Gateway</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
@@ -32,7 +32,7 @@
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Gateway</Tags>
+    <Tags>GF.Orleans.Gateway</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />

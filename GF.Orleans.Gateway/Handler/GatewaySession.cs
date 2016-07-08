@@ -1,25 +1,26 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-namespace GF.Gateway
+namespace GF.Orleans.Gateway
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+    using Autofac;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
     using GF.Unity.Common;
-    using GF.GrainInterface.Player;
     using global::Orleans;
 
     public class GatewaySession : RpcSession
     {
         //---------------------------------------------------------------------
         private IChannelHandlerContext context;
-        private IGFClientObserver clientObserver;
-        private IGFClientObserver clientObserverWeak;
-        private Guid clientGuid;
+        private IGatewaySessionListener listener = Gateway.Instance.GatewaySessionListenerContainer.Resolve<IGatewaySessionListener>();
+        //private IGFClientObserver clientObserver;
+        //private IGFClientObserver clientObserverWeak;
+        //private Guid clientGuid;
 
         //---------------------------------------------------------------------
         public GatewaySession(EntityMgr entity_mgr)
@@ -35,12 +36,14 @@ namespace GF.Gateway
 
             var task = await Task.Factory.StartNew<Task>(async () =>
             {
-                this.clientObserver = new GatewayClientObserver(this);
-                this.clientObserverWeak = await GrainClient.GrainFactory.CreateObjectReference<IGFClientObserver>(this.clientObserver);
+                await this.listener.OnSessionCreate();
 
-                this.clientGuid = Guid.NewGuid();
-                var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-                await grain_clientsession.SubClient(this.clientObserverWeak);
+                //    this.clientObserver = new GatewayClientObserver(this);
+                //    this.clientObserverWeak = await GrainClient.GrainFactory.CreateObjectReference<IGFClientObserver>(this.clientObserver);
+
+                //    this.clientGuid = Guid.NewGuid();
+                //    var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+                //    await grain_clientsession.SubClient(this.clientObserverWeak);
             });
         }
 
@@ -49,14 +52,16 @@ namespace GF.Gateway
         {
             var task = await Task.Factory.StartNew<Task>(async () =>
             {
-                var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-                await grain_clientsession.UnsubClient(this.clientObserverWeak);
+                await this.listener.OnSessionDestroy();
 
-                this.context = null;
-                this.clientObserver = null;
-                this.clientObserverWeak = null;
+                //    var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+                //    await grain_clientsession.UnsubClient(this.clientObserverWeak);
 
-                Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
+                //    this.context = null;
+                //    this.clientObserver = null;
+                //    this.clientObserverWeak = null;
+
+                //    Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
             });
         }
 
@@ -78,7 +83,7 @@ namespace GF.Gateway
             msg.WriteBytes(BitConverter.GetBytes(method_id));
             if (data != null) msg.WriteBytes(data);
 
-            context.WriteAndFlushAsync(msg);
+            this.context.WriteAndFlushAsync(msg);
         }
 
         //---------------------------------------------------------------------
@@ -89,7 +94,7 @@ namespace GF.Gateway
         //---------------------------------------------------------------------
         public override void close()
         {
-            context.CloseAsync();
+            this.context.CloseAsync();
         }
 
         //---------------------------------------------------------------------
@@ -116,8 +121,9 @@ namespace GF.Gateway
             Task.Factory.StartNew(() =>
             {
                 // 收到Client请求数据，转发给Orleans Server
-                var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-                grain_clientsession.Request(method_id, data);
+                this.listener.Unity2Orleans(method_id, data);
+                //var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
+                //grain_clientsession.Request(method_id, data);
             });
         }
 
@@ -125,7 +131,7 @@ namespace GF.Gateway
         public void OnOrleansNotify(ushort method_id, byte[] data)
         {
             // 收到Orleans Server的推送数据，转发给Client
-            send(method_id, data);
+            this.send(method_id, data);
         }
     }
 

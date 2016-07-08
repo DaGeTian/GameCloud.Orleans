@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-namespace GF.Gateway
+namespace GF.Orleans.Gateway
 {
     using System;
     using System.Collections.Generic;
@@ -28,8 +28,8 @@ namespace GF.Gateway
         public async Task Start(IPAddress ip_address, int port,
             string orleansClientConfigFile, GatewaySessionFactory factory)
         {
-            bootstrap
-                    .Group(bossGroup, workerGroup)
+            this.bootstrap
+                    .Group(this.bossGroup, this.workerGroup)
                     .Channel<TcpServerSocketChannel>()
                     .Option(ChannelOption.SoBacklog, 100)
                     .Handler(new LoggingHandler(LogLevel.INFO))
@@ -43,7 +43,7 @@ namespace GF.Gateway
                         pipeline.AddLast(new GatewayChannelHandler(factory));
                     }));
 
-            bootstrapChannel = await bootstrap.BindAsync(ip_address, port);
+            this.bootstrapChannel = await this.bootstrap.BindAsync(ip_address, port);
 
             GrainClient.Initialize(orleansClientConfigFile);
         }
@@ -55,11 +55,11 @@ namespace GF.Gateway
             {
                 GrainClient.Uninitialize();
 
-                await bootstrapChannel.CloseAsync();
+                await this.bootstrapChannel.CloseAsync();
             }
             finally
             {
-                Task.WaitAll(bossGroup.ShutdownGracefullyAsync(), workerGroup.ShutdownGracefullyAsync());
+                Task.WaitAll(this.bossGroup.ShutdownGracefullyAsync(), this.workerGroup.ShutdownGracefullyAsync());
             }
         }
     }

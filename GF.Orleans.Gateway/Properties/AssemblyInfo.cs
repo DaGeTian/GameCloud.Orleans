@@ -1,11 +1,13 @@
-﻿using System.Reflection;
+﻿// Copyright (c) Cragon. All rights reserved.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GF.Gateway")]
+[assembly: AssemblyTitle("GF.Orleans.Gateway")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cragon")]
