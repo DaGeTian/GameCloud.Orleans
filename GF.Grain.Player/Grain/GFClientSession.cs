@@ -89,13 +89,13 @@ namespace GF.Grain.Player
         }
 
         //---------------------------------------------------------------------
-        Task IGFClientSession.NewPlayer()
+        Task IGFClientSession.NewPlayer(Dictionary<string, string> map_newplayer_data)
         {
             return TaskDone.Done;
         }
 
         //---------------------------------------------------------------------
-        Task IGFClientSession.DeletePlayer()
+        Task IGFClientSession.DeletePlayer(string et_player_guid)
         {
             return TaskDone.Done;
         }

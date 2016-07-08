@@ -17,6 +17,8 @@ namespace GF.Unity.Sample
 
             entity_mgr.regEntityDef<EtOrleans>();
             entity_mgr.regEntityDef<EtSampleApp>();
+
+            entity_mgr.setRpcSessionFactory(new RpcSessionFactoryTcpClient());
         }
 
         //-------------------------------------------------------------------------

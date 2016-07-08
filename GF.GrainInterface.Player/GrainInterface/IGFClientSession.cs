@@ -26,10 +26,10 @@ namespace GF.GrainInterface.Player
         Task GetPlayerList();
 
         //---------------------------------------------------------------------
-        Task NewPlayer();
+        Task NewPlayer(Dictionary<string, string> map_newplayer_data);
 
         //---------------------------------------------------------------------
-        Task DeletePlayer();
+        Task DeletePlayer(string et_player_guid);
 
         //---------------------------------------------------------------------
         Task EnterWorld();
