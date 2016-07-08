@@ -9,7 +9,7 @@ namespace GF.Orleans.Gateway
     using System.Threading.Tasks;
     using global::Orleans;
 
-    interface IGatewaySessionListener
+    public interface IGatewaySessionListener
     {
         Task OnSessionCreate();
 
