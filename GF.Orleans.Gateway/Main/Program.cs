@@ -10,6 +10,7 @@ namespace GF.Orleans.Gateway
     using DotNetty.Transport.Channels.Sockets;
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Net;
     using System.Text;
     using System.Threading;
@@ -24,11 +25,13 @@ namespace GF.Orleans.Gateway
             EbLog.WarningCallback = Console.WriteLine;
             EbLog.ErrorCallback = Console.WriteLine;
 
-            IPAddress host = IPAddress.Parse("192.168.0.10");
-            int port = 5882;
+            string orleansClientConfiguration = ConfigurationManager.AppSettings["OrleansClientConfiguration"];
+            string ip = ConfigurationManager.AppSettings["ListenIP"];
+            string port = ConfigurationManager.AppSettings["ListenPort"];
+            IPAddress host = IPAddress.Parse(ip);
 
             Gateway gateway = new Gateway();
-            await gateway.Start(host, port, "ClientConfiguration.xml");
+            await gateway.Start(host, int.Parse(port), orleansClientConfiguration);
 
             Console.WriteLine("Gateway Start ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
             Console.WriteLine("按回车键退出。。。");

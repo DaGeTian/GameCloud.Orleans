@@ -69,10 +69,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseJSONStorageProvider.cs" />
-    <Compile Include="FileStorageProvider.cs" />
-    <Compile Include="IJSONStateDataManager.cs" />
-    <Compile Include="MongoDBStorageProvider.cs" />
+    <Compile Include="Main\BaseJSONStorageProvider.cs" />
+    <Compile Include="Main\FileStorageProvider.cs" />
+    <Compile Include="Main\IJSONStateDataManager.cs" />
+    <Compile Include="Main\MongoDBStorageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
