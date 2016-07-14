@@ -9,14 +9,16 @@ namespace GF.Orleans.Gateway
     using System.Threading.Tasks;
     using global::Orleans;
 
-    public interface IGatewaySessionListener
+    public abstract class IGatewaySessionListener
     {
-        Task OnSessionCreate();
+        public GatewaySession GatewaySession { get; set; }
 
-        Task OnSessionDestroy();
+        public abstract Task OnSessionCreate();
 
-        Task Unity2Orleans(ushort method_id, byte[] data);
+        public abstract Task OnSessionDestroy();
 
-        Task Orleans2Unity(ushort method_id, byte[] data);
+        public abstract Task Unity2Orleans(ushort method_id, byte[] data);
+
+        public abstract Task Orleans2Unity(ushort method_id, byte[] data);
     }
 }

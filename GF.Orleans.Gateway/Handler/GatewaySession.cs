@@ -36,6 +36,8 @@ namespace GF.Orleans.Gateway
 
             var task = await Task.Factory.StartNew<Task>(async () =>
             {
+                listener.GatewaySession = this;
+
                 await this.listener.OnSessionCreate();
 
                 //    this.clientObserver = new GatewayClientObserver(this);

@@ -12,7 +12,7 @@ namespace GF.Orleans.Gateway
     public class GatewaySessionListenerDefault : IGatewaySessionListener
     {
         //---------------------------------------------------------------------
-        public Task OnSessionCreate()
+        public override Task OnSessionCreate()
         {
             Console.WriteLine("GatewaySessionListenerDefault.OnSessionCreate()");
 
@@ -20,7 +20,7 @@ namespace GF.Orleans.Gateway
         }
 
         //---------------------------------------------------------------------
-        public Task OnSessionDestroy()
+        public override Task OnSessionDestroy()
         {
             Console.WriteLine("GatewaySessionListenerDefault.OnSessionDestroy()");
 
@@ -28,13 +28,13 @@ namespace GF.Orleans.Gateway
         }
 
         //---------------------------------------------------------------------
-        public Task Unity2Orleans(ushort method_id, byte[] data)
+        public override Task Unity2Orleans(ushort method_id, byte[] data)
         {
             return TaskDone.Done;
         }
 
         //---------------------------------------------------------------------
-        public Task Orleans2Unity(ushort method_id, byte[] data)
+        public override Task Orleans2Unity(ushort method_id, byte[] data)
         {
             return TaskDone.Done;
         }
