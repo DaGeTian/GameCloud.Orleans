@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>GF.Orleans.Gateway</Id>
-    <Version>1.00.006</Version>
+    <Version>1.00.007</Version>
     <Title>GF.Orleans.Gateway</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
