@@ -123,7 +123,8 @@ namespace GF.Orleans.Gateway
             Task.Factory.StartNew(() =>
             {
                 // 收到Client请求数据，转发给Orleans Server
-                this.listener.Unity2Orleans(method_id, data);
+                this.listener.Unity2Orleans(method_id, buf);
+
                 //var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
                 //grain_clientsession.Request(method_id, data);
             });

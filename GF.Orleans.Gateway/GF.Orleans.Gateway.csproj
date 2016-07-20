@@ -139,7 +139,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handler\GatewayClientObserver.cs" />
     <Compile Include="Main\Gateway.cs" />
     <Compile Include="Handler\GatewayChannelHandler.cs" />
     <Compile Include="Handler\GatewaySession.cs" />
