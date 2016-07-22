@@ -10,17 +10,15 @@ namespace GF.Orleans.Gateway
     using Autofac;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
-    using GF.Unity.Common;
     using global::Orleans;
+    using GF.Unity.Common;
 
     public class GatewaySession : RpcSession
     {
         //---------------------------------------------------------------------
         private IChannelHandlerContext context;
-        private IGatewaySessionListener listener = Gateway.Instance.GatewaySessionListenerContainer.Resolve<IGatewaySessionListener>();
-        //private IGFClientObserver clientObserver;
-        //private IGFClientObserver clientObserverWeak;
-        //private Guid clientGuid;
+        private IGatewaySessionListener listener =
+            Gateway.Instance.GatewaySessionListenerContainer.Resolve<IGatewaySessionListener>();
 
         //---------------------------------------------------------------------
         public GatewaySession(EntityMgr entity_mgr)
@@ -32,39 +30,15 @@ namespace GF.Orleans.Gateway
         {
             this.context = context;
 
-            Console.WriteLine("GatewaySession.ChannelActive() Name=" + context.Name);
+            listener.GatewaySession = this;
 
-            var task = await Task.Factory.StartNew<Task>(async () =>
-            {
-                listener.GatewaySession = this;
-
-                await this.listener.OnSessionCreate();
-
-                //    this.clientObserver = new GatewayClientObserver(this);
-                //    this.clientObserverWeak = await GrainClient.GrainFactory.CreateObjectReference<IGFClientObserver>(this.clientObserver);
-
-                //    this.clientGuid = Guid.NewGuid();
-                //    var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-                //    await grain_clientsession.SubClient(this.clientObserverWeak);
-            });
+            await this.listener.OnSessionCreate();
         }
 
         //---------------------------------------------------------------------
         public async void ChannelInactive(IChannelHandlerContext context)
         {
-            var task = await Task.Factory.StartNew<Task>(async () =>
-            {
-                await this.listener.OnSessionDestroy();
-
-                //    var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-                //    await grain_clientsession.UnsubClient(this.clientObserverWeak);
-
-                //    this.context = null;
-                //    this.clientObserver = null;
-                //    this.clientObserverWeak = null;
-
-                //    Console.WriteLine("GatewaySession.ChannelInactive() Name=" + context.Name);
-            });
+            await this.listener.OnSessionDestroy();
         }
 
         //---------------------------------------------------------------------
@@ -118,16 +92,8 @@ namespace GF.Orleans.Gateway
             }
             else buf = new byte[0];
 
-            Console.WriteLine("GatewaySession.onRecvData() MethodId=" + method_id);
-
-            Task.Factory.StartNew(() =>
-            {
-                // 收到Client请求数据，转发给Orleans Server
-                this.listener.Unity2Orleans(method_id, buf);
-
-                //var grain_clientsession = GrainClient.GrainFactory.GetGrain<IGFClientSession>(this.clientGuid);
-                //grain_clientsession.Request(method_id, data);
-            });
+            // 收到Client请求数据，转发给Orleans Server
+            this.listener.Unity2Orleans(method_id, buf);
         }
 
         //---------------------------------------------------------------------

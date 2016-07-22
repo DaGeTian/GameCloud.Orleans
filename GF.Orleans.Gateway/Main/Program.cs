@@ -2,12 +2,6 @@
 
 namespace GF.Orleans.Gateway
 {
-    using DotNetty.Codecs;
-    using DotNetty.Common.Internal.Logging;
-    using DotNetty.Handlers.Tls;
-    using DotNetty.Transport.Bootstrapping;
-    using DotNetty.Transport.Channels;
-    using DotNetty.Transport.Channels.Sockets;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -33,7 +27,7 @@ namespace GF.Orleans.Gateway
             Gateway gateway = new Gateway();
             await gateway.Start(host, int.Parse(port), orleansClientConfiguration);
 
-            Console.WriteLine("Gateway Start ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+            Console.WriteLine("Gateway Start");
             Console.WriteLine("按回车键退出。。。");
             Console.ReadLine();
 
