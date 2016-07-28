@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-namespace Test.Client
+namespace Test
 {
     using System;
     using System.Collections.Concurrent;
