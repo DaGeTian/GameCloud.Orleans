@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GF.Orleans.Gateway")]
+[assembly: AssemblyTitle("GameCloud.Orleans.Gateway")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cragon")]
-[assembly: AssemblyProduct("GF.Orleans")]
+[assembly: AssemblyProduct("GameCloud.Orleans")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

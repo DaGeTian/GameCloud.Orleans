@@ -11,20 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>62bf4149-0fa0-4986-a937-4b18d22a1c71</ProjectGuid>
+    <ProjectGuid>6d68fe7c-50c0-41ce-9611-b40628ce3a41</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Orleans.Storage.MongoDB</Id>
-    <Version>1.00.001</Version>
-    <Title>GF.Orleans.Storage.MongoDB</Title>
+    <Id>GF.Server.Common</Id>
+    <Version>1.00.000</Version>
+    <Title>GF.Server.Common</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GF.Orleans.Storage.MongoDB</Summary>
-    <Description>GF.Orleans.Storage.MongoDB</Description>
+    <Summary>GF.Server.Common</Summary>
+    <Description>GF.Server.Common</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
@@ -32,13 +32,13 @@
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Orleans.Storage.MongoDB</Tags>
+    <Tags>GF.Server.Common</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.csproj" />
+    <ProjectReference Include="..\..\GameCloud.Server.Common\GameCloud.Server.Common.csproj" />
   </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>

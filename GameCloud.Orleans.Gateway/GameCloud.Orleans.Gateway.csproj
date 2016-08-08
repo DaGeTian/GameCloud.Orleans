@@ -7,8 +7,8 @@
     <ProjectGuid>{AC5F7FFB-06F1-4584-BFCB-4DE86C3E1AEE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GF.Orleans.Gateway</RootNamespace>
-    <AssemblyName>GF.Orleans.Gateway</AssemblyName>
+    <RootNamespace>GameCloud.Orleans.Gateway</RootNamespace>
+    <AssemblyName>GameCloud.Orleans.Gateway</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

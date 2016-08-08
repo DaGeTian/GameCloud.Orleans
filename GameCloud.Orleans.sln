@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GF.Orleans.Storage.MongoDB", "GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.csproj", "{82DDC043-35EB-4D2C-88BB-1566114872AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Orleans.Storage.MongoDB", "GameCloud.Orleans.Storage.MongoDB\GameCloud.Orleans.Storage.MongoDB.csproj", "{82DDC043-35EB-4D2C-88BB-1566114872AE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Gateway.Client", "Test.Gateway.Client\Test.Gateway.Client.csproj", "{95777C31-1698-4EB5-B86E-1394DB9FBF76}"
 EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GF.Orleans.Storage.MongoDB", "NuGet\GF.Orleans.Storage.MongoDB\GF.Orleans.Storage.MongoDB.nuproj", "{62BF4149-0FA0-4986-A937-4B18D22A1C71}"
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.Storage.MongoDB", "NuGet\GameCloud.Orleans.Storage.MongoDB\GameCloud.Orleans.Storage.MongoDB.nuproj", "{62BF4149-0FA0-4986-A937-4B18D22A1C71}"
 EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GF.Orleans.Gateway", "NuGet\GF.Orleans.Gateway\GF.Orleans.Gateway.nuproj", "{20BF1364-332F-4D82-A989-036F5C7EDE09}"
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.Gateway", "NuGet\GameCloud.Orleans.Gateway\GameCloud.Orleans.Gateway.nuproj", "{20BF1364-332F-4D82-A989-036F5C7EDE09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GF.Orleans.Gateway", "GF.Orleans.Gateway\GF.Orleans.Gateway.csproj", "{AC5F7FFB-06F1-4584-BFCB-4DE86C3E1AEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Orleans.Gateway", "GameCloud.Orleans.Gateway\GameCloud.Orleans.Gateway.csproj", "{AC5F7FFB-06F1-4584-BFCB-4DE86C3E1AEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GF.Server.Common", "GF.Server.Common\GF.Server.Common.csproj", "{06C6A8AC-0FC6-40B2-9D85-8EF30C7340D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Server.Common", "GameCloud.Server.Common\GameCloud.Server.Common.csproj", "{06C6A8AC-0FC6-40B2-9D85-8EF30C7340D5}"
 EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GF.Server.Common", "NuGet\GF.Server.Common\GF.Server.Common.nuproj", "{6D68FE7C-50C0-41CE-9611-B40628CE3A41}"
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Server.Common", "NuGet\GameCloud.Server.Common\GameCloud.Server.Common.nuproj", "{6D68FE7C-50C0-41CE-9611-B40628CE3A41}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.MongoDB", "Test.MongoDB\Test.MongoDB.csproj", "{15027E73-3E34-41B3-993C-BFE9288F1040}"
 EndProject
