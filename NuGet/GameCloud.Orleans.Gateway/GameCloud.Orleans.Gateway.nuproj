@@ -18,13 +18,13 @@
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Orleans.Gateway</Id>
-    <Version>1.00.010</Version>
-    <Title>GF.Orleans.Gateway</Title>
+    <Id>GameCloud.Orleans.Gateway</Id>
+    <Version>1.00.011</Version>
+    <Title>GameCloud.Orleans.Gateway</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GF.Orleans.Gateway</Summary>
-    <Description>GF.Orleans.Gateway</Description>
+    <Summary>GameCloud.Orleans.Gateway</Summary>
+    <Description>GameCloud.Orleans.Gateway</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
@@ -32,7 +32,7 @@
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Orleans.Gateway</Tags>
+    <Tags>GameCloud.Orleans.Gateway</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />

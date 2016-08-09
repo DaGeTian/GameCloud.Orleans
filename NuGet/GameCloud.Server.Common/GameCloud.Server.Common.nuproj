@@ -18,13 +18,13 @@
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Server.Common</Id>
+    <Id>GameCloud.Server.Common</Id>
     <Version>1.00.000</Version>
-    <Title>GF.Server.Common</Title>
+    <Title>GameCloud.Server.Common</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GF.Server.Common</Summary>
-    <Description>GF.Server.Common</Description>
+    <Summary>GameCloud.Server.Common</Summary>
+    <Description>GameCloud.Server.Common</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
@@ -32,7 +32,7 @@
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Server.Common</Tags>
+    <Tags>GameCloud.Server.Common</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />

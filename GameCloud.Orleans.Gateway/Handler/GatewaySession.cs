@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-namespace GF.Orleans.Gateway
+namespace GameCloud.Orleans.Gateway
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace GF.Orleans.Gateway
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
     using global::Orleans;
-    using GF.Unity.Common;
+    using GameCloud.Unity.Common;
 
     public class GatewaySession : RpcSession
     {

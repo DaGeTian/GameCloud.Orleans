@@ -7,7 +7,7 @@ namespace Test
     using System.IO;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
-    using GF.Unity.Common;
+    using GameCloud.Unity.Common;
 
     public class ClientSession : RpcSession
     {

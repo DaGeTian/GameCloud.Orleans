@@ -18,13 +18,13 @@
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GF.Orleans.Storage.MongoDB</Id>
+    <Id>GameCloud.Orleans.Storage.MongoDB</Id>
     <Version>1.00.001</Version>
-    <Title>GF.Orleans.Storage.MongoDB</Title>
+    <Title>GameCloud.Orleans.Storage.MongoDB</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GF.Orleans.Storage.MongoDB</Summary>
-    <Description>GF.Orleans.Storage.MongoDB</Description>
+    <Summary>GameCloud.Orleans.Storage.MongoDB</Summary>
+    <Description>GameCloud.Orleans.Storage.MongoDB</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
@@ -32,7 +32,7 @@
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GF.Orleans.Storage.MongoDB</Tags>
+    <Tags>GameCloud.Orleans.Storage.MongoDB</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />

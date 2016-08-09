@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-namespace GF.Orleans.Gateway
+namespace GameCloud.Orleans.Gateway
 {
     using System;
     using System.Collections.Generic;
