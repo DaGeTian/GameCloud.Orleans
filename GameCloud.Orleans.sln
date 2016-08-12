@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Unity.Sqlite", "G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unity.Common", "Test.Unity.Common\Test.Unity.Common.csproj", "{58DF64EB-36CC-4A6F-9791-303D429FE549}"
 EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Unity.Common", "NuGet\GameCloud.Unity.Common\GameCloud.Unity.Common.nuproj", "{5D96F951-8832-4E76-91E3-78AEA6A4BB07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{58DF64EB-36CC-4A6F-9791-303D429FE549}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58DF64EB-36CC-4A6F-9791-303D429FE549}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58DF64EB-36CC-4A6F-9791-303D429FE549}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,7 @@ Global
 		{62BF4149-0FA0-4986-A937-4B18D22A1C71} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{20BF1364-332F-4D82-A989-036F5C7EDE09} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{6D68FE7C-50C0-41CE-9611-B40628CE3A41} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
+		{5D96F951-8832-4E76-91E3-78AEA6A4BB07} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8

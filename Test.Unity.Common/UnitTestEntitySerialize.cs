@@ -11,6 +11,19 @@ namespace Test
     using ProtoBuf;
     using GameCloud.Unity.Common;
 
+    [ProtoContract]
+    public class TestData1
+    {
+        [ProtoMember(1)]
+        public string s1;
+        [ProtoMember(2)]
+        public int a1;
+        [ProtoMember(3)]
+        public int a2;
+        [ProtoMember(4)]
+        public string s2;
+    }
+
     public class DefPlayer : ComponentDef
     {
         //---------------------------------------------------------------------
@@ -83,6 +96,19 @@ namespace Test
         [TestMethod]
         public void TestProtoBufSerializerProp()
         {
+            TestData1 test_data1 = new TestData1();
+            test_data1.s1 = "aaa";
+            test_data1.s2 = "asdfasdfasdfasdf";
+            test_data1.a1 = 1100;
+            test_data1.a2 = 5000;
+
+            MemoryStream s = new MemoryStream();
+
+            var buf = EbTool.protobufSerialize(s, test_data1);
+            var test_data2 = EbTool.protobufDeserialize<TestData1>(s, buf);
+
+            int aa = 0;
+
             //Prop<int> p = new Prop<int>();
             //p.Key = "aaa";
             //p.set(100);
