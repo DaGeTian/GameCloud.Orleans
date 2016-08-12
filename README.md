@@ -4,14 +4,13 @@
 [![forks badge]][forks]
 [![issues badge]][issues]
 
-GameCloud专注于提供手游PaaS解决方案，推动游戏项目的闪电开发和智能运营。
+GameCloud专注于提供手游PaaS解决方案，推动游戏项目的快速开发和智能运营。
 
 ## GameCloud项目地址
-- https://github.com/CragonGame/GameCloud.Unity 
 - https://github.com/CragonGame/GameCloud.Orleans 
-- https://github.com/CragonGame/GameCloud.IM 
-- https://github.com/CragonGame/GameCloud.UCenter 
 - https://github.com/CragonGame/GameCloud.Manager
+- https://github.com/CragonGame/GameCloud.UCenter 
+- https://github.com/CragonGame/GameCloud.IM 
 
 ## GameCloud第三方依赖
 - http://unity3d.com
