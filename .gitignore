@@ -250,9 +250,9 @@ paket-files/
 *.sln.iml
 
 # Unity3D
-/GF.Unity.Orleans/Library/
-/GF.Unity.Orleans/Temp/
-/GF.Unity.Orleans/GF.Unity.Orleans.CSharp.Editor.csproj
-/GF.Unity.Orleans/GF.Unity.Orleans.CSharp.Plugins.csproj
-/GF.Unity.Orleans/GF.Unity.Orleans.CSharp.csproj
-/GF.Unity.Orleans/GF.Unity.Orleans.sln
+/GameCloud.Unity.Client/Library/
+/GameCloud.Unity.Client/Temp/
+/GameCloud.Unity.Client/GameCloud.Unity.Client.CSharp.Editor.csproj
+/GameCloud.Unity.Client/GameCloud.Unity.Client.CSharp.Plugins.csproj
+/GameCloud.Unity.Client/GameCloud.Unity.Client.CSharp.csproj
+/GameCloud.Unity.Client/GameCloud.Unity.Client.sln
