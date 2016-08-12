@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
 
-
 namespace Test
 {
     using System;
@@ -65,6 +64,48 @@ namespace Test
     [TestClass]
     public class UnitTestEntitySerialize
     {
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void TestMemoryStream()
+        {
+            using (MemoryStream s = new MemoryStream())
+            {
+                byte[] buf = new byte[256];
+                s.Write(buf, 0, buf.Length);
+                
+                byte[] buf1 = new byte[100];
+                
+                s.Seek(0, SeekOrigin.Begin);
+                s.SetLength(0);
+
+                s.Write(buf1, 0, buf1.Length);
+
+                int aa = 0;
+            }
+
+            //int a1 = 100;
+            //object a2 = a1;
+
+            //byte[] data = null;
+            //using (MemoryStream s = new MemoryStream())
+            //{
+            //    ProtoBuf.Serializer.Serialize<int>(s, a1);
+            //    data = s.ToArray();
+            //}
+
+            //using (MemoryStream s = new MemoryStream(data))
+            //{
+            //    var a3 = ProtoBuf.Serializer.Deserialize<int>(s);
+
+            //    int a4 = (int)a3;
+
+            //    Debug.WriteLine(a1);
+            //    Debug.WriteLine(a2);
+            //    Debug.WriteLine(a3);
+            //    Debug.WriteLine(a4);
+            //}
+        }
+
         //---------------------------------------------------------------------
         [TestMethod]
         public void TestProtoBufSerializerObject()

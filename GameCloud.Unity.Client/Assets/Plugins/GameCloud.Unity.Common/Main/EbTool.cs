@@ -46,6 +46,7 @@ public static class EbTool
     public static T protobufDeserialize<T>(MemoryStream s, byte[] data)
     {
         s.Seek(0, SeekOrigin.Begin);
+        if (s.Length > data.Length) s.SetLength(0);
         s.Write(data, 0, data.Length);
         s.Seek(0, SeekOrigin.Begin);
 
