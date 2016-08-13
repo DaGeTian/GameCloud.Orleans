@@ -276,7 +276,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy $(ProjectDir)   $(SolutionDir)GameCloud.Unity.Client\Assets\Plugins\GameCloud.Unity.Common\  /mir /xd bin /xd obj /xd Properties /xf UnityEngine.dll /xf Pngcs.dll /xf GameCloud.Unity.Common.csproj
+    <PostBuildEvent>robocopy $(ProjectDir)   $(SolutionDir)GameCloud.Unity.Client\Assets\Plugins\GameCloud.Unity.Common\  /mir /xd bin /xd obj /xd Properties /xf UnityEngine.dll /xf Pngcs.dll /xf GameCloud.Unity.Common.csproj /xf *.meta
 exit 0</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
