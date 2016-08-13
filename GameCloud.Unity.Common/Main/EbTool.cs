@@ -26,6 +26,7 @@ public static class EbTool
     public static byte[] protobufSerialize<T>(MemoryStream s, T obj)
     {
         s.Seek(0, SeekOrigin.Begin);
+        s.SetLength(0);
 
         byte[] data = null;
 
