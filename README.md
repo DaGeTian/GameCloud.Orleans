@@ -17,6 +17,9 @@ GameCloud专注于提供手游PaaS解决方案，推动游戏项目的快速开�
 - http://dotnet.github.io/orleans
 - https://www.mongodb.com/
 
+## QQ交流群
+232026043
+
 ## License
 [MIT](/LICENSE)
 
