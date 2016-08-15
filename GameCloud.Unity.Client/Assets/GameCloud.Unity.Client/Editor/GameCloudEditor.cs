@@ -63,7 +63,7 @@ public class GameCloudEditor : EditorWindow
             return;
         }
 
-        //GameCloudEditor dragon_pack = (GameCloudEditor)EditorWindow.GetWindow(typeof(GameCloudEditor));
+        EditorWindow.GetWindow<GameCloudEditor>();
         _getCurrentTargetPath();
         _checkPatchData();
         mMD5 = new MD5CryptoServiceProvider();
