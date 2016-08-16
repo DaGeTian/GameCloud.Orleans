@@ -12,10 +12,10 @@
   -->
   <Statistics MetricsTableWriteInterval="30s" PerfCounterWriteInterval="30s"
     LogWriteInterval="300s" WriteLogStatisticsToTable="true" StatisticsCollectionLevel="Info"/>
-  <Tracing DefaultTraceLevel="Info"  TraceToConsole="true" TraceToFile="{0}-{1}.log" BulkMessageLimit="1000">
+  <Tracing DefaultTraceLevel="Error"  TraceToConsole="true" TraceToFile="{0}-{1}.log" BulkMessageLimit="1000">
     <TraceLevelOverride LogPrefix="Application" TraceLevel="Info" />
-    <TraceLevelOverride LogPrefix="Runtime" TraceLevel="Info" />
-    <TraceLevelOverride LogPrefix="Grain" TraceLevel="Info" />
-    <TraceLevelOverride LogPrefix="Provider" TraceLevel="Info" />
+    <TraceLevelOverride LogPrefix="Runtime" TraceLevel="Error" />
+    <TraceLevelOverride LogPrefix="Grain" TraceLevel="Error" />
+    <TraceLevelOverride LogPrefix="Provider" TraceLevel="Error" />
   </Tracing>
 </ClientConfiguration>

@@ -32,7 +32,7 @@ namespace GameCloud.Orleans.Gateway
                     .Group(this.bossGroup, this.workerGroup)
                     .Channel<TcpServerSocketChannel>()
                     .Option(ChannelOption.SoBacklog, 100)
-                    .Handler(new LoggingHandler(LogLevel.INFO))
+                    .Handler(new LoggingHandler(LogLevel.WARN))
                     .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
