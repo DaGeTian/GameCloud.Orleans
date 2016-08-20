@@ -29,7 +29,6 @@ namespace GameCloud.Orleans.Gateway
         public async void ChannelActive(IChannelHandlerContext context)
         {
             this.context = context;
-
             listener.GatewaySession = this;
 
             await this.listener.OnSessionCreate();

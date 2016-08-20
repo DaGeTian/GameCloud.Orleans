@@ -28,7 +28,7 @@ namespace GameCloud.Orleans.Gateway
             await gateway.Start(host, int.Parse(port), orleansClientConfiguration);
 
             Console.WriteLine("Gateway Start");
-            Console.WriteLine("按回车键退出。。。");
+            Console.WriteLine("Press Enter To Exit...");
             Console.ReadLine();
 
             await gateway.Stop();

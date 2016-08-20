@@ -79,7 +79,7 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            //Console.WriteLine("Exception: " + exception);
+            Console.WriteLine("Exception: \n" + exception);
 
             context.CloseAsync();
         }
