@@ -54,7 +54,7 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public override void send(ushort method_id, byte[] data)
         {
-            IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(256);
+            IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(10240);
             msg.WriteBytes(BitConverter.GetBytes(method_id));
             if (data != null) msg.WriteBytes(data);
 
