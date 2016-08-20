@@ -52,13 +52,20 @@ namespace GameCloud.Orleans.Gateway
         }
 
         //---------------------------------------------------------------------
-        public override void send(ushort method_id, byte[] data)
+        public override async void send(ushort method_id, byte[] data)
         {
             IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(10240);
             msg.WriteBytes(BitConverter.GetBytes(method_id));
             if (data != null) msg.WriteBytes(data);
 
-            this.context.WriteAndFlushAsync(msg);
+            try
+            {
+                await this.context.WriteAndFlushAsync(msg);
+            }
+            catch
+            {
+                await this.context.CloseAsync();
+            }
         }
 
         //---------------------------------------------------------------------
