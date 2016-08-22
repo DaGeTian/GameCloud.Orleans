@@ -47,9 +47,9 @@ public class LocalABAsyncAssetLoader : IAsyncAssetLoader
     public override string assetLoadError()
     {
         string load_error = "";
-        if (mAssetBundleCreateRequest == null)
+        if (mAssetBundleCreateRequest == null || (mAssetBundleCreateRequest != null && mAssetBundleCreateRequest.assetBundle == null))
         {
-            load_error = "LoadABAsync Is Null! AssetPath: " + AssetPath;
+            load_error = "LoadABAsync Failed! AssetPath: " + AssetPath;
         }
         else
         {
