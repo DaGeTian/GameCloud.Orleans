@@ -13,6 +13,7 @@ public class RpcSessionTcpClient : RpcSession
     public RpcSessionTcpClient(EntityMgr entity_mgr)
     {
         this.entityMgr = entity_mgr;
+
         this.tcpSocket = new TcpClient();
         this.tcpSocket.OnSocketReceive += _onSocketReceive;
         this.tcpSocket.OnSocketConnected += _onSocketConnected;
@@ -23,13 +24,24 @@ public class RpcSessionTcpClient : RpcSession
     //---------------------------------------------------------------------
     public override bool isConnect()
     {
+        if (this.tcpSocket == null) return false;
+
         return this.tcpSocket.IsConnected;
     }
 
     //---------------------------------------------------------------------
     public override void connect(string ip, int port)
     {
-        if (this.tcpSocket != null) this.tcpSocket.connect(ip, port);
+        if (this.tcpSocket == null)
+        {
+            this.tcpSocket = new TcpClient();
+            this.tcpSocket.OnSocketReceive += _onSocketReceive;
+            this.tcpSocket.OnSocketConnected += _onSocketConnected;
+            this.tcpSocket.OnSocketClosed += _onSocketClosed;
+            this.tcpSocket.OnSocketError += _onSocketError;
+        }
+
+        this.tcpSocket.connect(ip, port);
     }
 
     //---------------------------------------------------------------------
@@ -49,13 +61,20 @@ public class RpcSessionTcpClient : RpcSession
     //---------------------------------------------------------------------
     public override void close()
     {
-        if (this.tcpSocket != null) this.tcpSocket.close();
+        if (this.tcpSocket != null)
+        {
+            this.tcpSocket.close();
+            this.tcpSocket = null;
+        }
     }
 
     //---------------------------------------------------------------------
     public override void update(float elapsed_tm)
     {
-        if (this.tcpSocket != null) this.tcpSocket.update(elapsed_tm);
+        if (this.tcpSocket != null)
+        {
+            this.tcpSocket.update(elapsed_tm);
+        }
     }
 
     //---------------------------------------------------------------------
