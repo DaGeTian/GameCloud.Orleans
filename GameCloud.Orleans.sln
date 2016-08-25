@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unity.Common", "Test.U
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Unity.Common", "NuGet\GameCloud.Unity.Common\GameCloud.Unity.Common.nuproj", "{5D96F951-8832-4E76-91E3-78AEA6A4BB07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Entity", "GameCloud.Entity\GameCloud.Entity.csproj", "{8EA49150-091D-4630-A862-3D058F1EBB2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EA49150-091D-4630-A862-3D058F1EBB2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA49150-091D-4630-A862-3D058F1EBB2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EA49150-091D-4630-A862-3D058F1EBB2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EA49150-091D-4630-A862-3D058F1EBB2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
