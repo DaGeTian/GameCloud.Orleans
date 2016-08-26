@@ -11,135 +11,42 @@ namespace GameCloud.Entity
         //---------------------------------------------------------------------
         Entity mParent;
         Dictionary<string, Dictionary<string, Entity>> mMapChild;// key1=entity_type, key2=entity_guid
+        Dictionary<string, IComponent> mMapComponent = new Dictionary<string, IComponent>();
 
         //---------------------------------------------------------------------
         public EntityMgr EntityMgr { get; private set; }
         public string Type { get; private set; }
         public string Guid { get; private set; }
-        public List<IComponent> ListComponent { get { return mListComponent; } }
+        public List<IComponent> ListComponent { get; private set; }
         public Entity Parent { get { return mParent; } }
         public bool SignDestroy { internal set; get; }
-        public EntityEventPublisher Publisher { get { return mPublisher; } }
-
+        
         //---------------------------------------------------------------------
         public Entity(EntityMgr entity_mgr)
         {
             EntityMgr = entity_mgr;
+            ListComponent = new List<IComponent>();
         }
-
+        
         //---------------------------------------------------------------------
-        public EntityData genEntityData4SaveDb(bool recursive = false)
+        public TData getComponentData<TData>() where TData : IComponentData, new()
         {
-            EntityData entity_data = new EntityData();
-            entity_data.entity_type = Type;
-            entity_data.entity_guid = Guid;
-            entity_data.cache_data = null;
-            entity_data.map_component = new Dictionary<string, Dictionary<string, string>>();
-
-            foreach (var i in mMapComponent)
-            {
-                if (!i.Value.EnableSave2Db) continue;
-
-                Dictionary<string, string> def_propset = i.Value.getDef().getMapProp4SaveDb(EntityMgr.NodeType);
-                entity_data.map_component[i.Key] = def_propset;
-            }
-
-            if (recursive && mMapChild != null)
-            {
-                entity_data.entity_children = new List<EntityData>();
-                foreach (var i in mMapChild)
-                {
-                    foreach (var j in i.Value)
-                    {
-                        entity_data.entity_children.Add(j.Value.genEntityData4SaveDb(recursive));
-                    }
-                }
-            }
-
-            return entity_data;
-        }
-
-        //---------------------------------------------------------------------
-        public EntityData genEntityData4NetSync(byte to_node, bool recursive = false)
-        {
-            EntityData entity_data = new EntityData();
-            entity_data.entity_type = Type;
-            entity_data.entity_guid = Guid;
-            entity_data.cache_data = null;
-            entity_data.map_component = new Dictionary<string, Dictionary<string, string>>();
-
-            foreach (var i in mMapComponent)
-            {
-                if (!i.Value.EnableNetSync) continue;
-
-                Dictionary<string, string> def_propset = i.Value.getDef().getMapProp4NetSync(EntityMgr.NodeType, to_node);
-                entity_data.map_component[i.Key] = def_propset;
-            }
-
-            if (recursive && mMapChild != null)
-            {
-                entity_data.entity_children = new List<EntityData>();
-                foreach (var i in mMapChild)
-                {
-                    foreach (var j in i.Value)
-                    {
-                        entity_data.entity_children.Add(j.Value.genEntityData4NetSync(to_node, recursive));
-                    }
-                }
-            }
-
-            return entity_data;
-        }
-
-        //---------------------------------------------------------------------
-        public EntityData genEntityData4All(bool recursive = false)
-        {
-            EntityData entity_data = new EntityData();
-            entity_data.entity_type = Type;
-            entity_data.entity_guid = Guid;
-            entity_data.cache_data = null;
-            entity_data.map_component = new Dictionary<string, Dictionary<string, string>>();
-
-            foreach (var i in mMapComponent)
-            {
-                Dictionary<string, string> def_propset = i.Value.getDef().getMapProp4All();
-                entity_data.map_component[i.Key] = def_propset;
-            }
-
-            if (recursive && mMapChild != null)
-            {
-                entity_data.entity_children = new List<EntityData>();
-                foreach (var i in mMapChild)
-                {
-                    foreach (var j in i.Value)
-                    {
-                        entity_data.entity_children.Add(j.Value.genEntityData4All(recursive));
-                    }
-                }
-            }
-
-            return entity_data;
-        }
-
-        //---------------------------------------------------------------------
-        public TDef getComponentDef<TDef>() where TDef : ComponentDef, new()
-        {
-            string type_name = typeof(TDef).Name;
+            string type_name = typeof(TData).Name;
             IComponent co = null;
             if (mMapComponent.TryGetValue(type_name, out co))
             {
-                return (TDef)((Component<TDef>)co).Def;
+                return (TData)((Component<TData>)co).Data;
             }
             else
             {
-                return default(TDef);
+                return default(TData);
             }
         }
 
         //---------------------------------------------------------------------
         public T getComponent<T>() where T : IComponent
         {
-            string type_name = EntityMgr.getComponentName<T>();
+            string type_name = "";// EntityMgr.getComponentName<T>();
 
             IComponent co = null;
             if (mMapComponent.TryGetValue(type_name, out co))
@@ -160,48 +67,48 @@ namespace GameCloud.Entity
             return co;
         }
 
-        //---------------------------------------------------------------------
-        public void setUserData<T>(T data)
-        {
-            if (mMapCacheData == null)
-            {
-                mMapCacheData = new Dictionary<string, object>();
-            }
+        ////---------------------------------------------------------------------
+        //public void setUserData<T>(T data)
+        //{
+        //    if (mMapCacheData == null)
+        //    {
+        //        mMapCacheData = new Dictionary<string, object>();
+        //    }
 
-            mMapCacheData[data.GetType().Name] = data;
-        }
+        //    mMapCacheData[data.GetType().Name] = data;
+        //}
 
-        //---------------------------------------------------------------------
-        public T getUserData<T>()
-        {
-            string key = typeof(T).Name;
-            if (mMapCacheData == null || !mMapCacheData.ContainsKey(key)) return default(T);
-            else return (T)mMapCacheData[key];
-        }
+        ////---------------------------------------------------------------------
+        //public T getUserData<T>()
+        //{
+        //    string key = typeof(T).Name;
+        //    if (mMapCacheData == null || !mMapCacheData.ContainsKey(key)) return default(T);
+        //    else return (T)mMapCacheData[key];
+        //}
 
-        //---------------------------------------------------------------------
-        public void setCacheData(string key, object v)
-        {
-            if (mMapCacheData == null)
-            {
-                mMapCacheData = new Dictionary<string, object>();
-            }
+        ////---------------------------------------------------------------------
+        //public void setCacheData(string key, object v)
+        //{
+        //    if (mMapCacheData == null)
+        //    {
+        //        mMapCacheData = new Dictionary<string, object>();
+        //    }
 
-            mMapCacheData[key] = v;
-        }
+        //    mMapCacheData[key] = v;
+        //}
 
-        //---------------------------------------------------------------------
-        public object getCacheData(string key)
-        {
-            if (mMapCacheData == null || !mMapCacheData.ContainsKey(key)) return null;
-            else return mMapCacheData[key];
-        }
+        ////---------------------------------------------------------------------
+        //public object getCacheData(string key)
+        //{
+        //    if (mMapCacheData == null || !mMapCacheData.ContainsKey(key)) return null;
+        //    else return mMapCacheData[key];
+        //}
 
-        //---------------------------------------------------------------------
-        public bool hasCacheData(string key)
-        {
-            return mMapCacheData.ContainsKey(key);
-        }
+        ////---------------------------------------------------------------------
+        //public bool hasCacheData(string key)
+        //{
+        //    return mMapCacheData.ContainsKey(key);
+        //}
 
         //---------------------------------------------------------------------
         public void setParent(Entity parent)
@@ -270,10 +177,10 @@ namespace GameCloud.Entity
             SignDestroy = false;
             Type = entity_data.entity_type;
             Guid = entity_data.entity_guid;
-            mMapCacheData = entity_data.cache_data;
+            //mMapCacheData = entity_data.cache_data;
 
-            mPublisher = new EntityEventPublisher(EntityMgr);
-            mPublisher.addHandler(this);
+            //mPublisher = new EntityEventPublisher(EntityMgr);
+            //mPublisher.addHandler(this);
 
             EntityDef entity_def = EntityMgr.getEntityDef(entity_data.entity_type);
             if (entity_def == null) return;
@@ -283,7 +190,7 @@ namespace GameCloud.Entity
                 IComponentFactory component_factory = EntityMgr.getComponentFactory(i);
                 if (component_factory == null)
                 {
-                    EbLog.Error("Entity.addComponent() failed! can't find component_factory, component=" + i);
+                    //EbLog.Error("Entity.addComponent() failed! can't find component_factory, component=" + i);
                     continue;
                 }
 
@@ -295,7 +202,7 @@ namespace GameCloud.Entity
 
                 var component = component_factory.createComponent(this, def_propset);
                 mMapComponent[i] = component;
-                mListComponent.Add(component);
+                ListComponent.Add(component);
                 component.awake();
             }
         }
@@ -303,7 +210,7 @@ namespace GameCloud.Entity
         //---------------------------------------------------------------------
         public void _initAllComponent()
         {
-            foreach (var i in mListComponent)
+            foreach (var i in ListComponent)
             {
                 i.init();
             }
@@ -312,14 +219,14 @@ namespace GameCloud.Entity
         //---------------------------------------------------------------------
         public void _releaseAllComponent()
         {
-            mListComponent.Reverse();
-            foreach (var i in mListComponent)
+            ListComponent.Reverse();
+            foreach (var i in ListComponent)
             {
                 i.release();
                 i.Entity = null;
                 i.EntityMgr = null;
             }
-            mListComponent.Reverse();
+            ListComponent.Reverse();
         }
 
         //---------------------------------------------------------------------
@@ -346,28 +253,28 @@ namespace GameCloud.Entity
             }
 
             // 销毁Entity上挂接的所有组件
-            mListComponent.Reverse();
-            foreach (var i in mListComponent)
+            ListComponent.Reverse();
+            foreach (var i in ListComponent)
             {
-                if (!EbTool.isNull(i))
+                //if (!EbTool.isNull(i))
                 {
                     i.release();
                     i.Entity = null;
                     i.EntityMgr = null;
                 }
             }
-            mListComponent.Clear();
+            ListComponent.Clear();
             mMapComponent.Clear();
 
-            if (mPublisher != null)
-            {
-                mPublisher.removeHandler(this);
-            }
+            //if (mPublisher != null)
+            //{
+            //    mPublisher.removeHandler(this);
+            //}
 
-            if (mMapCacheData != null)
-            {
-                mMapCacheData.Clear();
-            }
+            //if (mMapCacheData != null)
+            //{
+            //    mMapCacheData.Clear();
+            //}
 
             if (mMapChild != null)
             {
@@ -392,7 +299,7 @@ namespace GameCloud.Entity
             if (SignDestroy) return;
 
             // 循环更新Update容器中所有元素
-            foreach (var i in mListComponent)
+            foreach (var i in ListComponent)
             {
                 i.update(elapsed_tm);
 
@@ -405,7 +312,7 @@ namespace GameCloud.Entity
         {
             if (SignDestroy) return;
 
-            foreach (var i in mListComponent)
+            foreach (var i in ListComponent)
             {
                 i.onChildInit(child);
 
@@ -418,7 +325,7 @@ namespace GameCloud.Entity
         {
             if (SignDestroy) return;
 
-            foreach (var i in mListComponent)
+            foreach (var i in ListComponent)
             {
                 i.handleEvent(sender, e);
 

@@ -45,8 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component.cs" />
+    <Compile Include="ComponentFactory.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityDef.cs" />
+    <Compile Include="EntityEvent.cs" />
     <Compile Include="EntityMgr.cs" />
     <Compile Include="EntityPool.cs" />
     <Compile Include="Program.cs" />
@@ -55,6 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Test\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

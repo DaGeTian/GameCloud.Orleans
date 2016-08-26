@@ -40,8 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Entity4Orleans\Component.cs" />
+    <Compile Include="Entity4Orleans\ComponentFactory.cs" />
+    <Compile Include="Entity4Orleans\Entity.cs" />
+    <Compile Include="Entity4Orleans\EntityMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameCloud.Unity.Common\GameCloud.Unity.Common.csproj">
+      <Project>{4a1a0894-dc8e-4d16-b920-064b77c9e781}</Project>
+      <Name>GameCloud.Unity.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

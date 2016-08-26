@@ -104,32 +104,32 @@ namespace GameCloud.Entity
         //}
         
         //---------------------------------------------------------------------
-        public Entity createEntity<TEntityDef>(Dictionary<string, object> cache_data,
-            Entity parent = null) where TEntityDef : EntityDef
-        {
-            string entity_guid = Guid.NewGuid().ToString();
-            return createEntityById<TEntityDef>(entity_guid, cache_data, parent);
-        }
+        //public Entity createEntity<TEntityDef>(Dictionary<string, object> cache_data,
+        //    Entity parent = null) where TEntityDef : EntityDef
+        //{
+        //    string entity_guid = Guid.NewGuid().ToString();
+        //    return createEntityById<TEntityDef>(entity_guid, cache_data, parent);
+        //}
 
-        //---------------------------------------------------------------------
-        public Entity createEntityById<TEntityDef>(string entity_guid, Dictionary<string, object> cache_data,
-            Entity parent = null) where TEntityDef : EntityDef
-        {
-            EntityData entity_data = new EntityData();
-            entity_data.entity_type = typeof(TEntityDef).Name;
-            entity_data.entity_guid = entity_guid;
-            entity_data.map_component = null;
-            entity_data.cache_data = cache_data;
+        ////---------------------------------------------------------------------
+        //public Entity createEntityById<TEntityDef>(string entity_guid, Dictionary<string, object> cache_data,
+        //    Entity parent = null) where TEntityDef : EntityDef
+        //{
+        //    EntityData entity_data = new EntityData();
+        //    entity_data.entity_type = typeof(TEntityDef).Name;
+        //    entity_data.entity_guid = entity_guid;
+        //    entity_data.map_component = null;
+        //    entity_data.cache_data = cache_data;
 
-            return _createEntityImpl(entity_data, parent);
-        }
+        //    return _createEntityImpl(entity_data, parent);
+        //}
 
-        //---------------------------------------------------------------------
-        public Entity createEntityByData<TEntityDef>(EntityData entity_data,
-            Entity parent = null, bool recursive = false) where TEntityDef : EntityDef
-        {
-            return _createEntityImpl(entity_data, parent, recursive);
-        }
+        ////---------------------------------------------------------------------
+        //public Entity createEntityByData<TEntityDef>(EntityData entity_data,
+        //    Entity parent = null, bool recursive = false) where TEntityDef : EntityDef
+        //{
+        //    return _createEntityImpl(entity_data, parent, recursive);
+        //}
 
         //---------------------------------------------------------------------
         public Entity genEntity<TEntityDef>(EntityData entity_data) where TEntityDef : EntityDef
@@ -179,7 +179,7 @@ namespace GameCloud.Entity
         //---------------------------------------------------------------------
         public void destroyEntity(Entity entity)
         {
-            if (EbTool.isNull(entity)) return;
+            //if (EbTool.isNull(entity)) return;
 
             string entity_type = entity.Type;
             string entity_guid = entity.Guid;

@@ -8,19 +8,17 @@ namespace GameCloud.Entity
     public abstract class EntityDef
     {
         //---------------------------------------------------------------------
-        //List<string> mListComponentDef = new List<string>();
+        Dictionary<string, object> mMapComponentData = new Dictionary<string, object>();
 
         //---------------------------------------------------------------------
-        //public List<string> ListComponentDef { get { return mListComponentDef; } }
+        public Dictionary<string, object> MapComponentData { get { return mMapComponentData; } }
 
         //---------------------------------------------------------------------
-        //public abstract void declareAllComponent(byte node_type);
-
-        //---------------------------------------------------------------------
-        //public void declareComponent<T>() where T : ComponentDef
-        //{
-        //    string name = typeof(T).Name;
-        //    mListComponentDef.Add(name);
-        //}
+        public void setupComponentData<TData>() where TData : IComponentData, new()
+        {
+            TData data = new TData();
+            string name = typeof(TData).Name;
+            mMapComponentData[name] = data;
+        }
     }
 }
