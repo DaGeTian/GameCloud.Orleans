@@ -35,7 +35,8 @@ namespace GameCloud.Entity
         //-------------------------------------------------------------------------
         public override string getName()
         {
-            return mEntityMgr.getComponentName<T>();
+            return string.Empty;
+            //return mEntityMgr.getComponentName<T>();
         }
 
         //-------------------------------------------------------------------------
@@ -45,7 +46,7 @@ namespace GameCloud.Entity
             component.Entity = container;
             component.EntityMgr = mEntityMgr;
             component.EnableUpdate = true;
-            component._genDef(map_param);
+            //component._genDef(map_param);
             return component;
         }
     }

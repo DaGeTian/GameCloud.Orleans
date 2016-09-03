@@ -19,7 +19,7 @@ namespace GameCloud.Server.Common
         //---------------------------------------------------------------------
         public static Task<Entity> CreateEntityAsync<EntityDef, EntityLoader>()
         {
-            Entity entity = new Entity(this);
+            Entity entity = new Entity();
 
             return Task.FromResult(entity);
         }

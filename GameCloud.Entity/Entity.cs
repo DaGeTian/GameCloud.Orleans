@@ -172,40 +172,40 @@ namespace GameCloud.Entity
         }
 
         //---------------------------------------------------------------------
-        public void _reset(EntityData entity_data)
-        {
-            SignDestroy = false;
-            Type = entity_data.entity_type;
-            Guid = entity_data.entity_guid;
-            //mMapCacheData = entity_data.cache_data;
+        //public void _reset(EntityData entity_data)
+        //{
+        //    SignDestroy = false;
+        //    Type = entity_data.entity_type;
+        //    Guid = entity_data.entity_guid;
+        //    //mMapCacheData = entity_data.cache_data;
 
-            //mPublisher = new EntityEventPublisher(EntityMgr);
-            //mPublisher.addHandler(this);
+        //    //mPublisher = new EntityEventPublisher(EntityMgr);
+        //    //mPublisher.addHandler(this);
 
-            EntityDef entity_def = EntityMgr.getEntityDef(entity_data.entity_type);
-            if (entity_def == null) return;
+        //    EntityDef entity_def = EntityMgr.getEntityDef(entity_data.entity_type);
+        //    if (entity_def == null) return;
 
-            foreach (var i in entity_def.ListComponentDef)
-            {
-                IComponentFactory component_factory = EntityMgr.getComponentFactory(i);
-                if (component_factory == null)
-                {
-                    //EbLog.Error("Entity.addComponent() failed! can't find component_factory, component=" + i);
-                    continue;
-                }
+        //    foreach (var i in entity_def.ListComponentDef)
+        //    {
+        //        IComponentFactory component_factory = EntityMgr.getComponentFactory(i);
+        //        if (component_factory == null)
+        //        {
+        //            //EbLog.Error("Entity.addComponent() failed! can't find component_factory, component=" + i);
+        //            continue;
+        //        }
 
-                Dictionary<string, string> def_propset = null;
-                if (entity_data.map_component != null)
-                {
-                    entity_data.map_component.TryGetValue(i, out def_propset);
-                }
+        //        Dictionary<string, string> def_propset = null;
+        //        if (entity_data.map_component != null)
+        //        {
+        //            entity_data.map_component.TryGetValue(i, out def_propset);
+        //        }
 
-                var component = component_factory.createComponent(this, def_propset);
-                mMapComponent[i] = component;
-                ListComponent.Add(component);
-                component.awake();
-            }
-        }
+        //        var component = component_factory.createComponent(this, def_propset);
+        //        mMapComponent[i] = component;
+        //        ListComponent.Add(component);
+        //        component.awake();
+        //    }
+        //}
 
         //---------------------------------------------------------------------
         public void _initAllComponent()

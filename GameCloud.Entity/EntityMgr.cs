@@ -132,49 +132,49 @@ namespace GameCloud.Entity
         //}
 
         //---------------------------------------------------------------------
-        public Entity genEntity<TEntityDef>(EntityData entity_data) where TEntityDef : EntityDef
-        {
-            Entity entity = new Entity(this);
-            entity._reset(entity_data);
-            entity._initAllComponent();
-            return entity;
-        }
+        //public Entity genEntity<TEntityDef>(EntityData entity_data) where TEntityDef : EntityDef
+        //{
+        //    Entity entity = new Entity(this);
+        //    entity._reset(entity_data);
+        //    entity._initAllComponent();
+        //    return entity;
+        //}
 
-        //---------------------------------------------------------------------
-        public Entity genEntity<TEntityDef, TUserData>(EntityData entity_data, TUserData user_data) where TEntityDef : EntityDef
-        {
-            Entity entity = new Entity(this);
-            entity._reset(entity_data);
-            entity.setUserData<TUserData>(user_data);
-            entity._initAllComponent();
-            return entity;
-        }
+        ////---------------------------------------------------------------------
+        //public Entity genEntity<TEntityDef, TUserData>(EntityData entity_data, TUserData user_data) where TEntityDef : EntityDef
+        //{
+        //    Entity entity = new Entity(this);
+        //    entity._reset(entity_data);
+        //    entity.setUserData<TUserData>(user_data);
+        //    entity._initAllComponent();
+        //    return entity;
+        //}
 
-        //---------------------------------------------------------------------
-        public Entity genEntity<TEntityDef>(Dictionary<string, object> cache_data) where TEntityDef : EntityDef
-        {
-            EntityData entity_data = new EntityData();
-            entity_data.entity_type = typeof(TEntityDef).Name;
-            entity_data.entity_guid = Guid.NewGuid().ToString();
-            entity_data.cache_data = cache_data;
-            entity_data.map_component = null;
-            entity_data.entity_children = null;
+        ////---------------------------------------------------------------------
+        //public Entity genEntity<TEntityDef>(Dictionary<string, object> cache_data) where TEntityDef : EntityDef
+        //{
+        //    EntityData entity_data = new EntityData();
+        //    entity_data.entity_type = typeof(TEntityDef).Name;
+        //    entity_data.entity_guid = Guid.NewGuid().ToString();
+        //    entity_data.cache_data = cache_data;
+        //    entity_data.map_component = null;
+        //    entity_data.entity_children = null;
 
-            return genEntity<TEntityDef>(entity_data);
-        }
+        //    return genEntity<TEntityDef>(entity_data);
+        //}
 
-        //---------------------------------------------------------------------
-        public Entity genEntity<TEntityDef, TUserData>(Dictionary<string, object> cache_data, TUserData user_data) where TEntityDef : EntityDef
-        {
-            EntityData entity_data = new EntityData();
-            entity_data.entity_type = typeof(TEntityDef).Name;
-            entity_data.entity_guid = Guid.NewGuid().ToString();
-            entity_data.cache_data = cache_data;
-            entity_data.map_component = null;
-            entity_data.entity_children = null;
+        ////---------------------------------------------------------------------
+        //public Entity genEntity<TEntityDef, TUserData>(Dictionary<string, object> cache_data, TUserData user_data) where TEntityDef : EntityDef
+        //{
+        //    EntityData entity_data = new EntityData();
+        //    entity_data.entity_type = typeof(TEntityDef).Name;
+        //    entity_data.entity_guid = Guid.NewGuid().ToString();
+        //    entity_data.cache_data = cache_data;
+        //    entity_data.map_component = null;
+        //    entity_data.entity_children = null;
 
-            return genEntity<TEntityDef, TUserData>(entity_data, user_data);
-        }
+        //    return genEntity<TEntityDef, TUserData>(entity_data, user_data);
+        //}
 
         //---------------------------------------------------------------------
         public void destroyEntity(Entity entity)
@@ -266,55 +266,55 @@ namespace GameCloud.Entity
         }
 
         //---------------------------------------------------------------------
-        internal Entity _createEntityImpl(EntityData entity_data,
-            Entity parent = null, bool recursive = false)
-        {
-            Entity entity = new Entity(this);
-            entity._reset(entity_data);
+        //internal Entity _createEntityImpl(EntityData entity_data,
+        //    Entity parent = null, bool recursive = false)
+        //{
+        //    Entity entity = new Entity(this);
+        //    entity._reset(entity_data);
 
-            string entity_type = entity.Type;
-            string entity_guid = entity.Guid;
+        //    string entity_type = entity.Type;
+        //    string entity_guid = entity.Guid;
 
-            if (mMapAllEntity4Search1.ContainsKey(entity_type))
-            {
-                Dictionary<string, Entity> m = mMapAllEntity4Search1[entity_type];
-                m[entity_guid] = entity;
-            }
-            else
-            {
-                Dictionary<string, Entity> m = new Dictionary<string, Entity>();
-                m[entity_guid] = entity;
-                mMapAllEntity4Search1[entity_type] = m;
-            }
+        //    if (mMapAllEntity4Search1.ContainsKey(entity_type))
+        //    {
+        //        Dictionary<string, Entity> m = mMapAllEntity4Search1[entity_type];
+        //        m[entity_guid] = entity;
+        //    }
+        //    else
+        //    {
+        //        Dictionary<string, Entity> m = new Dictionary<string, Entity>();
+        //        m[entity_guid] = entity;
+        //        mMapAllEntity4Search1[entity_type] = m;
+        //    }
 
-            mMapAllEntity4Search3[entity_guid] = entity;
-            mQueCreateEntity.Enqueue(entity);
+        //    mMapAllEntity4Search3[entity_guid] = entity;
+        //    mQueCreateEntity.Enqueue(entity);
 
-            // 调用Entity._setup()，让逻辑层有机会做事情
-            if (parent != null)
-            {
-                entity.setParent(parent);
-                parent._onChildInit(entity);
-            }
+        //    // 调用Entity._setup()，让逻辑层有机会做事情
+        //    if (parent != null)
+        //    {
+        //        entity.setParent(parent);
+        //        parent._onChildInit(entity);
+        //    }
 
-            entity._initAllComponent();
+        //    entity._initAllComponent();
 
-            // 广播Entity创建消息
-            if (OnEtCreate != null)
-            {
-                OnEtCreate(entity);
-            }
+        //    // 广播Entity创建消息
+        //    if (OnEtCreate != null)
+        //    {
+        //        OnEtCreate(entity);
+        //    }
 
-            // 递归创建子Entity
-            if (recursive && entity_data.entity_children != null)
-            {
-                foreach (var i in entity_data.entity_children)
-                {
-                    _createEntityImpl(i, entity, recursive);
-                }
-            }
+        //    // 递归创建子Entity
+        //    if (recursive && entity_data.entity_children != null)
+        //    {
+        //        foreach (var i in entity_data.entity_children)
+        //        {
+        //            _createEntityImpl(i, entity, recursive);
+        //        }
+        //    }
 
-            return entity;
-        }
+        //    return entity;
+        //}
     }
 }
