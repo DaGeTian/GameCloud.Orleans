@@ -15,12 +15,12 @@ namespace GameCloud.Entity
 
         //---------------------------------------------------------------------
         public EntityMgr EntityMgr { get; private set; }
+        public Entity Parent { get { return mParent; } }
+        public List<IComponent> ListComponent { get; private set; }
         public string Type { get; private set; }
         public string Guid { get; private set; }
-        public List<IComponent> ListComponent { get; private set; }
-        public Entity Parent { get { return mParent; } }
         public bool SignDestroy { internal set; get; }
-        
+
         //---------------------------------------------------------------------
         public Entity(EntityMgr entity_mgr)
         {

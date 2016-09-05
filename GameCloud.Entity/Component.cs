@@ -6,9 +6,9 @@ namespace GameCloud.Entity
     using System.Collections.Generic;
     using System.IO;
 
-    public abstract class IComponentData
-    {
-    }
+    //public abstract class IComponentData
+    //{
+    //}
 
     public abstract class IComponent
     {
@@ -20,7 +20,6 @@ namespace GameCloud.Entity
         public bool EnableUpdate { set; get; }
         public bool EnableSave2Db { set; get; }
         public bool EnableNetSync { get; set; }
-        internal bool _Init { set; get; }
 
         //---------------------------------------------------------------------
         public IComponent()
@@ -49,7 +48,7 @@ namespace GameCloud.Entity
         public abstract void onChildInit(Entity child);
     }
 
-    public class Component<TData> : IComponent where TData : IComponentData, new()
+    public class Component<TData> : IComponent where TData : class
     {
         //---------------------------------------------------------------------
         public TData Data { get; set; }
