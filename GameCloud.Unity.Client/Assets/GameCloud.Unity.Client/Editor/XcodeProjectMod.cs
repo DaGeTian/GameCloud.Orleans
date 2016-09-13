@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_IOS
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
@@ -154,3 +155,4 @@ public class FrameWorkInfo
     public string name;
     public bool is_weak;
 }
+#endif
