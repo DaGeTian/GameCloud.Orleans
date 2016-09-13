@@ -4,7 +4,7 @@ using System;
 
 public class NativeSample : MonoBehaviour,
     ITakePhotoReceiverListener, IPayReceiverListener, IAudioControlListener, ISpeechListener
-{  
+{
     //-------------------------------------------------------------------------
     public void audioChanged(string chang)
     {
@@ -34,7 +34,7 @@ public class NativeSample : MonoBehaviour,
     }
 
     //-------------------------------------------------------------------------
-	public void speechResult(_eSpeechResult result_code, string most_possibleresult)
+    public void speechResult(_eSpeechResult result_code, string most_possibleresult)
     {
         Debug.Log("speechResult::result_code:: " + (_eSpeechResult)result_code + "   most_possibleresult::" + most_possibleresult);
     }
@@ -49,16 +49,18 @@ public class NativeSample : MonoBehaviour,
     //-------------------------------------------------------------------------
     void Update()
     {
-        
+
     }
 
     //-------------------------------------------------------------------------
     void _initNativeMsgReceiverListener()
     {
-        NativeAPIMsgReceiver nativeAPI_msgreceiver = NativeAPIMsgReceiver.instance();
-        nativeAPI_msgreceiver.TakePhotoReceiverListener = this;
-        nativeAPI_msgreceiver.PayReceiverListener = this;
-        nativeAPI_msgreceiver.AudioControlListener = this;
-        //nativeAPI_msgreceiver.SpeechListener = this;
-    }   
+        var native_receiver = NativeReceiver.instance();
+        native_receiver.TakePhotoReceiverListener = this;
+        native_receiver.AudioControlListener = this;
+        var speech_receiver = SpeechReceiver.instance();
+        speech_receiver.SpeechListener = this;
+        var pay_receiver = PayReceiver.instance();
+        pay_receiver.PayReceiverListener = this;
+    }
 }

@@ -39,7 +39,7 @@ public class AndroidSpeech : ISpeech
         if (mAndroidSpeech == null)
         {
             mAndroidSpeech = mAndroidJavaClassSpeech.CallStatic<AndroidJavaObject>("Instantce",
-                "NativeAPIMsgReceiver", mAppId, mSpeechLanguage.ToString());
+                typeof(SpeechReceiver).Name, mAppId, mSpeechLanguage.ToString());
         }
     }
 }

@@ -104,7 +104,7 @@ public class Pay
             mInventory = inventory;
         }
 
-        NativeAPIMsgReceiver.instance().PayResult(_ePayOptionType.QueryInventory, true, inventory);
+        PayReceiver.instance().PayResult(_ePayOptionType.QueryInventory, true, inventory);
     }
 
     //-------------------------------------------------------------------------
@@ -113,7 +113,7 @@ public class Pay
         Debug.Log("queryInventoryFailedEvent Failed: " + error);
         mMsg = error;
 
-        NativeAPIMsgReceiver.instance().PayResult(_ePayOptionType.QueryInventory, false, mMsg);
+        PayReceiver.instance().PayResult(_ePayOptionType.QueryInventory, false, mMsg);
     }
 
     //-------------------------------------------------------------------------
@@ -122,7 +122,7 @@ public class Pay
         Debug.Log("purchaseSucceededEvent: " + purchase);
         mMsg = "PURCHASED Succeeded:" + purchase.ToString();
 
-        NativeAPIMsgReceiver.instance().PayResult(_ePayOptionType.PurchaseProduct, true, purchase);
+        PayReceiver.instance().PayResult(_ePayOptionType.PurchaseProduct, true, purchase);
     }
 
     //-------------------------------------------------------------------------
@@ -131,7 +131,7 @@ public class Pay
         Debug.Log("purchaseFailedEvent: " + errorMessage);
         mMsg = "Purchase Failed: " + errorMessage;
 
-        NativeAPIMsgReceiver.instance().PayResult(_ePayOptionType.PurchaseProduct, false, errorMessage);
+        PayReceiver.instance().PayResult(_ePayOptionType.PurchaseProduct, false, errorMessage);
     }
 
     //-------------------------------------------------------------------------
@@ -140,7 +140,7 @@ public class Pay
         Debug.Log("consumePurchaseSucceededEvent: " + purchase);
         mMsg = "CONSUMED Succeeded: " + purchase.ToString();
 
-        NativeAPIMsgReceiver.instance().PayResult(_ePayOptionType.ConsumeProduct, true, purchase);
+        PayReceiver.instance().PayResult(_ePayOptionType.ConsumeProduct, true, purchase);
     }
 
     //-------------------------------------------------------------------------
@@ -149,6 +149,6 @@ public class Pay
         Debug.Log("consumePurchaseFailedEvent: " + error);
         mMsg = "Consume Failed: " + error;
 
-        NativeAPIMsgReceiver.instance().PayResult(_ePayOptionType.ConsumeProduct, false, error);
+        PayReceiver.instance().PayResult(_ePayOptionType.ConsumeProduct, false, error);
     }
 }

@@ -16,7 +16,8 @@ public class GameCloudEditorInternal : EditorWindow
     {
         string[] arr_assetpathname = new string[3];
         arr_assetpathname[0] = "Assets/GameCloud.Unity.Native";
-        arr_assetpathname[1] = "Assets/Plugins";
+        arr_assetpathname[1] = "Assets/Plugins/Android";
+        arr_assetpathname[2] = "Assets/Plugins/GameCloud.Unity.Native";        
         arr_assetpathname[2] = "Assets/GameCloud.Unity.Sample/Native";
 
         AssetDatabase.ExportPackage(arr_assetpathname, mUnityPackagePath + "GameCloud.Unity.NativeAll.unitypackage", ExportPackageOptions.Recurse);
