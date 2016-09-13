@@ -9,6 +9,7 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
     //-------------------------------------------------------------------------    
     string mComponyName;
     string mProductName;
+    string mBundleIdentifier;
     string mBundleVersion;
     string mDataVersion;
     string mPatchInfoTargetDirectory;
@@ -34,13 +35,18 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
     void OnGUI()
     {
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("公司名(将会拼接BundleIndentifier):");
+        EditorGUILayout.LabelField("公司名:");
         mComponyName = EditorGUILayout.TextField(mComponyName);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("产品名(将会拼接BundleIndentifier):");
+        EditorGUILayout.LabelField("产品名(App名称):");
         mProductName = EditorGUILayout.TextField(mProductName);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("BundleIdentify:");
+        mBundleIdentifier = EditorGUILayout.TextField(mBundleIdentifier);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -86,6 +92,7 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
 
         PlayerSettings.companyName = mComponyName;
         PlayerSettings.productName = mProductName;
+        PlayerSettings.bundleIdentifier = mBundleIdentifier;
         GameCloudEditor.changeBundleData(mBundleVersion, true);
         GameCloudEditor.changeDataData(mDataVersion, true);
     }

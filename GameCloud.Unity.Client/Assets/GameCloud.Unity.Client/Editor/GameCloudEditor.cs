@@ -662,7 +662,7 @@ public class GameCloudEditor : EditorWindow
             }
         }
 
-        PlayerSettings.bundleIdentifier = "com." + PlayerSettings.companyName + "." + PlayerSettings.productName;
+        //PlayerSettings.bundleIdentifier = "com." + PlayerSettings.companyName + "." + PlayerSettings.productName;
         PlayerSettings.bundleVersion = mBundleVersion;
         mTargetPath = mTargetPlatformRootPath + "DataVersion_" + mDataVersion;
     }
