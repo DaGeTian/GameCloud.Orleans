@@ -16,8 +16,8 @@ public class XcodeProjectMod : MonoBehaviour
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget buildTarget, string path)
     {
-        //if (buildTarget == BuildTarget.iOS)
-        //{
+        if (buildTarget == BuildTarget.iOS)
+        {
         string projPath = PBXProject.GetPBXProjectPath(path);
 
 
@@ -50,7 +50,7 @@ public class XcodeProjectMod : MonoBehaviour
         //proj.AddBuildProperty(target, "FRAMEWORK_SEARCH_PATHS", "$(PROJECT_DIR)/Frameworks");
 
         File.WriteAllText(projPath, proj.WriteToString());
-        //}
+        }
     }
 
     //-------------------------------------------------------------------------

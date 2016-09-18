@@ -34,7 +34,7 @@ public class GameCloudEditor : EditorWindow
     //const string mNotPackAsset = "NotPackAsset";
     //const string mAssetBundleDirectory = "NeedPackAsset";
     const string mAssetBundleTargetDirectory = "ABPatch";
-    const string mABPathInfoResourceDirectory = "GameCloud.Unity/AutoPatcherInfo";
+    const string mABPathInfoResourceDirectory = "GameCloud.Unity.Client/AutoPatcherInfo";
     const string mPatchiInfoName = "ABPatchInfo.xml";
 
     string mPackInfoTextName = "DataFileList.txt";

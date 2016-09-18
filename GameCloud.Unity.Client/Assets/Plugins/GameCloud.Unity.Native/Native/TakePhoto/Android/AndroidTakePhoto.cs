@@ -17,7 +17,7 @@ public class AndroidTakePhoto : INativeTakePhoto
         if (mAndroidTakePhoto == null)
         {
             mAndroidTakePhoto = mAndoridJavaClassTakePhoto.CallStatic<AndroidJavaObject>("Instantce",
-                photo_width, photo_height, "getPicSuccess", "getPicFail", photo_name, "NativeAPIMsgReceiver");
+                photo_width, photo_height, "getPicSuccess", "getPicFail", photo_name, "NativeReceiver");
         }
 
         if (mAndroidTakePhoto != null)
@@ -36,7 +36,7 @@ public class AndroidTakePhoto : INativeTakePhoto
         if (mAndroidTakePhoto == null)
         {
             mAndroidTakePhoto = mAndoridJavaClassTakePhoto.CallStatic<AndroidJavaObject>("Instantce",
-                photo_width, photo_height, "getPicSuccess", "getPicFail", photo_name, "NativeAPIMsgReceiver");
+                photo_width, photo_height, "getPicSuccess", "getPicFail", photo_name, "NativeReceiver");
         }
 
         if (mAndroidTakePhoto != null)

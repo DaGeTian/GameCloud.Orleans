@@ -83,7 +83,7 @@ public class AndroidAudioControl : INativeAudioControl
         if (mAndroidAudioControl == null)
         {
             mAndroidAudioControl = mAndroidJavaClassAudioControl.CallStatic<AndroidJavaObject>("Instantce",
-                "NativeAPIMsgReceiver", "audioChanged");
+                "NativeReceiver", "audioChanged");
         }
     }
 }

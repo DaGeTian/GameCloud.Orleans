@@ -13,7 +13,7 @@ public class AndroidPay : IPay
         mAndroidJavaClassPay = new AndroidJavaClass("com.Pay.Pay.Pay");
         if (mAndroidJavaObjectPay == null)
         {
-            mAndroidJavaObjectPay = mAndroidJavaClassPay.CallStatic<AndroidJavaObject>("Instantce", "NativeAPIMsgReceiver");
+            mAndroidJavaObjectPay = mAndroidJavaClassPay.CallStatic<AndroidJavaObject>("Instantce", "PayReceiver");
         }
     }
 

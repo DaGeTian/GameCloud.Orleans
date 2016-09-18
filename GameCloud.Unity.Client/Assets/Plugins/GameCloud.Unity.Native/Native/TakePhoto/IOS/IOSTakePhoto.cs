@@ -8,14 +8,14 @@ public class IOSTakePhoto : INativeTakePhoto
     //-------------------------------------------------------------------------
     public void takeNewPhoto(int photo_width, int photo_height, string photo_name)
     {
-        takeNewPhoto_ios("NativeAPIMsgReceiver", "getPicSuccess",
+        takeNewPhoto_ios("NativeReceiver", "getPicSuccess",
             "getPicFail", photo_width, photo_height, photo_name);
     }
 
     //-------------------------------------------------------------------------
     public void takeExistPhoto(int photo_width, int photo_height, string photo_name)
     {
-        takeExistPhoto_ios("NativeAPIMsgReceiver", "getPicSuccess",
+        takeExistPhoto_ios("NativeReceiver", "getPicSuccess",
             "getPicFail", photo_width, photo_height, photo_name);
     }
 
