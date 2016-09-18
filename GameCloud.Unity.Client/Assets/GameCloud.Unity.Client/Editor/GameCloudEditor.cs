@@ -46,7 +46,7 @@ public class GameCloudEditor : EditorWindow
     bool mBuidIOS = false;
     bool mBuidPC = false;
     List<string> mListAllABFile = new List<string>();
-    
+
     //-------------------------------------------------------------------------
     [MenuItem("GameCloud.Unity/AutoPatcher")]
     static void AutoPatcher()
@@ -64,6 +64,7 @@ public class GameCloudEditor : EditorWindow
         }
 
         EditorWindow.GetWindow<GameCloudEditor>();
+        _checkResourcesPath();
         _getCurrentTargetPath();
         _checkPatchData();
         mMD5 = new MD5CryptoServiceProvider();
@@ -96,6 +97,23 @@ public class GameCloudEditor : EditorWindow
         mPatchInfoPath = Path.Combine(mABTargetPath, mPatchiInfoName);
         mPatchInfoPath = mPatchInfoPath.Replace(@"\", "/");
         //Debug.LogError("mRealTargetPath:: " + mRealTargetPath);      
+    }
+
+    //-------------------------------------------------------------------------
+    static void _checkResourcesPath()
+    {
+        mAssetBundleResourcesPath = mAssetPath + "/Resources" + PlayerSettings.productName;
+        if (!Directory.Exists(mAssetBundleResourcesPath))
+        {
+            Directory.CreateDirectory(mAssetBundleResourcesPath);
+        }
+        mAssetBundleResourcesPath = "Assets/Resources" + PlayerSettings.productName;
+        mRowAssetPath = mAssetPath + "/Resources" + PlayerSettings.productName + "Raw";
+        if (!Directory.Exists(mRowAssetPath))
+        {
+            Directory.CreateDirectory(mRowAssetPath);
+        }
+        mRowAssetPath = "Assets/Resources" + PlayerSettings.productName + "Raw";
     }
 
     //-------------------------------------------------------------------------
@@ -147,37 +165,37 @@ public class GameCloudEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("AB资源所在路径:");
-        Rect ab_resourcesrect = EditorGUILayout.GetControlRect(GUILayout.Width(500));
-        mAssetBundleResourcesPath = EditorGUI.TextField(ab_resourcesrect, mAssetBundleResourcesPath);
-        if ((Event.current.type == EventType.DragUpdated ||
-          Event.current.type == EventType.DragExited) &&
-          ab_resourcesrect.Contains(Event.current.mousePosition))
-        {
-            string path = DragAndDrop.paths[0];
-            if (!string.IsNullOrEmpty(path))
-            {
-                DragAndDrop.AcceptDrag();
-                mAssetBundleResourcesPath = path;
-            }
-        }
+        EditorGUILayout.LabelField("AB资源所在路径:", mAssetBundleResourcesPath);
+        //Rect ab_resourcesrect = EditorGUILayout.GetControlRect(GUILayout.Width(500));
+        //mAssetBundleResourcesPath = EditorGUI.TextField(ab_resourcesrect, mAssetBundleResourcesPath);
+        //if ((Event.current.type == EventType.DragUpdated ||
+        //  Event.current.type == EventType.DragExited) &&
+        //  ab_resourcesrect.Contains(Event.current.mousePosition))
+        //{
+        //    string path = DragAndDrop.paths[0];
+        //    if (!string.IsNullOrEmpty(path))
+        //    {
+        //        DragAndDrop.AcceptDrag();
+        //        mAssetBundleResourcesPath = path;
+        //    }
+        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("裸资源所在路径:");
-        Rect ab_rowrect = EditorGUILayout.GetControlRect(GUILayout.Width(500));
-        mRowAssetPath = EditorGUI.TextField(ab_rowrect, mRowAssetPath);
-        if ((Event.current.type == EventType.DragUpdated ||
-          Event.current.type == EventType.DragExited) &&
-          ab_rowrect.Contains(Event.current.mousePosition))
-        {
-            string path = DragAndDrop.paths[0];
-            if (!string.IsNullOrEmpty(path))
-            {
-                DragAndDrop.AcceptDrag();
-                mRowAssetPath = path;
-            }
-        }
+        EditorGUILayout.LabelField("裸资源所在路径:", mRowAssetPath);
+        //Rect ab_rowrect = EditorGUILayout.GetControlRect(GUILayout.Width(500));
+        //mRowAssetPath = EditorGUI.TextField(ab_rowrect, mRowAssetPath);
+        //if ((Event.current.type == EventType.DragUpdated ||
+        //  Event.current.type == EventType.DragExited) &&
+        //  ab_rowrect.Contains(Event.current.mousePosition))
+        //{
+        //    string path = DragAndDrop.paths[0];
+        //    if (!string.IsNullOrEmpty(path))
+        //    {
+        //        DragAndDrop.AcceptDrag();
+        //        mRowAssetPath = path;
+        //    }
+        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.LabelField("目标路径:", mTargetPlatformRootPath);
@@ -475,7 +493,8 @@ public class GameCloudEditor : EditorWindow
                 path = path.Replace(@"\", "/");
                 path = path.Replace(mAssetPath, "");
                 path = mTargetPath + "/" + path;
-                string obj_dir = path.Replace(Path.GetFileName(obj), "");
+                string file_name = Path.GetFileName(obj);
+                string obj_dir = path.Replace(file_name, "");
                 if (!Directory.Exists(obj_dir))
                 {
                     Directory.CreateDirectory(obj_dir);
@@ -614,13 +633,19 @@ public class GameCloudEditor : EditorWindow
         XmlElement root = null;
         root = abpath_xml.DocumentElement;
 
-        foreach (XmlElement i in root.ChildNodes)
+        foreach (XmlNode i in root.ChildNodes)
         {
+            if (i is XmlComment)
+            {
+                continue;
+            }
+
+            var xml_element = (XmlElement)i;
             if (i.Name.Equals("BundleData"))
             {
-                mAndroidBundleVersion = i.GetAttribute("BDAndroid");
-                mIOSBundleVersion = i.GetAttribute("BDIOS");
-                mPCBundleVersion = i.GetAttribute("BDWindowsPC");
+                mAndroidBundleVersion = xml_element.GetAttribute("BDAndroid");
+                mIOSBundleVersion = xml_element.GetAttribute("BDIOS");
+                mPCBundleVersion = xml_element.GetAttribute("BDWindowsPC");
                 if (mCurrentBuildTarget == BuildTarget.iOS)
                 {
                     mBundleVersion = mIOSBundleVersion;
@@ -636,9 +661,9 @@ public class GameCloudEditor : EditorWindow
             }
             else if (i.Name.Equals("DataData"))
             {
-                mAndroidDataVersion = i.GetAttribute("DDAndroid");
-                mIOSDataVersion = i.GetAttribute("DDIOS");
-                mPCDataVersion = i.GetAttribute("DDWindowsPC");
+                mAndroidDataVersion = xml_element.GetAttribute("DDAndroid");
+                mIOSDataVersion = xml_element.GetAttribute("DDIOS");
+                mPCDataVersion = xml_element.GetAttribute("DDWindowsPC");
                 if (mCurrentBuildTarget == BuildTarget.iOS)
                 {
                     mDataVersion = mIOSDataVersion;
@@ -652,14 +677,14 @@ public class GameCloudEditor : EditorWindow
                     mDataVersion = mPCDataVersion;
                 }
             }
-            else if (i.Name.Equals("AssetBundleResourcePath"))
-            {
-                mAssetBundleResourcesPath = i.GetAttribute("ABValue");//mAssetPath + mAssetBundleDirectory;
-            }
-            else if (i.Name.Equals("RawResourcePath"))
-            {
-                mRowAssetPath = i.GetAttribute("RawValue");//mAssetPath + mNotPackAsset;
-            }
+            //else if (i.Name.Equals("AssetBundleResourcePath"))
+            //{
+            //    mAssetBundleResourcesPath = i.GetAttribute("ABValue");//mAssetPath + mAssetBundleDirectory;
+            //}
+            //else if (i.Name.Equals("RawResourcePath"))
+            //{
+            //    mRowAssetPath = i.GetAttribute("RawValue");//mAssetPath + mNotPackAsset;
+            //}
         }
 
         //PlayerSettings.bundleIdentifier = "com." + PlayerSettings.companyName + "." + PlayerSettings.productName;
