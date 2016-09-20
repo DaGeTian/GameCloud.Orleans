@@ -33,7 +33,7 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
     //---------------------------------------------------------------------
     static readonly ushort HeadLength = 2;
     TcpClientSession mSession;
-    string mHost;
+    string mIpOrHost;
     int mPort;
     DefaultPipelineProcessor<BufferedPackageInfo<ushort>> mPipelineProcessor;
     Queue<SocketRecvData> mRecQueue = new Queue<SocketRecvData>();
@@ -68,22 +68,41 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
     }
 
     //---------------------------------------------------------------------
-    public void connect(string host, int port)
+    public void connect(string ip_or_host, int port, bool is_host)
     {
-        mHost = host;
+        mIpOrHost = ip_or_host;
         mPort = port;
 
-        IPHostEntry host_info = Dns.GetHostEntry(host);
+        IPHostEntry host_info = null;
+        if (is_host)
+        {
+            host_info = Dns.GetHostEntry(mIpOrHost);
+        }
+        else
+        {
+            host_info = Dns.GetHostEntry(IPAddress.Parse(mIpOrHost));
+        }
+
         IPAddress[] ary_IP = host_info.AddressList;
-        string result = ary_IP[0].ToString();
-        EndPoint server_address = new IPEndPoint(IPAddress.Parse(result), mPort);
-        mSession = new TcpClientSession(server_address);
+
+        bool is_ipv6 = ary_IP[0].AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6;
+
+        if (is_host)
+        {
+            mSession = new TcpClientSession(mIpOrHost, mPort);
+        }
+        else
+        {
+            EndPoint server_address = new IPEndPoint(IPAddress.Parse(mIpOrHost), mPort);
+            mSession = new TcpClientSession(server_address);
+        }
+
         mSession.DataReceived += _onReceive;
         mSession.Connected += _onConnected;
         mSession.Closed += _onClosed;
         mSession.Error += _onError;
 
-        mSession.connect();
+        mSession.connect(is_ipv6, is_host);
     }
 
     //---------------------------------------------------------------------

@@ -10,7 +10,9 @@ public class TcpClientSession : IDisposable
     //-------------------------------------------------------------------------
     readonly int MAX_RECEIVE_LEN = 8192;
     Socket mSocket;
+    int mPort;
     EndPoint mRemoteEndPoint;
+    string mHost;
     byte[] m_KeepAliveOptionValues;
     byte[] m_KeepAliveOptionOutValues;
     volatile bool mDisposed;
@@ -29,6 +31,22 @@ public class TcpClientSession : IDisposable
     public TcpClientSession(EndPoint remote_endpoint)
     {
         mRemoteEndPoint = remote_endpoint;
+
+        m_KeepAliveOptionValues = new byte[sizeof(uint) * 3];
+        m_KeepAliveOptionOutValues = new byte[m_KeepAliveOptionValues.Length];
+        // whether enable KeepAlive
+        BitConverter.GetBytes((uint)1).CopyTo(m_KeepAliveOptionValues, 0);
+        // how long will start first keep alive
+        BitConverter.GetBytes((uint)(3 * 1000)).CopyTo(m_KeepAliveOptionValues, sizeof(uint));
+        // keep alive interval
+        BitConverter.GetBytes((uint)(1 * 1000)).CopyTo(m_KeepAliveOptionValues, sizeof(uint) * 2);
+    }
+
+    //-------------------------------------------------------------------------
+    public TcpClientSession(string host, int port)
+    {
+        mHost = host;
+        mPort = port;
 
         m_KeepAliveOptionValues = new byte[sizeof(uint) * 3];
         m_KeepAliveOptionOutValues = new byte[m_KeepAliveOptionValues.Length];
@@ -139,22 +157,37 @@ public class TcpClientSession : IDisposable
     }
 
     //-------------------------------------------------------------------------
-    public void connect()
+    public void connect(bool is_ipv6,bool is_host)
     {
         try
         {
             if (mDisposed) return;
 
             mSendLength = 0;
-            mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            if (is_ipv6)
+            {
+                mSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp); 
+            }
+            else
+            {
+                mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            }
 
             mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
 
             mConnected = false;
 
-            var ip_endpoint = mRemoteEndPoint as IPEndPoint;
-            mSocket.BeginConnect(ip_endpoint.Address, ip_endpoint.Port, new AsyncCallback(_onConnect), mSocket);
+            if (is_host)
+            {
+                mSocket.BeginConnect(mHost, mPort, new AsyncCallback(_onConnect), mSocket);
+            }
+            else
+            {
+                var ip_endpoint = mRemoteEndPoint as IPEndPoint;
+                mSocket.BeginConnect(ip_endpoint.Address, ip_endpoint.Port, new AsyncCallback(_onConnect), mSocket);
+            }
         }
         catch (Exception ex)
         {

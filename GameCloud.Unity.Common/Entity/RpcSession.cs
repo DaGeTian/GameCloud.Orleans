@@ -223,7 +223,7 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public abstract bool isConnect();
 
-        public abstract void connect(string ip, int port);
+        public abstract void connect(string ip, int port, bool use_host);
 
         //---------------------------------------------------------------------
         public abstract void send(ushort method_id, byte[] data);
