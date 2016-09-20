@@ -33,7 +33,7 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
     //---------------------------------------------------------------------
     static readonly ushort HeadLength = 2;
     TcpClientSession mSession;
-    string mIp;
+    string mHost;
     int mPort;
     DefaultPipelineProcessor<BufferedPackageInfo<ushort>> mPipelineProcessor;
     Queue<SocketRecvData> mRecQueue = new Queue<SocketRecvData>();
@@ -68,12 +68,15 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
     }
 
     //---------------------------------------------------------------------
-    public void connect(string ip, int port)
+    public void connect(string host, int port)
     {
-        mIp = ip;
+        mHost = host;
         mPort = port;
 
-        EndPoint server_address = new IPEndPoint(IPAddress.Parse(mIp), mPort);
+        IPHostEntry host_info = Dns.GetHostEntry(host);
+        IPAddress[] ary_IP = host_info.AddressList;
+        string result = ary_IP[0].ToString();
+        EndPoint server_address = new IPEndPoint(IPAddress.Parse(mHost), mPort);
         mSession = new TcpClientSession(server_address);
         mSession.DataReceived += _onReceive;
         mSession.Connected += _onConnected;
