@@ -30,7 +30,7 @@ public class RpcSessionTcpClient : RpcSession
     }
 
     //---------------------------------------------------------------------
-    public override void connect(string ip, int port, bool is_host)
+    public override void connect(string ip, int port)
     {
         if (this.tcpSocket == null)
         {
@@ -41,7 +41,7 @@ public class RpcSessionTcpClient : RpcSession
             this.tcpSocket.OnSocketError += _onSocketError;
         }
 
-        this.tcpSocket.connect(ip, port, is_host);
+        this.tcpSocket.connect(ip, port);
     }
 
     //---------------------------------------------------------------------

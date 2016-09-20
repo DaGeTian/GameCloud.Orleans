@@ -44,7 +44,7 @@ public class ClientSampleNetwork<TDef> : Component<TDef> where TDef : DefSampleN
         DefaultRpcSession.OnSocketConnected = _onSocketConnected;
         DefaultRpcSession.OnSocketClosed = _onSocketClosed;
         DefaultRpcSession.OnSocketError = _onSocketError;
-        DefaultRpcSession.connect(base_ip, base_port, true);
+        DefaultRpcSession.connect(base_ip, base_port);
     }
 
     //-------------------------------------------------------------------------

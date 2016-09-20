@@ -68,10 +68,13 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
     }
 
     //---------------------------------------------------------------------
-    public void connect(string ip_or_host, int port, bool is_host)
+    public void connect(string ip_or_host, int port)
     {
         mIpOrHost = ip_or_host;
         mPort = port;
+
+        IPAddress ip_address = null;
+        bool is_host = !IPAddress.TryParse(mIpOrHost, out ip_address);
 
         IPHostEntry host_info = null;
         if (is_host)
@@ -80,12 +83,20 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
         }
         else
         {
-            host_info = Dns.GetHostEntry(IPAddress.Parse(mIpOrHost));
+            host_info = Dns.GetHostEntry(ip_address);
         }
 
         IPAddress[] ary_IP = host_info.AddressList;
 
-        bool is_ipv6 = ary_IP[0].AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6;
+        bool is_ipv6 = true;
+        foreach (var i in ary_IP)
+        {
+            if (i.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            {
+                is_ipv6 = false;
+                break;
+            }
+        }
 
         if (is_host)
         {
