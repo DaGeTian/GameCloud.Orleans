@@ -76,7 +76,7 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
         IPHostEntry host_info = Dns.GetHostEntry(host);
         IPAddress[] ary_IP = host_info.AddressList;
         string result = ary_IP[0].ToString();
-        EndPoint server_address = new IPEndPoint(IPAddress.Parse(mHost), mPort);
+        EndPoint server_address = new IPEndPoint(IPAddress.Parse(result), mPort);
         mSession = new TcpClientSession(server_address);
         mSession.DataReceived += _onReceive;
         mSession.Connected += _onConnected;
