@@ -17,8 +17,10 @@ public class TcpClientSession : IDisposable
     byte[] m_KeepAliveOptionOutValues;
     volatile bool mDisposed;
     Queue<byte[]> mQueSending = new Queue<byte[]>();
+    Queue<IPAddress> mQueIPAddress = new Queue<IPAddress>();
     int mSendLength = 0;
     volatile bool mConnected;
+    bool mIsHost;
 
     //-------------------------------------------------------------------------
     public bool IsConnected { get { return (mSocket == null || mDisposed) ? false : mConnected; } }
@@ -157,19 +159,46 @@ public class TcpClientSession : IDisposable
     }
 
     //-------------------------------------------------------------------------
-    public void connect(bool is_ipv6,bool is_host)
+    public void connect(IPAddress[] array_ipaddress, bool is_host)
     {
+        mIsHost = is_host;
+        foreach (var i in array_ipaddress)
+        {
+            mQueIPAddress.Enqueue(i);
+        }
+
+        if (mQueIPAddress.Count > 0)
+        {
+            _doConnect();
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    public void send(byte[] buf)
+    {
+        mQueSending.Enqueue(buf);
+    }
+
+    //-------------------------------------------------------------------------
+    void _doConnect()
+    {
+        if (mQueIPAddress.Count <= 0 || mDisposed)
+        {
+            return;
+        }
+
+        IPAddress connect_ipaddress = mQueIPAddress.Dequeue();
         try
         {
             if (mDisposed) return;
 
             mSendLength = 0;
 
-            if (is_ipv6)
+            if (connect_ipaddress.AddressFamily == AddressFamily.InterNetworkV6)
             {
-                mSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp); 
+                mSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
             }
-            else
+            else if (connect_ipaddress.AddressFamily == AddressFamily.InterNetwork)
             {
                 mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             }
@@ -179,7 +208,7 @@ public class TcpClientSession : IDisposable
 
             mConnected = false;
 
-            if (is_host)
+            if (mIsHost)
             {
                 mSocket.BeginConnect(mHost, mPort, new AsyncCallback(_onConnect), mSocket);
             }
@@ -194,12 +223,6 @@ public class TcpClientSession : IDisposable
             _raiseError(ex);
             Dispose();
         }
-    }
-
-    //-------------------------------------------------------------------------
-    public void send(byte[] buf)
-    {
-        mQueSending.Enqueue(buf);
     }
 
     //-------------------------------------------------------------------------
@@ -258,7 +281,6 @@ public class TcpClientSession : IDisposable
         {
             _raiseError(ex);
             _raiseClosed();
-            return;
         }
     }
 
@@ -274,6 +296,8 @@ public class TcpClientSession : IDisposable
     //---------------------------------------------------------------------
     void _raiseConnected()
     {
+        mQueIPAddress.Clear();
+
         if (Connected != null)
         {
             Connected(null, EventArgs.Empty);
@@ -292,6 +316,11 @@ public class TcpClientSession : IDisposable
     //---------------------------------------------------------------------
     void _raiseError(Exception e)
     {
+        if (mQueIPAddress.Count > 0)
+        {
+            _doConnect();
+        }
+
         if (Error != null)
         {
             Error(null, new SocketErrorEventArgs(e));

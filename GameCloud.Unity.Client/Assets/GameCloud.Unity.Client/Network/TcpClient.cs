@@ -88,16 +88,6 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
 
         IPAddress[] ary_IP = host_info.AddressList;
 
-        bool is_ipv6 = true;
-        foreach (var i in ary_IP)
-        {
-            if (i.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-            {
-                is_ipv6 = false;
-                break;
-            }
-        }
-
         if (is_host)
         {
             mSession = new TcpClientSession(mIpOrHost, mPort);
@@ -113,7 +103,7 @@ public class TcpClient : IPackageHandler<BufferedPackageInfo<ushort>>
         mSession.Closed += _onClosed;
         mSession.Error += _onError;
 
-        mSession.connect(is_ipv6, is_host);
+        mSession.connect(ary_IP, is_host);
     }
 
     //---------------------------------------------------------------------
