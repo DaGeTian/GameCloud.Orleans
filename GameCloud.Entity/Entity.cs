@@ -29,19 +29,19 @@ namespace GameCloud.Entity
         }
         
         //---------------------------------------------------------------------
-        public TData getComponentData<TData>() where TData : IComponentData, new()
-        {
-            string type_name = typeof(TData).Name;
-            IComponent co = null;
-            if (mMapComponent.TryGetValue(type_name, out co))
-            {
-                return (TData)((Component<TData>)co).Data;
-            }
-            else
-            {
-                return default(TData);
-            }
-        }
+        //public TData getComponentData<TData>() where TData : IComponentData, new()
+        //{
+        //    string type_name = typeof(TData).Name;
+        //    IComponent co = null;
+        //    if (mMapComponent.TryGetValue(type_name, out co))
+        //    {
+        //        return (TData)((Component<TData>)co).Data;
+        //    }
+        //    else
+        //    {
+        //        return default(TData);
+        //    }
+        //}
 
         //---------------------------------------------------------------------
         public T getComponent<T>() where T : IComponent

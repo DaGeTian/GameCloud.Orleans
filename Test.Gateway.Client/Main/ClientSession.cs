@@ -39,7 +39,7 @@ namespace Test
         }
 
         //---------------------------------------------------------------------
-        public override void connect(string ip, int port)
+        public override void connect(string ip, int port, bool is_dns)
         {
         }
 
