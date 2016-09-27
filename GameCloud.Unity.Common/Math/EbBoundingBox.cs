@@ -113,7 +113,7 @@ namespace GameCloud.Unity.Common
         {
             return new[]
                 {
-                    new EbVector3 { x = this.Min.x, y = this.Min.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Min.y, z = this.Min.z }, 
+                    new EbVector3 { x = this.Min.x, y = this.Min.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Min.y, z = this.Min.z },
                     new EbVector3 { x = this.Min.x, y = this.Max.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Max.y, z = this.Min.z }
                 };
         }
@@ -124,10 +124,10 @@ namespace GameCloud.Unity.Common
         {
             return new[]
                 {
-                    new EbVector3 { x = this.Min.x, y = this.Min.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Min.y, z = this.Min.z }, 
-                    new EbVector3 { x = this.Min.x, y = this.Max.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Max.y, z = this.Min.z }, 
-                    new EbVector3 { x = this.Min.x, y = this.Min.y, z = this.Max.z }, new EbVector3 { x = this.Max.x, y = this.Min.y, z = this.Max.z }, 
-                    new EbVector3 { x = this.Min.x, y = this.Max.y, z = this.Max.z }, new EbVector3 { x = this.Max.x, y = this.Max.y, z = this.Max.z }, 
+                    new EbVector3 { x = this.Min.x, y = this.Min.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Min.y, z = this.Min.z },
+                    new EbVector3 { x = this.Min.x, y = this.Max.y, z = this.Min.z }, new EbVector3 { x = this.Max.x, y = this.Max.y, z = this.Min.z },
+                    new EbVector3 { x = this.Min.x, y = this.Min.y, z = this.Max.z }, new EbVector3 { x = this.Max.x, y = this.Min.y, z = this.Max.z },
+                    new EbVector3 { x = this.Min.x, y = this.Max.y, z = this.Max.z }, new EbVector3 { x = this.Max.x, y = this.Max.y, z = this.Max.z },
                 };
         }
 

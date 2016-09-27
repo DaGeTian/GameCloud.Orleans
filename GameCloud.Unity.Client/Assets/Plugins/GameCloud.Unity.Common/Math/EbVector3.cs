@@ -11,11 +11,11 @@ namespace GameCloud.Unity.Common
     {
         //---------------------------------------------------------------------
         [ProtoMember(1)]
-        public float x { get; set; }// Gets or sets the X value.
+        public float x;// { get; set; }// Gets or sets the X value.
         [ProtoMember(2)]
-        public float y { get; set; }// Gets or sets Y value.
+        public float y;// { get; set; }// Gets or sets Y value.
         [ProtoMember(3)]
-        public float z { get; set; }// Gets or sets Z value.
+        public float z;// { get; set; }// Gets or sets Z value.
         public float Length { get { return (float)Math.Sqrt((x * x) + (y * y) + (z * z)); } }
         public float Length2 { get { return ((x * x) + (y * y) + (z * z)); } }
 
@@ -33,7 +33,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector3 v3 = new EbVector3();
+                EbVector3 v3;// = new EbVector3();
                 v3.x = 0.0f;
                 v3.y = 0.0f;
                 v3.z = 0.0f;
@@ -46,7 +46,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector3 v3 = new EbVector3();
+                EbVector3 v3;// = new EbVector3();
                 v3.x = 1.0f;
                 v3.y = 0.0f;
                 v3.z = 0.0f;
@@ -59,7 +59,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector3 v3 = new EbVector3();
+                EbVector3 v3;// = new EbVector3();
                 v3.x = 0.0f;
                 v3.y = 1.0f;
                 v3.z = 0.0f;
@@ -72,7 +72,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector3 v3 = new EbVector3();
+                EbVector3 v3;// = new EbVector3();
                 v3.x = 0.0f;
                 v3.y = 0.0f;
                 v3.z = 1.0f;
@@ -85,7 +85,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector3 v3 = new EbVector3();
+                EbVector3 v3;// = new EbVector3();
                 v3.x = 1.0f;
                 v3.y = 1.0f;
                 v3.z = 1.0f;
@@ -141,55 +141,109 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public static EbVector3 operator +(EbVector3 a, EbVector3 b)
         {
-            return new EbVector3 { x = a.x + b.x, y = a.y + b.y, z = a.z + b.z };
+            EbVector3 v;
+            v.x = a.x + b.x;
+            v.y = a.y + b.y;
+            v.z = a.z + b.z;
+            return v;
+
+            //return new EbVector3 { x = a.x + b.x, y = a.y + b.y, z = a.z + b.z };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 operator -(EbVector3 a, EbVector3 b)
         {
-            return new EbVector3 { x = a.x - b.x, y = a.y - b.y, z = a.z - b.z };
+            EbVector3 v;
+            v.x = a.x - b.x;
+            v.y = a.y - b.y;
+            v.z = a.z - b.z;
+            return v;
+
+            //return new EbVector3 { x = a.x - b.x, y = a.y - b.y, z = a.z - b.z };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 operator -(EbVector3 a)
         {
-            return new EbVector3 { x = -a.x, y = -a.y, z = -a.z };
+            EbVector3 v;
+            v.x = -a.x;
+            v.y = -a.y;
+            v.z = -a.z;
+            return v;
+
+            //return new EbVector3 { x = -a.x, y = -a.y, z = -a.z };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 operator *(EbVector3 a, int b)
         {
-            return new EbVector3 { x = a.x * b, y = a.y * b, z = a.z * b };
+            EbVector3 v;
+            v.x = a.x * b;
+            v.y = a.y * b;
+            v.z = a.z * b;
+            return v;
+
+            //return new EbVector3 { x = a.x * b, y = a.y * b, z = a.z * b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 operator *(EbVector3 a, float b)
         {
-            return new EbVector3 { x = a.x * b, y = a.y * b, z = a.z * b };
+            EbVector3 v;
+            v.x = a.x * b;
+            v.y = a.y * b;
+            v.z = a.z * b;
+            return v;
+
+            //return new EbVector3 { x = a.x * b, y = a.y * b, z = a.z * b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 operator /(EbVector3 a, int b)
         {
-            return new EbVector3 { x = a.x / b, y = a.y / b, z = a.z / b };
+            EbVector3 v;
+            v.x = a.x / b;
+            v.y = a.y / b;
+            v.z = a.z / b;
+            return v;
+
+            //return new EbVector3 { x = a.x / b, y = a.y / b, z = a.z / b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 operator /(EbVector3 a, float b)
         {
-            return new EbVector3 { x = a.x / b, y = a.y / b, z = a.z / b };
+            EbVector3 v;
+            v.x = a.x / b;
+            v.y = a.y / b;
+            v.z = a.z / b;
+            return v;
+
+            //return new EbVector3 { x = a.x / b, y = a.y / b, z = a.z / b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 max(EbVector3 value1, EbVector3 value2)
         {
-            return new EbVector3 { x = Math.Max(value1.x, value2.x), y = Math.Max(value1.y, value2.y), z = Math.Max(value1.z, value2.z) };
+            EbVector3 v;
+            v.x = Math.Max(value1.x, value2.x);
+            v.y = Math.Max(value1.y, value2.y);
+            v.z = Math.Max(value1.z, value2.z);
+            return v;
+
+            //return new EbVector3 { x = Math.Max(value1.x, value2.x), y = Math.Max(value1.y, value2.y), z = Math.Max(value1.z, value2.z) };
         }
 
         //---------------------------------------------------------------------
         public static EbVector3 min(EbVector3 value1, EbVector3 value2)
         {
-            return new EbVector3 { x = Math.Min(value1.x, value2.x), y = Math.Min(value1.y, value2.y), z = Math.Min(value1.z, value2.z) };
+            EbVector3 v;
+            v.x = Math.Min(value1.x, value2.x);
+            v.y = Math.Min(value1.y, value2.y);
+            v.z = Math.Min(value1.z, value2.z);
+            return v;
+
+            //return new EbVector3 { x = Math.Min(value1.x, value2.x), y = Math.Min(value1.y, value2.y), z = Math.Min(value1.z, value2.z) };
         }
 
         //---------------------------------------------------------------------
@@ -209,7 +263,7 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public static EbVector3 cross(EbVector3 v1, EbVector3 v2)
         {
-            EbVector3 result = new EbVector3();
+            EbVector3 result;// = new EbVector3();
             result.x = (v1.y * v2.z) - (v1.z * v2.y);
             result.y = (v1.z * v2.x) - (v1.x * v2.z);
             result.z = (v1.x * v2.y) - (v1.y * v2.x);
@@ -269,7 +323,12 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector3 v = new EbVector3(x, y, z);
+                //= new EbVector3(x, y, z);
+                EbVector3 v;
+                v.x = x;
+                v.y = y;
+                v.z = z;
+
                 float num = magnitude(v);
                 if (num > 1E-05f)
                 {

@@ -9,7 +9,7 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public static readonly float INF = -EbMath.PI;
         public static readonly float SUP = EbMath.PI;
-        private float _value;
+        public float _value;
         public float Value { get { return _value; } set { _value = value; Normalize(); } }
         public void SetValue(float value) { _value = value; Normalize(); }
 
@@ -91,13 +91,21 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public static EbAngle operator +(EbAngle kAngle1, EbAngle kAngle2)
         {
-            return new EbAngle(kAngle1.Value + kAngle2.Value);
+            var v = kAngle1.Value + kAngle2.Value;
+            EbAngle a;
+            a._value = v;
+            a.Normalize();
+            return a;
         }
 
         //---------------------------------------------------------------------
         public static EbAngle operator -(EbAngle kAngle1, EbAngle kAngle2)
         {
-            return new EbAngle(kAngle1.Value - kAngle2.Value);
+            var v = kAngle1.Value - kAngle2.Value;
+            EbAngle a;
+            a._value = v;
+            a.Normalize();
+            return a;
         }
 
         //---------------------------------------------------------------------

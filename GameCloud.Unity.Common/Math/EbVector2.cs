@@ -11,9 +11,9 @@ namespace GameCloud.Unity.Common
     {
         //---------------------------------------------------------------------
         [ProtoMember(1)]
-        public float x { get; set; }// Gets or sets the X value.
+        public float x;// { get; set; }// Gets or sets the X value.
         [ProtoMember(2)]
-        public float y { get; set; }// Gets or sets Y value.
+        public float y;// { get; set; }// Gets or sets Y value.
         public float Length { get { return (float)Math.Sqrt((x * x) + (y * y)); } }
         public float Length2 { get { return ((x * x) + (y * y)); } }
 
@@ -30,7 +30,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector2 v = new EbVector2();
+                EbVector2 v;// = new EbVector2();
                 v.x = 0.0f;
                 v.y = 0.0f;
                 return v;
@@ -42,7 +42,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector2 v = new EbVector2();
+                EbVector2 v;// = new EbVector2();
                 v.x = 1.0f;
                 v.y = 0.0f;
                 return v;
@@ -54,7 +54,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector2 v = new EbVector2();
+                EbVector2 v;// = new EbVector2();
                 v.x = 0.0f;
                 v.y = 1.0f;
                 return v;
@@ -66,7 +66,7 @@ namespace GameCloud.Unity.Common
         {
             get
             {
-                EbVector2 v = new EbVector2();
+                EbVector2 v;// = new EbVector2();
                 v.x = 1.0f;
                 v.y = 1.0f;
                 return v;
@@ -120,55 +120,100 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public static EbVector2 operator +(EbVector2 a, EbVector2 b)
         {
-            return new EbVector2 { x = a.x + b.x, y = a.y + b.y };
+            EbVector2 v;
+            v.x = a.x + b.x;
+            v.y = a.y + b.y;
+            return v;
+
+            //return new EbVector2 { x = a.x + b.x, y = a.y + b.y };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 operator -(EbVector2 a, EbVector2 b)
         {
-            return new EbVector2 { x = a.x - b.x, y = a.y - b.y };
+            EbVector2 v;
+            v.x = a.x - b.x;
+            v.y = a.y - b.y;
+            return v;
+
+            //return new EbVector2 { x = a.x - b.x, y = a.y - b.y };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 operator -(EbVector2 a)
         {
-            return new EbVector2 { x = -a.x, y = -a.y };
+            EbVector2 v;
+            v.x = -a.x;
+            v.y = -a.y;
+            return v;
+
+            //return new EbVector2 { x = -a.x, y = -a.y };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 operator *(EbVector2 a, int b)
         {
-            return new EbVector2 { x = a.x * b, y = a.y * b };
+            EbVector2 v;
+            v.x = a.x * b;
+            v.y = a.y * b;
+            return v;
+
+            //return new EbVector2 { x = a.x * b, y = a.y * b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 operator *(EbVector2 a, float b)
         {
-            return new EbVector2 { x = a.x * b, y = a.y * b };
+            EbVector2 v;
+            v.x = a.x * b;
+            v.y = a.y * b;
+            return v;
+
+            //return new EbVector2 { x = a.x * b, y = a.y * b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 operator /(EbVector2 a, int b)
         {
-            return new EbVector2 { x = a.x / b, y = a.y / b };
+            EbVector2 v;
+            v.x = a.x / b;
+            v.y = a.y / b;
+            return v;
+
+            //return new EbVector2 { x = a.x / b, y = a.y / b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 operator /(EbVector2 a, float b)
         {
-            return new EbVector2 { x = a.x / b, y = a.y / b };
+            EbVector2 v;
+            v.x = a.x / b;
+            v.y = a.y / b;
+            return v;
+
+            //return new EbVector2 { x = a.x / b, y = a.y / b };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 max(EbVector2 value1, EbVector2 value2)
         {
-            return new EbVector2 { x = Math.Max(value1.x, value2.x), y = Math.Max(value1.y, value2.y) };
+            EbVector2 v;
+            v.x = Math.Max(value1.x, value2.x);
+            v.y = Math.Max(value1.y, value2.y);
+            return v;
+
+            //return new EbVector2 { x = Math.Max(value1.x, value2.x), y = Math.Max(value1.y, value2.y) };
         }
 
         //---------------------------------------------------------------------
         public static EbVector2 min(EbVector2 value1, EbVector2 value2)
         {
-            return new EbVector2 { x = Math.Min(value1.x, value2.x), y = Math.Min(value1.y, value2.y) };
+            EbVector2 v;
+            v.x = Math.Min(value1.x, value2.x);
+            v.y = Math.Min(value1.y, value2.y);
+            return v;
+
+            //return new EbVector2 { x = Math.Min(value1.x, value2.x), y = Math.Min(value1.y, value2.y) };
         }
 
         //---------------------------------------------------------------------
