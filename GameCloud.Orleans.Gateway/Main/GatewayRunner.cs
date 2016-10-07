@@ -14,7 +14,6 @@ namespace GameCloud.Orleans.Gateway
     using DotNetty.Transport.Bootstrapping;
     using DotNetty.Transport.Channels;
     using DotNetty.Transport.Channels.Sockets;
-    using global::Orleans;
 
     public class GatewayRunner
     {
@@ -26,7 +25,7 @@ namespace GameCloud.Orleans.Gateway
 
         //---------------------------------------------------------------------
         public async Task Start(IPAddress ip_address, int port,
-            string orleansClientConfigFile, GatewaySessionFactory factory)
+            GatewaySessionFactory factory)
         {
             this.bootstrap
                     .Group(this.bossGroup, this.workerGroup)
@@ -46,8 +45,6 @@ namespace GameCloud.Orleans.Gateway
                     }));
 
             this.bootstrapChannel = await this.bootstrap.BindAsync(ip_address, port);
-
-            GrainClient.Initialize(orleansClientConfigFile);
         }
 
         //---------------------------------------------------------------------
@@ -55,8 +52,6 @@ namespace GameCloud.Orleans.Gateway
         {
             try
             {
-                GrainClient.Uninitialize();
-
                 await this.bootstrapChannel.CloseAsync();
             }
             finally

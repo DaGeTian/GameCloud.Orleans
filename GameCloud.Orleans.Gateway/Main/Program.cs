@@ -9,6 +9,8 @@ namespace GameCloud.Orleans.Gateway
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using global::Orleans;
+    using global::Orleans.Runtime.Configuration;
 
     class Program
     {
@@ -19,17 +21,35 @@ namespace GameCloud.Orleans.Gateway
             EbLog.WarningCallback = Console.WriteLine;
             EbLog.ErrorCallback = Console.WriteLine;
 
-            string orleansClientConfiguration = ConfigurationManager.AppSettings["OrleansClientConfiguration"];
+            string orleansClientConfigFile = ConfigurationManager.AppSettings["OrleansClientConfiguration"];
             string ip = ConfigurationManager.AppSettings["ListenIP"];
             string port = ConfigurationManager.AppSettings["ListenPort"];
             IPAddress host = IPAddress.Parse(ip);
 
             Gateway gateway = new Gateway();
-            await gateway.Start(host, int.Parse(port), orleansClientConfiguration);
+            await gateway.Start(host, int.Parse(port));
+
+            // initialize the grain client, with some retry logic
+            var initialized = false;
+            while (!initialized)
+            {
+                try
+                {
+                    GrainClient.Initialize(orleansClientConfigFile);
+                    initialized = GrainClient.IsInitialized;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                }
+            }
 
             Console.WriteLine("Gateway Start");
             Console.WriteLine("Press Enter To Exit...");
-            Console.ReadLine();
+            Console.ReadKey();
+
+            GrainClient.Uninitialize();
 
             await gateway.Stop();
 

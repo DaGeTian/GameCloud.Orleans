@@ -30,7 +30,7 @@ namespace GameCloud.Orleans.Gateway
         }
 
         //---------------------------------------------------------------------
-        public Task Start(IPAddress ip_address, int port, string orleansClientConfigFile)
+        public Task Start(IPAddress ip_address, int port)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ConfigurationSettingsReader("autofac"));
@@ -38,7 +38,7 @@ namespace GameCloud.Orleans.Gateway
 
             var gatewaySessionFactory = new GatewaySessionFactory();
 
-            return this.gatewayRunner.Start(ip_address, port, orleansClientConfigFile, gatewaySessionFactory);
+            return this.gatewayRunner.Start(ip_address, port, gatewaySessionFactory);
         }
 
         //---------------------------------------------------------------------
