@@ -361,8 +361,7 @@ public class GameCloudEditor : EditorWindow
             directory_name = directory_name.Replace(@"\", "/");
             directory_name = directory_name.Substring(directory_name.LastIndexOf("/") + 1);
             string file_name = Path.GetFileName(i);
-            string file_namewithoutex = Path.GetFileNameWithoutExtension(i);
-            if (file_name.Equals(mPackInfoTextName) || file_name.Equals(directory_name) || file_namewithoutex.Equals(directory_name))
+            if (file_name.Equals(mPackInfoTextName))
             {
                 continue;
             }
