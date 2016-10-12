@@ -51,67 +51,67 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Orleans.ServiceFabric, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.Orleans.ServiceFabric.1.3.0-beta2\lib\net451\Microsoft.Orleans.ServiceFabric.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.ServiceFabric.1.3.0\lib\net451\Microsoft.Orleans.ServiceFabric.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.Data.2.1.163\lib\net45\Microsoft.ServiceFabric.Data.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.Data.2.3.301\lib\net45\Microsoft.ServiceFabric.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Data.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.Data.2.1.163\lib\net45\Microsoft.ServiceFabric.Data.Interfaces.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.Data.2.3.301\lib\net45\Microsoft.ServiceFabric.Data.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Internal, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.5.1.163\lib\net45\Microsoft.ServiceFabric.Internal.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.5.3.301\lib\net45\Microsoft.ServiceFabric.Internal.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Internal.Strings, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.5.1.163\lib\net45\Microsoft.ServiceFabric.Internal.Strings.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.5.3.301\lib\net45\Microsoft.ServiceFabric.Internal.Strings.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Services, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.Services.2.1.163\lib\net45\Microsoft.ServiceFabric.Services.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.Services.2.3.301\lib\net45\Microsoft.ServiceFabric.Services.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Orleans, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.1.3.0-beta2\lib\net451\Orleans.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.Core.1.3.0\lib\net451\Orleans.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansCodeGenerator, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansCodeGenerator.1.3.0-beta2\lib\net451\OrleansCodeGenerator.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansCodeGenerator.1.3.0\lib\net451\OrleansCodeGenerator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansCounterControl, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.CounterControl.1.3.0-beta2\lib\net451\OrleansCounterControl.exe</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.CounterControl.1.3.0\lib\net451\OrleansCounterControl.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansHost, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansHost.1.3.0-beta2\lib\net451\OrleansHost.exe</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansHost.1.3.0\lib\net451\OrleansHost.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansProviders, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.1.3.0-beta2\lib\net451\OrleansProviders.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.1.3.0\lib\net451\OrleansProviders.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansRuntime, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.1.3.0-beta2\lib\net451\OrleansRuntime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.1.3.0\lib\net451\OrleansRuntime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansTelemetryConsumers.Counters, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansTelemetryConsumers.Counters.1.3.0-beta2\lib\net451\OrleansTelemetryConsumers.Counters.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansTelemetryConsumers.Counters.1.3.0\lib\net451\OrleansTelemetryConsumers.Counters.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OrleansZooKeeperUtils, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansZooKeeperUtils.1.3.0-beta2\lib\net451\OrleansZooKeeperUtils.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Orleans.OrleansZooKeeperUtils.1.3.0\lib\net451\OrleansZooKeeperUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ServiceFabricServiceModel, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.Services.2.1.163\lib\net45\ServiceFabricServiceModel.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.Services.2.3.301\lib\net45\ServiceFabricServiceModel.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -139,7 +139,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Fabric, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.5.1.163\lib\net45\System.Fabric.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.5.3.301\lib\net45\System.Fabric.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Fabric.Strings, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <HintPath>..\packages\Microsoft.ServiceFabric.5.3.301\lib\net45\System.Fabric.Strings.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IO.FileSystem, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -198,8 +202,8 @@
       <HintPath>..\packages\System.Xml.XPath.XDocument.4.0.1\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ZooKeeperNetEx, Version=3.4.8.5, Culture=neutral, PublicKeyToken=42cd15de36f9b993, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZooKeeperNetEx.3.4.8.5\lib\net45\ZooKeeperNetEx.dll</HintPath>
+    <Reference Include="ZooKeeperNetEx, Version=3.4.9.0, Culture=neutral, PublicKeyToken=42cd15de36f9b993, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZooKeeperNetEx.3.4.9\lib\net45\ZooKeeperNetEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
