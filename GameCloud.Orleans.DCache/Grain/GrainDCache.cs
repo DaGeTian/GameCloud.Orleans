@@ -1,14 +1,13 @@
 ﻿// Copyright(c) Cragon. All rights reserved.
 
-namespace TexasPoker
+namespace GameCloud.Orleans.DCache
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Orleans;
-    using Orleans.Concurrency;
     using System;
     using System.Text;
-    using System.Configuration;
+    using global::Orleans.Concurrency;
+    using global::Orleans;
 
     [Reentrant]
     [StatelessWorker]
@@ -16,12 +15,20 @@ namespace TexasPoker
     {
         Random Random { get; set; }
         StringBuilder SB { get; set; }
-        public int DcacheMapCount { get; set; }
-        public int DcacheMasterSlaveMaxDeep { get; set; }
-        public int DcacheMasterSlaveCount { get; set; }
+        public int DCacheMapCount { get; set; }
+        public int DCacheMasterSlaveMaxDeep { get; set; }
+        public int DCacheMasterSlaveCount { get; set; }
         public const string DCACHEMAP_COUNTER_TITLE = "Counter";
         public const string SLAVE_MAP_NAME = "Slave_";
         public const int SLAVE_ROOT_DEEP = 2;
+
+        //---------------------------------------------------------------------
+        public GrainDCache(IDCacheContext dcache_context)
+        {
+            DCacheMapCount = dcache_context.DCacheMapCount;
+            DCacheMasterSlaveMaxDeep = dcache_context.DCacheMasterSlaveMaxDeep;
+            DCacheMasterSlaveCount = dcache_context.DCacheMasterSlaveCount;
+        }
 
         //---------------------------------------------------------------------
         public override Task OnActivateAsync()
@@ -30,23 +37,9 @@ namespace TexasPoker
 
             Random = new Random((int)DateTime.UtcNow.Ticks);
             SB = new StringBuilder();
-            DcacheMapCount = 100;
-            DcacheMasterSlaveMaxDeep = 2;
-            DcacheMasterSlaveCount = 100;
-
-            ExeConfigurationFileMap file = new ExeConfigurationFileMap();
-            file.ExeConfigFilename = "GameCloud.Orleans.DCache.config";
-            Configuration cfg = ConfigurationManager.OpenMappedExeConfiguration(file, ConfigurationUserLevel.None);
-            try
-            {
-                DcacheMapCount = int.Parse(cfg.AppSettings.Settings["DCACHEMAPCOUNT"].Value);
-                DcacheMasterSlaveMaxDeep = int.Parse(cfg.AppSettings.Settings["DCACHEMASTERSLAVEMAXDEEP"].Value);
-                DcacheMasterSlaveCount = int.Parse(cfg.AppSettings.Settings["DCACHEMASTERSLAVECOUNT"].Value);
-            }
-            catch (Exception e)
-            {
-
-            }
+            DCacheMapCount = DCacheMapCount == 0 ? 100 : DCacheMapCount;
+            DCacheMasterSlaveMaxDeep = DCacheMasterSlaveMaxDeep == 0 ? 2 : DCacheMasterSlaveMaxDeep;
+            DCacheMasterSlaveCount = DCacheMasterSlaveMaxDeep == 0 ? 100 : DCacheMasterSlaveMaxDeep;
 
             return base.OnActivateAsync();
         }
@@ -78,7 +71,7 @@ namespace TexasPoker
             SB.Append(map_name);
             SB.Append("_");
             SB.Append(DCACHEMAP_COUNTER_TITLE);
-            int count = DcacheMapCount;
+            int count = DCacheMapCount;
             var grain_mapcounter = this.GrainFactory.GetGrain<IGrainDCacheMapCounter>(SB.ToString());
             grain_mapcounter.setup(map_name, count);
 
@@ -109,7 +102,7 @@ namespace TexasPoker
         // 从Map中随机获取数据
         async Task<List<byte[]>> IGrainDCache.getFromMapRandom(string map_name, int count)
         {
-            int map_index = Random.Next(1, DcacheMapCount + 1);
+            int map_index = Random.Next(1, DCacheMapCount + 1);
             SB.Clear();
             SB.Append(map_name);
             SB.Append("_");
@@ -127,7 +120,7 @@ namespace TexasPoker
         {
             if (string.IsNullOrEmpty(ticket))
             {
-                int map_index = Random.Next(1, DcacheMapCount + 1);
+                int map_index = Random.Next(1, DCacheMapCount + 1);
                 SB.Clear();
                 SB.Append(map_name);
                 SB.Append("_");
@@ -174,9 +167,9 @@ namespace TexasPoker
         Task IGrainDCache.initMasteSlave(string maste_name)
         {
             var grain_master = this.GrainFactory.GetGrain<IGrainDCacheMaster>(maste_name);
-            grain_master.setup(maste_name, DcacheMasterSlaveMaxDeep, DcacheMasterSlaveCount);
+            grain_master.setup(maste_name, DCacheMasterSlaveMaxDeep, DCacheMasterSlaveCount);
 
-            for (int i = 1; i <= DcacheMasterSlaveCount; i++)
+            for (int i = 1; i <= DCacheMasterSlaveCount; i++)
             {
                 SB.Clear();
                 SB.Append(maste_name);
@@ -187,7 +180,7 @@ namespace TexasPoker
                 SB.Append("_");
                 SB.Append(i);
                 var grain_slave = this.GrainFactory.GetGrain<IGrainDCacheSlave>(SB.ToString());
-                grain_slave.setup(maste_name, SLAVE_ROOT_DEEP, DcacheMasterSlaveMaxDeep, DcacheMasterSlaveCount);
+                grain_slave.setup(maste_name, SLAVE_ROOT_DEEP, DCacheMasterSlaveMaxDeep, DCacheMasterSlaveCount);
             }
 
             return TaskDone.Done;
@@ -197,14 +190,14 @@ namespace TexasPoker
         // 从MasteSlave中获取数据
         async Task<byte[]> IGrainDCache.getFromMasteSlave(string maste_name, string key)
         {
-            int slave_count = (int)Math.Pow(DcacheMasterSlaveCount, DcacheMasterSlaveMaxDeep - 1);
+            int slave_count = (int)Math.Pow(DCacheMasterSlaveCount, DCacheMasterSlaveMaxDeep - 1);
             int slave_index = Random.Next(1, slave_count + 1);
             SB.Clear();
             SB.Append(maste_name);
             SB.Append("_");
             SB.Append(SLAVE_MAP_NAME);
             SB.Append("_");
-            SB.Append(DcacheMasterSlaveMaxDeep);
+            SB.Append(DCacheMasterSlaveMaxDeep);
             SB.Append("_");
             SB.Append(slave_index);
             var grain_slave = this.GrainFactory.GetGrain<IGrainDCacheSlave>(SB.ToString());

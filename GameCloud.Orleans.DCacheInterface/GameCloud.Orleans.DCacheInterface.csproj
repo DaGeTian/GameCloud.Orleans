@@ -134,11 +134,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IGrainDCache.cs" />
-    <Compile Include="IGrainDCacheMap.cs" />
-    <Compile Include="IGrainDCacheMapCounter.cs" />
-    <Compile Include="IGrainDCacheMaster.cs" />
-    <Compile Include="IGrainDCacheSlave.cs" />
+    <Compile Include="ContextInterface\IDCacheContext.cs" />
+    <Compile Include="GrainInterface\IGrainDCache.cs" />
+    <Compile Include="GrainInterface\IGrainDCacheMap.cs" />
+    <Compile Include="GrainInterface\IGrainDCacheMapCounter.cs" />
+    <Compile Include="GrainInterface\IGrainDCacheMaster.cs" />
+    <Compile Include="GrainInterface\IGrainDCacheSlave.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

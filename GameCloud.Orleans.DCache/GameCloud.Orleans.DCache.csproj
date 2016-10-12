@@ -204,11 +204,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GrainDCache.cs" />
-    <Compile Include="GrainDCacheMap.cs" />
-    <Compile Include="GrainDCacheMapCounter.cs" />
-    <Compile Include="GrainDCacheMaster.cs" />
-    <Compile Include="GrainDCacheSlave.cs" />
+    <Compile Include="Context\DCacheContext.cs" />
+    <Compile Include="Grain\GrainDCache.cs" />
+    <Compile Include="Grain\GrainDCacheMap.cs" />
+    <Compile Include="Grain\GrainDCacheMapCounter.cs" />
+    <Compile Include="Grain\GrainDCacheMaster.cs" />
+    <Compile Include="Grain\GrainDCacheSlave.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +226,7 @@
       <Name>GameCloud.Orleans.DCacheInterface</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,15 +1,16 @@
 ﻿// Copyright(c) Cragon. All rights reserved.
 
-namespace TexasPoker
+namespace GameCloud.Orleans.DCache
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Orleans;
-    using Orleans.Concurrency;
+    using System.Threading.Tasks;    
     using System;
     using System.Diagnostics;
     using System.Text;
+    using global::Orleans;
+    using global::Orleans.Concurrency;
 
+    [Reentrant]
     public class GrainDCacheMaster : Grain, IGrainDCacheMaster
     {
         string MasterName { get; set; }

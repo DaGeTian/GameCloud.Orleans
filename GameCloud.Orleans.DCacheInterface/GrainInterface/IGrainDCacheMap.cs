@@ -1,13 +1,13 @@
 ﻿// Copyright(c) Cragon. All rights reserved.
 
-namespace TexasPoker
+namespace GameCloud.Orleans.DCache
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Text;
-    using Orleans;
+    using System.Text;    
+    using global::Orleans;
 
     public interface IGrainDCacheMap : IGrainWithStringKey
     {
