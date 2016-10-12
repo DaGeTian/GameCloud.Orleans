@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Orleans.DCache", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Orleans.DCacheInterface", "GameCloud.Orleans.DCacheInterface\GameCloud.Orleans.DCacheInterface.csproj", "{EF166DF6-8736-4C00-9040-1AEAF28521F2}"
 EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.DCacheInterface", "NuGet\GameCloud.Orleans.DCacheInterface\GameCloud.Orleans.DCacheInterface.nuproj", "{6D68FE7C-50C0-41CE-9611-B40628CE3A43}"
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.DCache", "NuGet\GameCloud.Orleans.DCache\GameCloud.Orleans.DCache.nuproj", "{6D68FE7C-50C0-41CE-9611-B40628CE3A42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +105,14 @@ Global
 		{EF166DF6-8736-4C00-9040-1AEAF28521F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF166DF6-8736-4C00-9040-1AEAF28521F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF166DF6-8736-4C00-9040-1AEAF28521F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +122,8 @@ Global
 		{20BF1364-332F-4D82-A989-036F5C7EDE09} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{6D68FE7C-50C0-41CE-9611-B40628CE3A41} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A43} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
+		{6D68FE7C-50C0-41CE-9611-B40628CE3A42} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
