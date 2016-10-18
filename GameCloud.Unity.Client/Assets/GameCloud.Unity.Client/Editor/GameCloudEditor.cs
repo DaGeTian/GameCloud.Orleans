@@ -123,15 +123,17 @@ public class GameCloudEditor : EditorWindow
             Directory.CreateDirectory(mAssetBundleResourcesPkgFoldPath);
         }
 
-        mAssetBundleResourcesPath = "Assets/Resources" + PlayerSettings.productName;
+        string id= PlayerSettings.bundleIdentifier;
+        string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.'));
+        mAssetBundleResourcesPath = "Assets/Resources" + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgSingleFoldName;
         mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgFoldFoldName;
-        mRowAssetPath = mAssetPath + "/Resources" + PlayerSettings.productName + "Raw";
+        mRowAssetPath = mAssetPath + "/Resources" + folder_suffix + "Raw";
         if (!Directory.Exists(mRowAssetPath))
         {
             Directory.CreateDirectory(mRowAssetPath);
         }
-        mRowAssetPath = "Assets/Resources" + PlayerSettings.productName + "Raw";
+        mRowAssetPath = "Assets/Resources" + folder_suffix + "Raw";
     }
 
     //-------------------------------------------------------------------------
