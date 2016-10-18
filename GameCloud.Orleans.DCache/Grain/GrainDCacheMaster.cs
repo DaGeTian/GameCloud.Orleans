@@ -3,7 +3,7 @@
 namespace GameCloud.Orleans.DCache
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;    
+    using System.Threading.Tasks;
     using System;
     using System.Diagnostics;
     using System.Text;
@@ -18,6 +18,7 @@ namespace GameCloud.Orleans.DCache
         int SlaveCount { get; set; }
         Dictionary<string, byte[]> MapCache { get; set; }
         StringBuilder SB { get; set; }
+        bool IsInited { get; set; }
         const float UPDATE_DATA_TM = 2f;
 
         //---------------------------------------------------------------------
@@ -47,6 +48,23 @@ namespace GameCloud.Orleans.DCache
             }
 
             return base.OnDeactivateAsync();
+        }
+
+        //---------------------------------------------------------------------
+        Task IGrainDCacheMaster.Init()
+        {
+            if (!IsInited)
+            {
+                IsInited = true;
+            }
+
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task<bool> IGrainDCacheMaster.GetIfInit()
+        {
+            return Task.FromResult(IsInited);
         }
 
         //---------------------------------------------------------------------

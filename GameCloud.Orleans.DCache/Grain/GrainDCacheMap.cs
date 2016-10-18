@@ -3,7 +3,7 @@
 namespace GameCloud.Orleans.DCache
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;        
+    using System.Threading.Tasks;
     using System;
     using global::Orleans;
     using global::Orleans.Concurrency;
@@ -16,6 +16,7 @@ namespace GameCloud.Orleans.DCache
         List<byte[]> ListCacheRandom { get; set; }
         string DCacheMapKey { get; set; }
         Random Random { get; set; }
+        bool IsInited { get; set; }
 
         //---------------------------------------------------------------------
         public override Task OnActivateAsync()
@@ -46,6 +47,23 @@ namespace GameCloud.Orleans.DCache
             }
 
             return base.OnDeactivateAsync();
+        }
+
+        //---------------------------------------------------------------------
+        Task IGrainDCacheMap.Init()
+        {
+            if (!IsInited)
+            {
+                IsInited = true;
+            }
+
+            return TaskDone.Done;
+        }
+
+        //---------------------------------------------------------------------
+        Task<bool> IGrainDCacheMap.GetIfInit()
+        {
+            return Task.FromResult(IsInited);
         }
 
         //---------------------------------------------------------------------

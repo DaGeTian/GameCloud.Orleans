@@ -6,11 +6,17 @@ namespace GameCloud.Orleans.DCache
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Text;    
+    using System.Text;
     using global::Orleans;
 
     public interface IGrainDCacheMaster : IGrainWithStringKey
     {
+        //---------------------------------------------------------------------
+        Task Init();
+
+        //---------------------------------------------------------------------
+        Task<bool> GetIfInit();
+
         //---------------------------------------------------------------------
         Task setup(string master_name, int deep, int slave_count);
 
@@ -20,6 +26,6 @@ namespace GameCloud.Orleans.DCache
 
         //---------------------------------------------------------------------
         // remove数据
-        Task removeFromMasteSlave(string key);        
+        Task removeFromMasteSlave(string key);
     }
 }

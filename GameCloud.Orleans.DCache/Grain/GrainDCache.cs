@@ -65,13 +65,28 @@ namespace GameCloud.Orleans.DCache
 
         //---------------------------------------------------------------------
         // 初始化Map
-        Task IGrainDCache.initMap(string map_name)
+       async Task IGrainDCache.initMap(string map_name)
         {
             SB.Clear();
             SB.Append(map_name);
             SB.Append("_");
             SB.Append(DCACHEMAP_COUNTER_TITLE);
             int count = DCacheMapCount;
+
+            int map_index = Random.Next(1, count + 1);
+            SB.Clear();
+            SB.Append(map_name);
+            SB.Append("_");
+            SB.Append(map_index);
+
+            var grain_maprandom = this.GrainFactory.GetGrain<IGrainDCacheMap>(SB.ToString());
+            var is_inited = await grain_maprandom.GetIfInit();
+
+            if (is_inited)
+            {
+                return;
+            }
+
             var grain_mapcounter = this.GrainFactory.GetGrain<IGrainDCacheMapCounter>(SB.ToString());
             grain_mapcounter.setup(map_name, count);
 
@@ -83,9 +98,7 @@ namespace GameCloud.Orleans.DCache
                 SB.Append(i);
                 var grain_map = this.GrainFactory.GetGrain<IGrainDCacheMap>(SB.ToString());
                 grain_map.setup();
-            }
-
-            return TaskDone.Done;
+            }            
         }
 
         //---------------------------------------------------------------------
@@ -164,9 +177,17 @@ namespace GameCloud.Orleans.DCache
 
         //---------------------------------------------------------------------
         // 初始化MasteSlave        
-        Task IGrainDCache.initMasteSlave(string maste_name)
+        async Task IGrainDCache.initMasteSlave(string maste_name)
         {
             var grain_master = this.GrainFactory.GetGrain<IGrainDCacheMaster>(maste_name);
+            bool is_inited = await grain_master.GetIfInit();
+
+            if (is_inited)
+            {
+                return;
+            }
+
+            grain_master.Init();
             grain_master.setup(maste_name, DCacheMasterSlaveMaxDeep, DCacheMasterSlaveCount);
 
             for (int i = 1; i <= DCacheMasterSlaveCount; i++)
@@ -182,8 +203,6 @@ namespace GameCloud.Orleans.DCache
                 var grain_slave = this.GrainFactory.GetGrain<IGrainDCacheSlave>(SB.ToString());
                 grain_slave.setup(maste_name, SLAVE_ROOT_DEEP, DCacheMasterSlaveMaxDeep, DCacheMasterSlaveCount);
             }
-
-            return TaskDone.Done;
         }
 
         //---------------------------------------------------------------------
