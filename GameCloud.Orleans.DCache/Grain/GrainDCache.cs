@@ -65,12 +65,8 @@ namespace GameCloud.Orleans.DCache
 
         //---------------------------------------------------------------------
         // 初始化Map
-       async Task IGrainDCache.initMap(string map_name)
+        async Task IGrainDCache.initMap(string map_name)
         {
-            SB.Clear();
-            SB.Append(map_name);
-            SB.Append("_");
-            SB.Append(DCACHEMAP_COUNTER_TITLE);
             int count = DCacheMapCount;
 
             int map_index = Random.Next(1, count + 1);
@@ -87,6 +83,10 @@ namespace GameCloud.Orleans.DCache
                 return;
             }
 
+            SB.Clear();
+            SB.Append(map_name);
+            SB.Append("_");
+            SB.Append(DCACHEMAP_COUNTER_TITLE);
             var grain_mapcounter = this.GrainFactory.GetGrain<IGrainDCacheMapCounter>(SB.ToString());
             grain_mapcounter.setup(map_name, count);
 
@@ -98,7 +98,7 @@ namespace GameCloud.Orleans.DCache
                 SB.Append(i);
                 var grain_map = this.GrainFactory.GetGrain<IGrainDCacheMap>(SB.ToString());
                 grain_map.setup();
-            }            
+            }
         }
 
         //---------------------------------------------------------------------
