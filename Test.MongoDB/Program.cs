@@ -11,7 +11,6 @@ namespace Test
     using MongoDB.Bson;
     using MongoDB.Driver;
 
-
     class Program
     {
         static void Main(string[] args)
