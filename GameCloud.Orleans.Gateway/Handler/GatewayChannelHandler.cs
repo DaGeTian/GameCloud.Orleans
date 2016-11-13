@@ -19,11 +19,25 @@ namespace GameCloud.Orleans.Gateway
         private GatewaySessionFactory factory;
         private ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
             = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
+        private System.Timers.Timer timer;
 
         //---------------------------------------------------------------------
         public GatewayChannelHandler(GatewaySessionFactory factory)
         {
             this.factory = factory;
+
+            timer = new System.Timers.Timer();
+            timer.Interval = 3000;
+            timer.Elapsed += (obj, evt) =>
+            {
+                //var t = obj as System.Timers.Timer;
+
+                int count = mapSession.Count;
+                string title = Gateway.Instance.ConsoleTitle;
+                string version = Gateway.Instance.Version;
+                Console.Title = string.Format("{0} {1}, ConnectionCount={2}", title, version, count);
+            };
+            timer.Start();
         }
 
         //---------------------------------------------------------------------

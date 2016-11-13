@@ -22,11 +22,15 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public static Gateway Instance { get; private set; }
         public IContainer GatewaySessionListenerContainer { get; private set; }
+        public string ConsoleTitle { get; set; }
+        public string Version { get; set; }
 
         //---------------------------------------------------------------------
         public Gateway()
         {
             Instance = this;
+            ConsoleTitle = "";
+            Version = "";
         }
 
         //---------------------------------------------------------------------
