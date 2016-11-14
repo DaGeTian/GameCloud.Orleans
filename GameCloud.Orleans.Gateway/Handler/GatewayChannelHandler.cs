@@ -3,8 +3,8 @@
 namespace GameCloud.Orleans.Gateway
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Net;
     using System.Text;
     using System.Threading;
@@ -17,47 +17,32 @@ namespace GameCloud.Orleans.Gateway
     {
         //---------------------------------------------------------------------
         private GatewaySessionFactory factory;
-        private ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
-            = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
-        private System.Timers.Timer timer;
+        private GatewaySession session;
 
         //---------------------------------------------------------------------
         public GatewayChannelHandler(GatewaySessionFactory factory)
         {
             this.factory = factory;
-
-            timer = new System.Timers.Timer();
-            timer.Interval = 3000;
-            timer.Elapsed += (obj, evt) =>
-            {
-                //var t = obj as System.Timers.Timer;
-
-                int count = mapSession.Count;
-                string title = Gateway.Instance.ConsoleTitle;
-                string version = Gateway.Instance.Version;
-                Console.Title = string.Format("{0} {1}, ConnectionCount={2}", title, version, count);
-            };
-            timer.Start();
         }
 
         //---------------------------------------------------------------------
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            var session = (GatewaySession)this.factory.createRpcSession(null);
-            mapSession[context] = session;
+            this.session = (GatewaySession)this.factory.createRpcSession(null);
+            this.session.ChannelActive(context);
 
-            session.ChannelActive(context);
+            Gateway.Instance.addSession(context, this.session);
         }
 
         //---------------------------------------------------------------------
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            GatewaySession session = null;
-            mapSession.TryRemove(context, out session);
+            Gateway.Instance.removeSession(context);
 
-            if (session != null)
+            if (this.session != null)
             {
-                session.ChannelInactive(context);
+                this.session.ChannelInactive(context);
+                this.session = null;
             }
         }
 
@@ -77,8 +62,7 @@ namespace GameCloud.Orleans.Gateway
             var msg = message as IByteBuffer;
             msg.WithOrder(ByteOrder.BigEndian);
 
-            GatewaySession session = null;
-            if (mapSession.TryGetValue(context, out session))
+            if (this.session != null)
             {
                 session.onRecvData(msg.ToArray());
             }

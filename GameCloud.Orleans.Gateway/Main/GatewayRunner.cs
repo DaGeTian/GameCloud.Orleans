@@ -3,6 +3,7 @@
 namespace GameCloud.Orleans.Gateway
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Net;
     using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace GameCloud.Orleans.Gateway
     using DotNetty.Transport.Bootstrapping;
     using DotNetty.Transport.Channels;
     using DotNetty.Transport.Channels.Sockets;
+    using GameCloud.Unity.Common;
 
     public class GatewayRunner
     {
@@ -22,6 +24,9 @@ namespace GameCloud.Orleans.Gateway
         MultithreadEventLoopGroup workerGroup = new MultithreadEventLoopGroup(4);
         ServerBootstrap bootstrap = new ServerBootstrap();
         IChannel bootstrapChannel = null;
+        System.Timers.Timer timer = null;
+        ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
+            = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
 
         //---------------------------------------------------------------------
         public async Task Start(IPAddress ip_address, int port,
@@ -45,6 +50,19 @@ namespace GameCloud.Orleans.Gateway
                     }));
 
             this.bootstrapChannel = await this.bootstrap.BindAsync(ip_address, port);
+
+            this.timer = new System.Timers.Timer();
+            this.timer.Interval = 3000;
+            this.timer.Elapsed += (obj, evt) =>
+            {
+                //var t = obj as System.Timers.Timer;
+
+                int count = this.mapSession.Count;
+                string title = Gateway.Instance.ConsoleTitle;
+                string version = Gateway.Instance.Version;
+                Console.Title = string.Format("{0} {1}, ConnectionCount={2}", title, version, count);
+            };
+            this.timer.Start();
         }
 
         //---------------------------------------------------------------------
@@ -52,11 +70,34 @@ namespace GameCloud.Orleans.Gateway
         {
             try
             {
+                if (this.timer != null)
+                {
+                    this.timer.Stop();
+                    this.timer.Close();
+                    this.timer = null;
+                }
+
                 await this.bootstrapChannel.CloseAsync();
             }
             finally
             {
                 Task.WaitAll(this.bossGroup.ShutdownGracefullyAsync(), this.workerGroup.ShutdownGracefullyAsync());
+            }
+        }
+
+        //---------------------------------------------------------------------
+        public void addSession(IChannelHandlerContext c, GatewaySession s)
+        {
+            this.mapSession[c] = s;
+        }
+
+        //---------------------------------------------------------------------
+        public void removeSession(IChannelHandlerContext c)
+        {
+            if (c != null)
+            {
+                GatewaySession s = null;
+                mapSession.TryRemove(c, out s);
             }
         }
     }

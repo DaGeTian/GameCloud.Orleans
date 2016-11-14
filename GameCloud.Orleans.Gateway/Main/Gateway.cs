@@ -3,16 +3,20 @@
 namespace GameCloud.Orleans.Gateway
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Reflection;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
+    using DotNetty.Transport.Channels;
     using Autofac;
     using Autofac.Configuration;
     using Autofac.Core;
+    using GameCloud.Unity.Common;
 
     public class Gateway
     {
@@ -49,6 +53,18 @@ namespace GameCloud.Orleans.Gateway
         public Task Stop()
         {
             return this.gatewayRunner.Stop();
+        }
+
+        //---------------------------------------------------------------------
+        public void addSession(IChannelHandlerContext c, GatewaySession s)
+        {
+            this.gatewayRunner.addSession(c, s);
+        }
+
+        //---------------------------------------------------------------------
+        public void removeSession(IChannelHandlerContext c)
+        {
+            this.gatewayRunner.removeSession(c);
         }
     }
 }
