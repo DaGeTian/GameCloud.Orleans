@@ -25,8 +25,10 @@ namespace GameCloud.Orleans.Gateway
         ServerBootstrap bootstrap = new ServerBootstrap();
         IChannel bootstrapChannel = null;
         System.Timers.Timer timer = null;
-        ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
-            = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
+        object lockSetSession = new object();
+        HashSet<IChannelHandlerContext> setSession = new HashSet<IChannelHandlerContext>();
+        //ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
+        //    = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
 
         //---------------------------------------------------------------------
         public async Task Start(IPAddress ip_address, int port,
@@ -57,10 +59,15 @@ namespace GameCloud.Orleans.Gateway
             {
                 //var t = obj as System.Timers.Timer;
 
-                int count = this.mapSession.Count;
+                int count = 0;
+                lock (lockSetSession)
+                {
+                    count = this.setSession.Count;
+                }
+
                 string title = Gateway.Instance.ConsoleTitle;
                 string version = Gateway.Instance.Version;
-                Console.Title = string.Format("{0} {1}, ConnectionCount={2}", title, version, count);
+                Console.Title = string.Format("{0} {1} ConnectionCount={2}", title, version, count);
             };
             this.timer.Start();
         }
@@ -88,7 +95,12 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public void addSession(IChannelHandlerContext c, GatewaySession s)
         {
-            this.mapSession[c] = s;
+            //this.mapSession[c] = s;
+
+            lock (lockSetSession)
+            {
+                this.setSession.Add(c);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -96,8 +108,13 @@ namespace GameCloud.Orleans.Gateway
         {
             if (c != null)
             {
-                GatewaySession s = null;
-                mapSession.TryRemove(c, out s);
+                //GatewaySession s = null;
+                //mapSession.TryRemove(c, out s);
+
+                lock (lockSetSession)
+                {
+                    this.setSession.Remove(c);
+                }
             }
         }
     }

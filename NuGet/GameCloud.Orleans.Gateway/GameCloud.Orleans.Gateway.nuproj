@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>GameCloud.Orleans.Gateway</Id>
-    <Version>1.00.077</Version>
+    <Version>1.00.078</Version>
     <Title>GameCloud.Orleans.Gateway</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
