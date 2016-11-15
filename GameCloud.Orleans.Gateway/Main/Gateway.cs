@@ -30,11 +30,11 @@ namespace GameCloud.Orleans.Gateway
         public string Version { get; set; }
 
         //---------------------------------------------------------------------
-        public Gateway()
+        public Gateway(string title, string version)
         {
             Instance = this;
-            ConsoleTitle = "";
-            Version = "";
+            ConsoleTitle = title;
+            Version = version;
         }
 
         //---------------------------------------------------------------------

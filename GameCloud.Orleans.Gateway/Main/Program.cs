@@ -21,12 +21,14 @@ namespace GameCloud.Orleans.Gateway
             EbLog.WarningCallback = Console.WriteLine;
             EbLog.ErrorCallback = Console.WriteLine;
 
+            string title = ConfigurationManager.AppSettings["Title"];
+            string version = ConfigurationManager.AppSettings["Version"];
             string orleansClientConfigFile = ConfigurationManager.AppSettings["OrleansClientConfiguration"];
             string ip = ConfigurationManager.AppSettings["ListenIP"];
             string port = ConfigurationManager.AppSettings["ListenPort"];
             IPAddress host = IPAddress.Parse(ip);
 
-            Gateway gateway = new Gateway();
+            Gateway gateway = new Gateway(title, version);
             await gateway.Start(host, int.Parse(port));
 
             // initialize the grain client, with some retry logic

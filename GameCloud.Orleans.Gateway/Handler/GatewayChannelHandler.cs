@@ -77,6 +77,8 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
+            Gateway.Instance.removeSession(context);
+
             if (exception is System.ObjectDisposedException)
             {
                 // do nothting
