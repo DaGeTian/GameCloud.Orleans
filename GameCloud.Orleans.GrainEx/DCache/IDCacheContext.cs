@@ -1,6 +1,6 @@
 ﻿// Copyright(c) Cragon. All rights reserved.
 
-namespace GameCloud.Orleans.DCache
+namespace GameCloud.Orleans
 {
     //---------------------------------------------------------------------
     public interface IDCacheContext

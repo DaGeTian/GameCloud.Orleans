@@ -1,6 +1,6 @@
 ﻿// Copyright(c) Cragon. All rights reserved.
 
-namespace GameCloud.Orleans.DCache
+namespace GameCloud.Orleans
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;    
