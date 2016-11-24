@@ -18,25 +18,25 @@
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>GameCloud.Orleans.DCache</Id>
-    <Version>1.00.017</Version>
-    <Title>GameCloud.Orleans.DCache</Title>
+    <Id>GameCloud.Orleans.GrainEx</Id>
+    <Version>1.00.000</Version>
+    <Title>GameCloud.Orleans.GrainEx</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
-    <Summary>GameCloud.Orleans.DCache</Summary>
-    <Description>GameCloud.Orleans.DCache</Description>
+    <Summary>GameCloud.Orleans.GrainEx</Summary>
+    <Description>GameCloud.Orleans.GrainEx</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>https://github.com/CragonGame/GameCloud.Orleans</ProjectUrl>
     <LicenseUrl>https://github.com/CragonGame/GameCloud.Orleans/blob/master/LICENSE</LicenseUrl>
     <Copyright>Copyright © Cragon</Copyright>
-    <Tags>GameCloud.Orleans.DCache</Tags>
+    <Tags>GameCloud.Orleans.GrainEx</Tags>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GameCloud.Orleans.DCache\GameCloud.Orleans.DCache.csproj" />
+    <ProjectReference Include="..\..\GameCloud.Orleans.DCache\GameCloud.Orleans.GrainEx.csproj" />
   </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>

@@ -275,7 +275,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GameCloud.Unity.Sqlite\GameCloud.Unity.Sqlite.csproj">
       <Project>{47b5d60f-be8d-4ccf-8125-800b991a6502}</Project>
-      <Name>GF.Unity.Sqlite</Name>
+      <Name>GameCloud.Unity.Sqlite</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

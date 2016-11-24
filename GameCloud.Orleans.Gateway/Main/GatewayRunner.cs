@@ -27,8 +27,6 @@ namespace GameCloud.Orleans.Gateway
         System.Timers.Timer timer = null;
         object lockSetSession = new object();
         HashSet<IChannelHandlerContext> setSession = new HashSet<IChannelHandlerContext>();
-        //ConcurrentDictionary<IChannelHandlerContext, GatewaySession> mapSession
-        //    = new ConcurrentDictionary<IChannelHandlerContext, GatewaySession>();
 
         //---------------------------------------------------------------------
         public async Task Start(IPAddress ip_address, int port,
@@ -95,8 +93,6 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public void addSession(IChannelHandlerContext c, GatewaySession s)
         {
-            //this.mapSession[c] = s;
-
             lock (lockSetSession)
             {
                 this.setSession.Add(c);
@@ -106,15 +102,9 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public void removeSession(IChannelHandlerContext c)
         {
-            if (c != null)
+            lock (lockSetSession)
             {
-                //GatewaySession s = null;
-                //mapSession.TryRemove(c, out s);
-
-                lock (lockSetSession)
-                {
-                    this.setSession.Remove(c);
-                }
+                this.setSession.Remove(c);
             }
         }
     }
