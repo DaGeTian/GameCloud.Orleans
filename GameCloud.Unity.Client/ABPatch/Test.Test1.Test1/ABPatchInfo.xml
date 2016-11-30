@@ -2,6 +2,4 @@
 <ABPatchInfo>
   <BundleData BDAndroid="1.00.002" BDIOS="1.00.001" BDWindowsPC="1.00.001"/>
   <DataData DDAndroid="1.00.002" DDIOS="1.00.001" DDWindowsPC="1.00.001"/>
-  <!--AssetBundleResourcePath ABValue="Assets/ResourcesTest1"/-->
-  <!--RawResourcePath RawValue="Assets/ResourcesTest1Raw"/-->
 </ABPatchInfo>

@@ -35,7 +35,7 @@ public class GameCloudEditor : EditorWindow
     static string mPatchInfoPath;
     static List<string> mDoNotPackFileExtention = new List<string> { ".meta", ".DS_Store" };
     static List<_InitProjectInfo> ListInitProjectInfo { get; set; }
-    static string[] ArrayProjectName { get; set; }
+    static string[] ArrayProjectBundleIdentity { get; set; }
     static _InitProjectInfo CurrentProject { get; set; }
     static int CurrentSelectIndex { get; set; }
     //const string mNotPackAsset = "NotPackAsset";
@@ -127,7 +127,7 @@ public class GameCloudEditor : EditorWindow
         }
 
         ListInitProjectInfo.Sort((x, y) => x.ProjectIndex.CompareTo(y.ProjectIndex));
-        ArrayProjectName = ListInitProjectInfo.Select(x => x.AppName).ToArray();
+        ArrayProjectBundleIdentity = ListInitProjectInfo.Select(x => x.BundleIdentify).ToArray();
     }
 
     //-------------------------------------------------------------------------
@@ -146,16 +146,18 @@ public class GameCloudEditor : EditorWindow
         PlayerSettings.companyName = CurrentProject.CompanyName;
         PlayerSettings.productName = CurrentProject.AppName;
         PlayerSettings.bundleIdentifier = CurrentProject.BundleIdentify;
-        mPatchInfoPath = Path.Combine(mABTargetPathRoot, CurrentProject.AppName);
+        mPatchInfoPath = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
         mPatchInfoPath = Path.Combine(mPatchInfoPath, mPatchiInfoName);
         mPatchInfoPath = mPatchInfoPath.Replace(@"\", "/");
-        mABTargetPathCurrent = Path.Combine(mABTargetPathRoot, CurrentProject.AppName);
+        mABTargetPathCurrent = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
     }
 
     //-------------------------------------------------------------------------
     static void _checkResourcesPath()
     {
-        mAssetBundleResourcesPath = mAssetPath + "/Resources" + PlayerSettings.productName;
+        string id = PlayerSettings.bundleIdentifier;
+        string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.'));
+        mAssetBundleResourcesPath = mAssetPath + "/Resources" + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgSingleFoldName;
         mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgFoldFoldName;
         if (!Directory.Exists(mAssetBundleResourcesPath))
@@ -171,8 +173,6 @@ public class GameCloudEditor : EditorWindow
             Directory.CreateDirectory(mAssetBundleResourcesPkgFoldPath);
         }
 
-        string id = PlayerSettings.bundleIdentifier;
-        string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.') + 1);
         mAssetBundleResourcesPath = "Assets/Resources" + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgSingleFoldName;
         mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgFoldFoldName;
@@ -209,7 +209,7 @@ public class GameCloudEditor : EditorWindow
         if (CurrentProject != null)
         {
             select_index = CurrentProject.ProjectIndex;
-            select_index = EditorGUILayout.Popup("当前项目：", select_index, ArrayProjectName);
+            select_index = EditorGUILayout.Popup("当前项目：", select_index, ArrayProjectBundleIdentity);
             if (CurrentSelectIndex != select_index)
             {
                 _decideCurrentProject(select_index);
@@ -602,7 +602,7 @@ public class GameCloudEditor : EditorWindow
 
     //-------------------------------------------------------------------------
     void _getAllPkgSingleFiles(string directory_path)
-    {        
+    {
         string[] ab_file = Directory.GetFiles(directory_path);
         foreach (var i in ab_file)
         {
@@ -625,7 +625,7 @@ public class GameCloudEditor : EditorWindow
 
     //-------------------------------------------------------------------------
     void _getAllPkgFoldFold(string directory_path)
-    {        
+    {
         string[] directorys = Directory.GetDirectories(directory_path);
         mListAllPkgFoldABFold.AddRange(directorys);
 

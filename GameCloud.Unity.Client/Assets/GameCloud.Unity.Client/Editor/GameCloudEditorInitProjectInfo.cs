@@ -162,7 +162,7 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
         {
             _InitProjectInfo project_info = i.Value;
 
-            string target_directory = mPatchInfoTargetDirectory + "/" + project_info.AppName;
+            string target_directory = mPatchInfoTargetDirectory + "/" + project_info.BundleIdentify;
             try
             {
                 Directory.CreateDirectory(target_directory);
