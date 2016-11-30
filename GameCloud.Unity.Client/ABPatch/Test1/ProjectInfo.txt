@@ -1,0 +1,9 @@
+{
+ProjectIndex : 0
+IsDefault : True
+CompanyName : Test
+AppName : Test1
+BundleIdentify : Test.Test1.Test1
+InitBundleVersion : 1.00.000
+InitDataVersion : 1.00.000
+}

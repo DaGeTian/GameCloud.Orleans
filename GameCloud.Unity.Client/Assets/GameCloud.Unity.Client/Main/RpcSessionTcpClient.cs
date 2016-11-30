@@ -98,7 +98,7 @@ public class RpcSessionTcpClient : RpcSession
     //---------------------------------------------------------------------
     void _onSocketError(object rec, SocketErrorEventArgs args)
     {
-        this.tcpSocket = null;
+        //this.tcpSocket = null;
 
         if (OnSocketError != null)
         {
@@ -118,7 +118,7 @@ public class RpcSessionTcpClient : RpcSession
     //---------------------------------------------------------------------
     void _onSocketClosed(object client, EventArgs args)
     {
-        this.tcpSocket = null;
+        //this.tcpSocket = null;
 
         if (OnSocketClosed != null)
         {

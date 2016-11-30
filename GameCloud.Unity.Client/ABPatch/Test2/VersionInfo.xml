@@ -1,0 +1,9 @@
+<VersionInfo>
+	<Pc BundleVersion="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/1.00.000.exe" 
+		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/DataVersion_1.00.000/DataFileList.txt" />
+	<Android BundleVersion="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/Android/1.00.000.apk" 
+		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/ANDROID/DataVersion_1.00.000/DataFileList.txt" />
+	<iOS BundleVersion="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/IOS/1.00.000.ipa" 
+		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/IOS/DataVersion_1.00.000/DataFileList.txt" />
+	<ServerState state="0" />
+</VersionInfo>

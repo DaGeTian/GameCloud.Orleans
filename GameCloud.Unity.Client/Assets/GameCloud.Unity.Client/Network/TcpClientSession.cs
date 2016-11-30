@@ -193,7 +193,7 @@ public class TcpClientSession : IDisposable
             if (mDisposed) return;
 
             mSendLength = 0;
-
+            
             if (connect_ipaddress.AddressFamily == AddressFamily.InterNetworkV6)
             {
                 mSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
@@ -202,7 +202,6 @@ public class TcpClientSession : IDisposable
             {
                 mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             }
-
             mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             mSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
 
@@ -220,8 +219,7 @@ public class TcpClientSession : IDisposable
         }
         catch (Exception ex)
         {
-            _raiseError(ex);
-            Dispose();
+            _raiseError(ex);            
         }
     }
 

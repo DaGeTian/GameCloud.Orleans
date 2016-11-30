@@ -123,8 +123,8 @@ public class GameCloudEditor : EditorWindow
             Directory.CreateDirectory(mAssetBundleResourcesPkgFoldPath);
         }
 
-        string id= PlayerSettings.bundleIdentifier;
-        string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.'));
+        string id = PlayerSettings.bundleIdentifier;
+        string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.') + 1);
         mAssetBundleResourcesPath = "Assets/Resources" + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgSingleFoldName;
         mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgFoldFoldName;
@@ -802,10 +802,9 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
-    public static void changeBundleData(string new_bundle, bool change_allplatform = false)
+    public static void changeBundleData(string target_path, string new_bundle, bool change_allplatform = false)
     {
-        _checkPatchData();
-        string ab_pathinfo = mABTargetPath + "/" + mPatchiInfoName;
+        string ab_pathinfo = target_path + "/" + mPatchiInfoName;
         string file = "";
         using (StreamReader sr = new StreamReader(ab_pathinfo))
         {
@@ -846,15 +845,12 @@ public class GameCloudEditor : EditorWindow
         {
             sw.Write(file);
         }
-
-        _checkPatchData();
     }
 
     //-------------------------------------------------------------------------
-    public static void changeDataData(string new_data, bool change_allplatform = false)
+    public static void changeDataData(string target_path, string new_data, bool change_allplatform = false)
     {
-        _checkPatchData();
-        string ab_pathinfo = mABTargetPath + "/" + mPatchiInfoName;
+        string ab_pathinfo = target_path + "/" + mPatchiInfoName;
         string file = "";
         using (StreamReader sr = new StreamReader(ab_pathinfo))
         {
@@ -895,8 +891,6 @@ public class GameCloudEditor : EditorWindow
         {
             sw.Write(file);
         }
-
-        _checkPatchData();
     }
 
     //-------------------------------------------------------------------------
@@ -971,7 +965,10 @@ public class GameCloudEditor : EditorWindow
         }
         string bundle_version = bundle.ToString();
         bundle_version = bundle_version.Insert(1, ".").Insert(4, ".");
-        changeBundleData(bundle_version);
+
+        _checkPatchData();
+        changeBundleData(mABTargetPath, bundle_version);
+        _checkPatchData();
     }
 
     //-------------------------------------------------------------------------
@@ -988,6 +985,8 @@ public class GameCloudEditor : EditorWindow
         }
         string data_version = data.ToString();
         data_version = data_version.Insert(1, ".").Insert(4, ".");
-        changeDataData(data_version);
+        _checkPatchData();
+        changeDataData(mABTargetPath, data_version);
+        _checkPatchData();
     }
 }

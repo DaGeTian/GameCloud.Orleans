@@ -3,21 +3,25 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System.Text;
 
 public class GameCloudEditorInitProjectInfo : EditorWindow
 {
-    //-------------------------------------------------------------------------    
-    string mComponyName;
-    string mProductName;
-    string mBundleIdentifier;
-    string mBundleVersion;
-    string mDataVersion;
+    //-------------------------------------------------------------------------        
     string mPatchInfoTargetDirectory;
     string mPatchInfoResouceDirectory;
+    int mInitProjectNum;
+    bool mCanStartInitProjectDetail;
+    Dictionary<int, _InitProjectInfo> MapInitProjectInfo { get; set; }
+    Dictionary<int, _InitProjectInfo> MapChangeInitProjectInfo { get; set; }
+    const string PROJECT_INFO_FILE_NAME = "ProjectInfo.txt";
 
     //-------------------------------------------------------------------------
     public void copyPatchInfo(string patch_infotargetdirectory, string patch_inforesoucedirectory)
     {
+        mCanStartInitProjectDetail = false;
+        MapInitProjectInfo = new Dictionary<int, _InitProjectInfo>();
+        MapChangeInitProjectInfo = new Dictionary<int, _InitProjectInfo>();
         mPatchInfoTargetDirectory = patch_infotargetdirectory;
         mPatchInfoResouceDirectory = patch_inforesoucedirectory;
     }
@@ -34,66 +38,249 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
     //-------------------------------------------------------------------------
     void OnGUI()
     {
+        if (mCanStartInitProjectDetail)
+        {
+            MapChangeInitProjectInfo.Clear();
+            foreach (var i in MapInitProjectInfo)
+            {
+                var project_info = _drowInitProjectWindow(i.Value);
+                MapChangeInitProjectInfo[project_info.ProjectIndex] = project_info;
+            }
+
+            foreach (var i in MapChangeInitProjectInfo)
+            {
+                _InitProjectInfo project_info = null;
+                MapInitProjectInfo.TryGetValue(i.Key, out project_info);
+                if (project_info != null)
+                {
+                    project_info.cloneData(i.Value);
+                }
+            }
+
+            bool init = GUILayout.Button("设置", GUILayout.Width(200));
+            if (init)
+            {
+                bool is_initall = true;
+                foreach (var i in MapInitProjectInfo)
+                {
+                    if (!i.Value.isAllInit())
+                    {
+                        is_initall = false;
+                    }
+                }
+
+                if (is_initall)
+                {
+                    _initProject();
+                    ShowNotification(new GUIContent("初始化成功!"));
+                }
+            }
+        }
+        else
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("初始化项目个数:");
+            int.TryParse(EditorGUILayout.TextField(mInitProjectNum.ToString()), out mInitProjectNum);
+            EditorGUILayout.EndHorizontal();
+
+            bool confirm_num = GUILayout.Button("确定", GUILayout.Width(200));
+            if (confirm_num)
+            {
+                if (mInitProjectNum != 0)
+                {
+                    for (int i = 0; i < mInitProjectNum; i++)
+                    {
+                        bool is_default = false;
+                        if (i == 0)
+                        {
+                            is_default = true;
+                        }
+
+                        _InitProjectInfo init_info = new _InitProjectInfo();
+                        init_info.ProjectIndex = i;
+                        init_info.IsDefault = is_default;
+                        MapInitProjectInfo[init_info.ProjectIndex] = init_info;
+                    }
+                    mCanStartInitProjectDetail = true;
+                }
+            }
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    _InitProjectInfo _drowInitProjectWindow(_InitProjectInfo project_info)
+    {
+        _InitProjectInfo project_infoex = new _InitProjectInfo();
+        project_infoex.cloneData(project_info);
+
+        string company_name_title = "公司名:";
+        string app_name_title = "App名:";
+        string bundle_identify_title = "BundleIdentify:";
+        if (project_infoex.IsDefault)
+        {
+            company_name_title = "默认公司名:";
+            app_name_title = "默认App名:";
+            bundle_identify_title = "默认BundleIdentify:";
+        }
+
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("公司名:");
-        mComponyName = EditorGUILayout.TextField(mComponyName);
+        EditorGUILayout.LabelField(company_name_title);
+        project_infoex.CompanyName = EditorGUILayout.TextField(project_infoex.CompanyName);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("产品名(App名称):");
-        mProductName = EditorGUILayout.TextField(mProductName);
+        EditorGUILayout.LabelField(app_name_title);
+        string app_name = "";
+        project_infoex.AppName = EditorGUILayout.TextField(project_infoex.AppName);
+        //if (!string.IsNullOrEmpty(app_name))
+        //{
+        //    init_info.AppName = app_name;
+        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("BundleIdentify:");
-        mBundleIdentifier = EditorGUILayout.TextField(mBundleIdentifier);
+        EditorGUILayout.LabelField(bundle_identify_title);
+        string bundle_identify = "";
+        project_infoex.BundleIdentify = EditorGUILayout.TextField(project_infoex.BundleIdentify);
+        //if (!string.IsNullOrEmpty(bundle_identify))
+        //{
+        //    init_info.BundleIdentify = bundle_identify;
+        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("初始程序版本号(请以*.**.***，其中*为数字来设置):");
-        mBundleVersion = EditorGUILayout.TextField(mBundleVersion);
+        string bundle_version = "";
+        project_infoex.InitBundleVersion = EditorGUILayout.TextField(project_infoex.InitBundleVersion);
+        //if (!string.IsNullOrEmpty(bundle_version))
+        //{
+        //    init_info.BundleVersion = bundle_version;
+        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("初始资源版本号(请以*.**.***，其中*为数字来设置):");
-        mDataVersion = EditorGUILayout.TextField(mDataVersion);
+        string data_version = "";
+        project_infoex.InitDataVersion = EditorGUILayout.TextField(project_infoex.InitDataVersion);
+        //if (!string.IsNullOrEmpty(data_version))
+        //{
+        //    init_info.DataVersion = data_version;
+        //}
         EditorGUILayout.EndHorizontal();
 
-        bool init = GUILayout.Button("设置", GUILayout.Width(200));
-        if (init)
-        {
-            _initProject();
-            ShowNotification(new GUIContent("初始化成功!"));
-        }
+        //if (init_info.isAllInit())
+        //{
+        //    MapInitProjectInfo[init_info.AppName] = init_info;
+        //}
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("____________________________________________");
+        EditorGUILayout.EndHorizontal();
+
+        return project_infoex;
     }
 
     //-------------------------------------------------------------------------
     void _initProject()
     {
-        try
+        foreach (var i in MapInitProjectInfo)
         {
-            Directory.CreateDirectory(mPatchInfoTargetDirectory);
-        }
-        catch (Exception e)
-        {
-            _deleteDirectory(mPatchInfoTargetDirectory);
-            Debug.LogError("GameCloudEditorInitProjectInfo CreateDirectory Error::" + e.Message);
-        }
+            _InitProjectInfo project_info = i.Value;
 
-        try
-        {
-            GameCloudEditor.copyFile(mPatchInfoResouceDirectory, mPatchInfoTargetDirectory, mPatchInfoResouceDirectory);
-        }
-        catch (Exception e)
-        {
-            _deleteDirectory(mPatchInfoTargetDirectory);
-            Debug.LogError("GameCloudEditorInitProjectInfo copyFile Error::" + e.Message);
-        }
+            string target_directory = mPatchInfoTargetDirectory + "/" + project_info.AppName;
+            try
+            {
+                Directory.CreateDirectory(target_directory);
+            }
+            catch (Exception e)
+            {
+                _deleteDirectory(target_directory);
+                Debug.LogError("GameCloudEditorInitProjectInfo CreateDirectory Error::" + e.Message);
+            }
 
-        PlayerSettings.companyName = mComponyName;
-        PlayerSettings.productName = mProductName;
-        PlayerSettings.bundleIdentifier = mBundleIdentifier;
-        GameCloudEditor.changeBundleData(mBundleVersion, true);
-        GameCloudEditor.changeDataData(mDataVersion, true);
+            try
+            {
+                GameCloudEditor.copyFile(mPatchInfoResouceDirectory, target_directory, mPatchInfoResouceDirectory);
+            }
+            catch (Exception e)
+            {
+                _deleteDirectory(target_directory);
+                Debug.LogError("GameCloudEditorInitProjectInfo copyFile Error::" + e.Message);
+            }
+
+            if (project_info.IsDefault)
+            {
+                PlayerSettings.companyName = project_info.CompanyName;
+                PlayerSettings.productName = project_info.AppName;
+                PlayerSettings.bundleIdentifier = project_info.BundleIdentify;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("{");
+            sb.Append("ProjectIndex : ");
+            sb.Append(project_info.ProjectIndex);
+            sb.AppendLine();
+            sb.Append("IsDefault : ");
+            sb.Append(project_info.IsDefault);
+            sb.AppendLine();
+            sb.Append("CompanyName : ");
+            sb.Append(project_info.CompanyName);
+            sb.AppendLine();
+            sb.Append("AppName : ");
+            sb.Append(project_info.AppName);
+            sb.AppendLine();
+            sb.Append("BundleIdentify : ");
+            sb.Append(project_info.BundleIdentify);
+            sb.AppendLine();
+            sb.Append("InitBundleVersion : ");
+            sb.Append(project_info.InitBundleVersion);
+            sb.AppendLine();
+            sb.Append("InitDataVersion : ");
+            sb.Append(project_info.InitDataVersion);
+            sb.AppendLine();
+            sb.Append("}");
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
+
+            string path = target_directory + "/" + PROJECT_INFO_FILE_NAME;
+            using (FileStream fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+
+            GameCloudEditor.changeBundleData(target_directory,project_info.InitBundleVersion, true);
+            GameCloudEditor.changeDataData(target_directory, project_info.InitDataVersion, true);
+        }
+    }
+}
+
+//-------------------------------------------------------------------------
+public class _InitProjectInfo
+{
+    public int ProjectIndex;
+    public bool IsDefault;
+    public string CompanyName;
+    public string AppName;
+    public string BundleIdentify;
+    public string InitBundleVersion;
+    public string InitDataVersion;
+
+    //-------------------------------------------------------------------------
+    public void cloneData(_InitProjectInfo project_info)
+    {
+        this.AppName = project_info.AppName;
+        this.BundleIdentify = project_info.BundleIdentify;
+        this.InitBundleVersion = project_info.InitBundleVersion;
+        this.CompanyName = project_info.CompanyName;
+        this.InitDataVersion = project_info.InitDataVersion;
+        this.IsDefault = project_info.IsDefault;
+        this.ProjectIndex = project_info.ProjectIndex;
+    }
+
+    //-------------------------------------------------------------------------
+    public bool isAllInit()
+    {
+        return !string.IsNullOrEmpty(CompanyName) && !string.IsNullOrEmpty(AppName)
+            && !string.IsNullOrEmpty(BundleIdentify) && !string.IsNullOrEmpty(InitBundleVersion)
+            && !string.IsNullOrEmpty(InitDataVersion);
     }
 }
