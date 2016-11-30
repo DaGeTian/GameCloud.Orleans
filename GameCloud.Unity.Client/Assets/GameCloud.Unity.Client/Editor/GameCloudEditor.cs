@@ -35,16 +35,17 @@ public class GameCloudEditor : EditorWindow
     static string mPatchInfoPath;
     static List<string> mDoNotPackFileExtention = new List<string> { ".meta", ".DS_Store" };
     static List<_InitProjectInfo> ListInitProjectInfo { get; set; }
+    static Dictionary<int, int> MapProjectIndexCombineWithSelectIndex { get; set; }//key projectindex,value selectindex
     static string[] ArrayProjectBundleIdentity { get; set; }
     static _InitProjectInfo CurrentProject { get; set; }
     static int CurrentSelectIndex { get; set; }
     //const string mNotPackAsset = "NotPackAsset";
     //const string mAssetBundleDirectory = "NeedPackAsset";
-    const string mAssetBundleTargetDirectory = "ABPatch";
-    const string mABPathInfoResourceDirectory = "GameCloud.Unity.Client/AutoPatcherInfo";
-    const string mPatchiInfoName = "ABPatchInfo.xml";
-    const string mAssetBundlePkgSingleFoldName = "PkgSingle";
-    const string mAssetBundlePkgFoldFoldName = "PkgFold";
+    public const string AssetBundleTargetDirectory = "ABPatch";
+    public const string ABPathInfoResourceDirectory = "GameCloud.Unity.Client/AutoPatcherInfo";
+    const string PatchiInfoName = "ABPatchInfo.xml";
+    const string AssetBundlePkgSingleFoldName = "PkgSingle";
+    const string AssetBundlePkgFoldFoldName = "PkgFold";
 
     string mPackInfoTextName = "DataFileList.txt";
     string mDataTargetPath;
@@ -64,12 +65,12 @@ public class GameCloudEditor : EditorWindow
         _checkTargetPath();
         _initCurrentBuildTarget();
 
-        if (!Directory.Exists(mABTargetPathRoot))
+        if (!Directory.Exists(mABTargetPathRoot) || Directory.GetDirectories(mABTargetPathRoot).Length == 0)
         {
             GameCloudEditorInitProjectInfo test = GetWindow<GameCloudEditorInitProjectInfo>("初始化项目信息");
 
             test.copyPatchInfo(mABTargetPathRoot,
-                mAssetPath + mABPathInfoResourceDirectory);
+                mAssetPath + ABPathInfoResourceDirectory);
             return;
         }
 
@@ -105,7 +106,7 @@ public class GameCloudEditor : EditorWindow
         current_dir = current_dir.Replace(@"\", "/");
         mAssetPath = current_dir + "/Assets/";
 
-        mABTargetPathRoot = Path.Combine(current_dir, mAssetBundleTargetDirectory);
+        mABTargetPathRoot = Path.Combine(current_dir, AssetBundleTargetDirectory);
         mABTargetPathRoot = mABTargetPathRoot.Replace(@"\", "/");
     }
 
@@ -113,6 +114,7 @@ public class GameCloudEditor : EditorWindow
     static void _getAllProjectAndCurrentProject()
     {
         ListInitProjectInfo = new List<_InitProjectInfo>();
+        MapProjectIndexCombineWithSelectIndex = new Dictionary<int, int>();
         var project_infoderectories = Directory.GetDirectories(mABTargetPathRoot);
 
         foreach (var i in project_infoderectories)
@@ -127,13 +129,16 @@ public class GameCloudEditor : EditorWindow
         }
 
         ListInitProjectInfo.Sort((x, y) => x.ProjectIndex.CompareTo(y.ProjectIndex));
+        _combineProjectIndexWithSelectIndex();
         ArrayProjectBundleIdentity = ListInitProjectInfo.Select(x => x.BundleIdentify).ToArray();
     }
 
     //-------------------------------------------------------------------------
     static void _decideCurrentProject(int project_index)
     {
-        _InitProjectInfo project_info = ListInitProjectInfo.Find(x => x.ProjectIndex == project_index);
+        var project_i = MapProjectIndexCombineWithSelectIndex.First(x => x.Value.Equals(project_index));
+
+        _InitProjectInfo project_info = ListInitProjectInfo.Find(x => x.ProjectIndex == project_i.Key);
         if (project_info != null)
         {
             CurrentProject = project_info;
@@ -143,13 +148,30 @@ public class GameCloudEditor : EditorWindow
     //-------------------------------------------------------------------------
     static void _initCurrentProject()
     {
+        if (CurrentProject == null)
+        {
+            return;
+        }
+
         PlayerSettings.companyName = CurrentProject.CompanyName;
         PlayerSettings.productName = CurrentProject.AppName;
         PlayerSettings.bundleIdentifier = CurrentProject.BundleIdentify;
         mPatchInfoPath = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
-        mPatchInfoPath = Path.Combine(mPatchInfoPath, mPatchiInfoName);
+        mPatchInfoPath = Path.Combine(mPatchInfoPath, PatchiInfoName);
         mPatchInfoPath = mPatchInfoPath.Replace(@"\", "/");
         mABTargetPathCurrent = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
+    }
+
+    //-------------------------------------------------------------------------
+    static void _combineProjectIndexWithSelectIndex()
+    {
+        MapProjectIndexCombineWithSelectIndex.Clear();
+        int select_index = 0;
+        foreach (var i in ListInitProjectInfo)
+        {
+            MapProjectIndexCombineWithSelectIndex[i.ProjectIndex] = select_index;
+            select_index++;
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -158,8 +180,8 @@ public class GameCloudEditor : EditorWindow
         string id = PlayerSettings.bundleIdentifier;
         string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.'));
         mAssetBundleResourcesPath = mAssetPath + "/Resources" + folder_suffix;
-        mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgSingleFoldName;
-        mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgFoldFoldName;
+        mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + AssetBundlePkgSingleFoldName;
+        mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + AssetBundlePkgFoldFoldName;
         if (!Directory.Exists(mAssetBundleResourcesPath))
         {
             Directory.CreateDirectory(mAssetBundleResourcesPath);
@@ -174,8 +196,8 @@ public class GameCloudEditor : EditorWindow
         }
 
         mAssetBundleResourcesPath = "Assets/Resources" + folder_suffix;
-        mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgSingleFoldName;
-        mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + mAssetBundlePkgFoldFoldName;
+        mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + AssetBundlePkgSingleFoldName;
+        mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + AssetBundlePkgFoldFoldName;
         mRowAssetPath = mAssetPath + "/Resources" + folder_suffix + "Raw";
         if (!Directory.Exists(mRowAssetPath))
         {
@@ -207,8 +229,12 @@ public class GameCloudEditor : EditorWindow
         EditorGUILayout.BeginHorizontal();
         int select_index = 0;
         if (CurrentProject != null)
-        {
-            select_index = CurrentProject.ProjectIndex;
+        {            
+            if (!MapProjectIndexCombineWithSelectIndex.TryGetValue(CurrentProject.ProjectIndex, out select_index))
+            {
+                return;
+            }
+            
             select_index = EditorGUILayout.Popup("当前项目：", select_index, ArrayProjectBundleIdentity);
             if (CurrentSelectIndex != select_index)
             {
@@ -226,8 +252,8 @@ public class GameCloudEditor : EditorWindow
                 CurrentSelectIndex = select_index;
             }
         }
-
         EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("当前平台程序包版本号:", mBundleVersion);
         bool add_bundleversion = GUILayout.Button("程序包版本号加一");
@@ -333,11 +359,13 @@ public class GameCloudEditor : EditorWindow
         //    _checkPatchData();
         //}
 
+        EditorGUILayout.BeginHorizontal();
         bool click_build_asset = GUILayout.Button("打AssetBundle包(压缩)", GUILayout.Width(200));
         if (click_build_asset)
         {
             _startBuild();
         }
+        EditorGUILayout.EndHorizontal();
     }
 
     ////-------------------------------------------------------------------------
@@ -525,7 +553,7 @@ public class GameCloudEditor : EditorWindow
         {
             try
             {
-                _deleteFile(persistent_data_path);
+                deleteFile(persistent_data_path);
                 ShowNotification(new GUIContent("删除本地AB成功!"));
             }
             catch (System.Exception e)
@@ -536,7 +564,7 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
-    void _deleteFile(string directory_path)
+    public static void deleteFile(string directory_path)
     {
         if (Directory.Exists(directory_path))
         {
@@ -550,7 +578,7 @@ public class GameCloudEditor : EditorWindow
 
             foreach (var i in directorys)
             {
-                _deleteFile(i);
+                deleteFile(i);
             }
 
             Directory.Delete(directory_path);
@@ -565,7 +593,7 @@ public class GameCloudEditor : EditorWindow
         _getCurrentTargetPath();
         _checkPatchData();
 
-        _deleteFile(mTargetPlatformRootPath);
+        deleteFile(mTargetPlatformRootPath);
 
         Caching.CleanCache();
 
@@ -645,7 +673,7 @@ public class GameCloudEditor : EditorWindow
                 string path = Path.GetFullPath(obj);
                 path = path.Replace(@"\", "/");
                 path = path.Replace(mAssetPath, "");
-                path = path.Replace(mAssetBundlePkgSingleFoldName + "/", "");
+                path = path.Replace(AssetBundlePkgSingleFoldName + "/", "");
                 path = mTargetPath + "/" + path;
                 string file_name = Path.GetFileName(obj);
                 string obj_dir = path.Replace(file_name, "");
@@ -704,7 +732,7 @@ public class GameCloudEditor : EditorWindow
                 string path = Path.GetFullPath(i);
                 path = path.Replace(@"\", "/");
                 path = path.Replace(mAssetPath, "");
-                path = path.Replace(mAssetBundlePkgFoldFoldName + "/", "");
+                path = path.Replace(AssetBundlePkgFoldFoldName + "/", "");
                 path = mTargetPath + "/" + path;
                 if (!Directory.Exists(path))
                 {
@@ -875,7 +903,7 @@ public class GameCloudEditor : EditorWindow
     //-------------------------------------------------------------------------
     public static void changeBundleData(string target_path, string new_bundle, bool change_allplatform = false)
     {
-        string ab_pathinfo = target_path + "/" + mPatchiInfoName;
+        string ab_pathinfo = target_path + "/" + PatchiInfoName;
         _translatePatchXml(ab_pathinfo);
         string file = "";
         using (StreamReader sr = new StreamReader(ab_pathinfo))
@@ -922,7 +950,7 @@ public class GameCloudEditor : EditorWindow
     //-------------------------------------------------------------------------
     public static void changeDataData(string target_path, string new_data, bool change_allplatform = false)
     {
-        string ab_pathinfo = target_path + "/" + mPatchiInfoName;
+        string ab_pathinfo = target_path + "/" + PatchiInfoName;
         _translatePatchXml(ab_pathinfo);
         string file = "";
         using (StreamReader sr = new StreamReader(ab_pathinfo))

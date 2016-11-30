@@ -149,7 +149,7 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("____________________________________________");
+        EditorGUILayout.LabelField("==================华丽的分割线==================");
         EditorGUILayout.EndHorizontal();
 
         return project_infoex;
