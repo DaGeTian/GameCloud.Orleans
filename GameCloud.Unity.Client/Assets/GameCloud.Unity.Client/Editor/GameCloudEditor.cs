@@ -415,8 +415,8 @@ public class GameCloudEditor : EditorWindow
             ShowNotification(new GUIContent("打包完成!"));
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(mInitBuildTarget);
-            changeAssetBundleResourcePath();
-            changeRowResourcePath();
+            //changeAssetBundleResourcePath();
+            //changeRowResourcePath();
         }
     }
 
