@@ -62,6 +62,8 @@ public class GameCloudEditor : EditorWindow
     [MenuItem("GameCloud.Unity/AutoPatcher")]
     static void AutoPatcher()
     {
+        CurrentProject = null;
+
         _checkTargetPath();
         _initCurrentBuildTarget();
 
@@ -229,12 +231,12 @@ public class GameCloudEditor : EditorWindow
         EditorGUILayout.BeginHorizontal();
         int select_index = 0;
         if (CurrentProject != null)
-        {            
+        {
             if (!MapProjectIndexCombineWithSelectIndex.TryGetValue(CurrentProject.ProjectIndex, out select_index))
             {
                 return;
             }
-            
+
             select_index = EditorGUILayout.Popup("当前项目：", select_index, ArrayProjectBundleIdentity);
             if (CurrentSelectIndex != select_index)
             {
