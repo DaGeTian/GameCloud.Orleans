@@ -124,7 +124,10 @@ public class WWWAsyncAssetLoader : IAsyncAssetLoader
     {
         AsyncAssetLoaderMgr._destroyAsyncAssetLoader(AssetPath);
 
-        mAsyncAssetWWW.Dispose();
-        mAsyncAssetWWW = null;
+        if (mAsyncAssetWWW != null)
+        {
+            mAsyncAssetWWW.Dispose();
+            mAsyncAssetWWW = null;
+        }
     }
 }

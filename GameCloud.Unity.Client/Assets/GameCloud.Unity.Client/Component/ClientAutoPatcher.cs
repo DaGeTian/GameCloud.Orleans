@@ -102,7 +102,7 @@ public class ClientAutoPatcher<TDef> : Component<TDef> where TDef : DefAutoPatch
                     OnAutoPatcherGetServerVersionCfgResult(r, mWWWGetServerVersionCfg.error);
                 }
 
-                StepGetRemoteVersionInfo = false;                
+                StepGetRemoteVersionInfo = false;
                 mWWWGetServerVersionCfg = null;
             }
         }
@@ -111,7 +111,7 @@ public class ClientAutoPatcher<TDef> : Component<TDef> where TDef : DefAutoPatch
         if (StepIsNeedBundlePatcher)
         {
             bool is_need = false;
-            if (!VersionInfo.remoteEqualsLocalBundleVersion())
+            if (VersionInfo.mustUpdateBundleVersion())
             {
                 is_need = true;
             }
@@ -144,7 +144,7 @@ public class ClientAutoPatcher<TDef> : Component<TDef> where TDef : DefAutoPatch
         if (StepIsNeedDataPatcher)
         {
             bool is_need = false;
-            if (!VersionInfo.remoteEqualsLocalDataVersion())
+            if (VersionInfo.mustUpdateDataVersion())
             {
                 is_need = true;
             }

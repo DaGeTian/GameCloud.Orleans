@@ -19,6 +19,7 @@ public struct RemoteVersionInfo
     public string bundle_url;
     public string data_version;
     public string data_url;
+    public _eBundleState bundle_state;
     public AutoPatcherServerState server_state;
 }
 
@@ -94,19 +95,57 @@ public class VersionInfo
 #if UNITY_ANDROID
         xml.SelectSingleNode("VersionInfo/Android");
 #elif UNITY_IPHONE
-        xml.SelectSingleNode("VersionInfo/iOS");
+        xml.SelectSingleNode("VersionInfo/IOS");
 #else
-        xml.SelectSingleNode("VersionInfo/Pc");
+        xml.SelectSingleNode("VersionInfo/PC");
 #endif
         XmlNode server_state_node = xml.SelectSingleNode("VersionInfo/ServerState");
 
-        RemoteVersionInfo server_config;
-        server_config.bundle_version = version_node.Attributes["BundleVersion"].Value;
-        server_config.bundle_url = version_node.Attributes["BundleURL"].Value;
-        server_config.data_version = version_node.Attributes["DataVersion"].Value;
-        server_config.data_url = version_node.Attributes["DataURL"].Value;
-        server_config.server_state = (AutoPatcherServerState)(int.Parse(server_state_node.Attributes["state"].Value));
-        RemoteVersionInfo = server_config;
+        List<RemoteVersionInfo> list_remote_versions = new List<RemoteVersionInfo>();
+
+        _eBundleState local_bundlestate = _eBundleState.Production;
+        foreach (XmlNode i in version_node.ChildNodes)
+        {
+            RemoteVersionInfo server_config;
+            string remote_version = i.Attributes["Version"].Value;
+            server_config.bundle_version = remote_version;
+            server_config.bundle_url = i.Attributes["BundleURL"].Value;
+            server_config.data_version = i.Attributes["DataVersion"].Value;
+            server_config.data_url = i.Attributes["DataURL"].Value;
+            server_config.server_state = (AutoPatcherServerState)int.Parse(server_state_node.Attributes["state"].Value);
+            _eBundleState bundle_state = (_eBundleState)int.Parse(i.Attributes["State"].Value);
+            server_config.bundle_state = bundle_state;
+
+            if (remote_version.Equals(LocalBundleVersion))
+            {
+                local_bundlestate = bundle_state;
+            }
+
+            if (local_bundlestate == bundle_state)
+            {
+                list_remote_versions.Add(server_config);
+            }
+        }
+
+        list_remote_versions.Sort((x, y) =>
+        {
+            int x_b = int.Parse(x.bundle_version.Replace(".", ""));
+            int y_b = int.Parse(y.bundle_version.Replace(".", ""));
+            if (x_b > y_b)
+            {
+                return -1;
+            }
+            else if (x_b < y_b)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        });
+
+        RemoteVersionInfo = list_remote_versions[0];
     }
 
     //-------------------------------------------------------------------------
@@ -116,12 +155,15 @@ public class VersionInfo
     }
 
     //-------------------------------------------------------------------------
-    public bool remoteEqualsLocalBundleVersion()
+    public bool mustUpdateBundleVersion()
     {
 #if UNITY_EDITOR
-        return true;
+        return false;
 #else
-        if (RemoteVersionInfo.bundle_version.Equals(LocalBundleVersion))
+         int remote_version = int.Parse(RemoteVersionInfo.bundle_version.Replace(".", ""));
+         int local_version = int.Parse(LocalBundleVersion.Replace(".", ""));
+
+        if (remote_version > local_version)
         {
             return true;
         }
@@ -131,16 +173,23 @@ public class VersionInfo
     }
 
     //-------------------------------------------------------------------------
-    public bool remoteEqualsLocalDataVersion()
+    public bool mustUpdateDataVersion()
     {
-        if (RemoteVersionInfo.data_version.Equals(LocalVersionInfo.data_version))
+        string local_dataversion = LocalVersionInfo.data_version;
+        if (string.IsNullOrEmpty(local_dataversion))
         {
             return true;
         }
-        else
+
+        int remote_version = int.Parse(RemoteVersionInfo.data_version.Replace(".", ""));
+        int local_version = int.Parse(local_dataversion.Replace(".", ""));
+
+        if (remote_version > local_version)
         {
-            return false;
+            return true;
         }
+
+        return false;
     }
 
     //-------------------------------------------------------------------------
@@ -185,4 +234,11 @@ public class VersionInfo
             }
         }
     }
+}
+
+//-------------------------------------------------------------------------
+public enum _eBundleState
+{
+    Examine = 0,
+    Production,
 }
