@@ -14,7 +14,7 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
     bool mCanStartInitProjectDetail;
     Dictionary<int, _InitProjectInfo> MapInitProjectInfo { get; set; }
     Dictionary<int, _InitProjectInfo> MapChangeInitProjectInfo { get; set; }
-    const string PROJECT_INFO_FILE_NAME = "ProjectInfo.txt";
+    public const string PROJECT_INFO_FILE_NAME = "ProjectInfo.txt";
 
     //-------------------------------------------------------------------------
     public void copyPatchInfo(string patch_infotargetdirectory, string patch_inforesoucedirectory)
@@ -130,48 +130,23 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(app_name_title);
-        string app_name = "";
         project_infoex.AppName = EditorGUILayout.TextField(project_infoex.AppName);
-        //if (!string.IsNullOrEmpty(app_name))
-        //{
-        //    init_info.AppName = app_name;
-        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(bundle_identify_title);
-        string bundle_identify = "";
         project_infoex.BundleIdentify = EditorGUILayout.TextField(project_infoex.BundleIdentify);
-        //if (!string.IsNullOrEmpty(bundle_identify))
-        //{
-        //    init_info.BundleIdentify = bundle_identify;
-        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("初始程序版本号(请以*.**.***，其中*为数字来设置):");
-        string bundle_version = "";
         project_infoex.InitBundleVersion = EditorGUILayout.TextField(project_infoex.InitBundleVersion);
-        //if (!string.IsNullOrEmpty(bundle_version))
-        //{
-        //    init_info.BundleVersion = bundle_version;
-        //}
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("初始资源版本号(请以*.**.***，其中*为数字来设置):");
-        string data_version = "";
         project_infoex.InitDataVersion = EditorGUILayout.TextField(project_infoex.InitDataVersion);
-        //if (!string.IsNullOrEmpty(data_version))
-        //{
-        //    init_info.DataVersion = data_version;
-        //}
         EditorGUILayout.EndHorizontal();
-
-        //if (init_info.isAllInit())
-        //{
-        //    MapInitProjectInfo[init_info.AppName] = init_info;
-        //}
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("____________________________________________");
@@ -217,26 +192,33 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.Append("ProjectIndex : ");
+            sb.Append("    \"ProjectIndex\" : ");
             sb.Append(project_info.ProjectIndex);
+            sb.Append(",");
             sb.AppendLine();
-            sb.Append("IsDefault : ");
+            sb.Append("    \"IsDefault\" : \"");
             sb.Append(project_info.IsDefault);
+            sb.Append("\",");
             sb.AppendLine();
-            sb.Append("CompanyName : ");
+            sb.Append("    \"CompanyName\" : \"");
             sb.Append(project_info.CompanyName);
+            sb.Append("\",");
             sb.AppendLine();
-            sb.Append("AppName : ");
+            sb.Append("    \"AppName\" : \"");
             sb.Append(project_info.AppName);
+            sb.Append("\",");
             sb.AppendLine();
-            sb.Append("BundleIdentify : ");
+            sb.Append("    \"BundleIdentify\" : \"");
             sb.Append(project_info.BundleIdentify);
+            sb.Append("\",");
             sb.AppendLine();
-            sb.Append("InitBundleVersion : ");
+            sb.Append("    \"InitBundleVersion\" : \"");
             sb.Append(project_info.InitBundleVersion);
+            sb.Append("\",");
             sb.AppendLine();
-            sb.Append("InitDataVersion : ");
+            sb.Append("    \"InitDataVersion\" : \"");
             sb.Append(project_info.InitDataVersion);
+            sb.Append("\",");
             sb.AppendLine();
             sb.Append("}");
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
@@ -247,7 +229,7 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
                 fs.Write(bytes, 0, bytes.Length);
             }
 
-            GameCloudEditor.changeBundleData(target_directory,project_info.InitBundleVersion, true);
+            GameCloudEditor.changeBundleData(target_directory, project_info.InitBundleVersion, true);
             GameCloudEditor.changeDataData(target_directory, project_info.InitDataVersion, true);
         }
     }

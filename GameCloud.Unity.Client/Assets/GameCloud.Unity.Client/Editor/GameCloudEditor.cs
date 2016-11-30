@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -24,7 +25,8 @@ public class GameCloudEditor : EditorWindow
     static string mAssetBundleResourcesPkgFoldPath;
     static string mRowAssetPath;
     static string mTargetPath;
-    static string mABTargetPath;
+    static string mABTargetPathRoot;
+    static string mABTargetPathCurrent;
     static string mAssetPath;
     static BuildTarget mInitBuildTarget;
     static BuildTarget mCurrentBuildTarget;
@@ -32,7 +34,10 @@ public class GameCloudEditor : EditorWindow
     static Queue<BuildTarget> mQueueNeedBuildPlatform;
     static string mPatchInfoPath;
     static List<string> mDoNotPackFileExtention = new List<string> { ".meta", ".DS_Store" };
-
+    static List<_InitProjectInfo> ListInitProjectInfo { get; set; }
+    static string[] ArrayProjectName { get; set; }
+    static _InitProjectInfo CurrentProject { get; set; }
+    static int CurrentSelectIndex { get; set; }
     //const string mNotPackAsset = "NotPackAsset";
     //const string mAssetBundleDirectory = "NeedPackAsset";
     const string mAssetBundleTargetDirectory = "ABPatch";
@@ -56,19 +61,22 @@ public class GameCloudEditor : EditorWindow
     [MenuItem("GameCloud.Unity/AutoPatcher")]
     static void AutoPatcher()
     {
-        _checkPath();
+        _checkTargetPath();
         _initCurrentBuildTarget();
 
-        if (!Directory.Exists(mABTargetPath))
+        if (!Directory.Exists(mABTargetPathRoot))
         {
             GameCloudEditorInitProjectInfo test = GetWindow<GameCloudEditorInitProjectInfo>("初始化项目信息");
 
-            test.copyPatchInfo(mABTargetPath,
+            test.copyPatchInfo(mABTargetPathRoot,
                 mAssetPath + mABPathInfoResourceDirectory);
             return;
         }
 
         EditorWindow.GetWindow<GameCloudEditor>();
+
+        _getAllProjectAndCurrentProject();
+        _initCurrentProject();
         _checkResourcesPath();
         _getCurrentTargetPath();
         _checkPatchData();
@@ -91,17 +99,57 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
-    static void _checkPath()
+    static void _checkTargetPath()
     {
         string current_dir = System.Environment.CurrentDirectory;
         current_dir = current_dir.Replace(@"\", "/");
         mAssetPath = current_dir + "/Assets/";
 
-        mABTargetPath = Path.Combine(current_dir, mAssetBundleTargetDirectory);
-        mABTargetPath = mABTargetPath.Replace(@"\", "/");
-        mPatchInfoPath = Path.Combine(mABTargetPath, mPatchiInfoName);
+        mABTargetPathRoot = Path.Combine(current_dir, mAssetBundleTargetDirectory);
+        mABTargetPathRoot = mABTargetPathRoot.Replace(@"\", "/");
+    }
+
+    //-------------------------------------------------------------------------
+    static void _getAllProjectAndCurrentProject()
+    {
+        ListInitProjectInfo = new List<_InitProjectInfo>();
+        var project_infoderectories = Directory.GetDirectories(mABTargetPathRoot);
+
+        foreach (var i in project_infoderectories)
+        {
+            var project_info_lines = File.ReadAllText(i + "/" + GameCloudEditorInitProjectInfo.PROJECT_INFO_FILE_NAME);
+            _InitProjectInfo project_info = EbTool.jsonDeserialize<_InitProjectInfo>(project_info_lines);
+            if (CurrentProject == null)
+            {
+                CurrentProject = project_info;
+            }
+            ListInitProjectInfo.Add(project_info);
+        }
+
+        ListInitProjectInfo.Sort((x, y) => x.ProjectIndex.CompareTo(y.ProjectIndex));
+        ArrayProjectName = ListInitProjectInfo.Select(x => x.AppName).ToArray();
+    }
+
+    //-------------------------------------------------------------------------
+    static void _decideCurrentProject(int project_index)
+    {
+        _InitProjectInfo project_info = ListInitProjectInfo.Find(x => x.ProjectIndex == project_index);
+        if (project_info != null)
+        {
+            CurrentProject = project_info;
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    static void _initCurrentProject()
+    {
+        PlayerSettings.companyName = CurrentProject.CompanyName;
+        PlayerSettings.productName = CurrentProject.AppName;
+        PlayerSettings.bundleIdentifier = CurrentProject.BundleIdentify;
+        mPatchInfoPath = Path.Combine(mABTargetPathRoot, CurrentProject.AppName);
+        mPatchInfoPath = Path.Combine(mPatchInfoPath, mPatchiInfoName);
         mPatchInfoPath = mPatchInfoPath.Replace(@"\", "/");
-        //Debug.LogError("mRealTargetPath:: " + mRealTargetPath);      
+        mABTargetPathCurrent = Path.Combine(mABTargetPathRoot, CurrentProject.AppName);
     }
 
     //-------------------------------------------------------------------------
@@ -141,21 +189,45 @@ public class GameCloudEditor : EditorWindow
     {
         if (mCurrentBuildTarget == BuildTarget.Android)
         {
-            mTargetPlatformRootPath = mABTargetPath + "/ANDROID/";
+            mTargetPlatformRootPath = mABTargetPathCurrent + "/ANDROID/";
         }
         else if (mCurrentBuildTarget == BuildTarget.iOS)
         {
-            mTargetPlatformRootPath = mABTargetPath + "/IOS/";
+            mTargetPlatformRootPath = mABTargetPathCurrent + "/IOS/";
         }
         else if (mCurrentBuildTarget == BuildTarget.StandaloneWindows)
         {
-            mTargetPlatformRootPath = mABTargetPath + "/PC/";
+            mTargetPlatformRootPath = mABTargetPathCurrent + "/PC/";
         }
     }
 
     //-------------------------------------------------------------------------
     void OnGUI()
     {
+        EditorGUILayout.BeginHorizontal();
+        int select_index = 0;
+        if (CurrentProject != null)
+        {
+            select_index = CurrentProject.ProjectIndex;
+            select_index = EditorGUILayout.Popup("当前项目：", select_index, ArrayProjectName);
+            if (CurrentSelectIndex != select_index)
+            {
+                _decideCurrentProject(select_index);
+                _initCurrentProject();
+                _checkResourcesPath();
+                _getCurrentTargetPath();
+                _checkPatchData();
+                mBuidAndroid = false;
+                mCurrentIsBuidAndroid = false;
+                mBuidIOS = false;
+                mCurrentIsBuidIOS = false;
+                mBuidPC = false;
+                mCurrentIsBuidPC = false;
+                CurrentSelectIndex = select_index;
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("当前平台程序包版本号:", mBundleVersion);
         bool add_bundleversion = GUILayout.Button("程序包版本号加一");
@@ -497,7 +569,9 @@ public class GameCloudEditor : EditorWindow
 
         Caching.CleanCache();
 
+        mListAllPkgSingleABFile.Clear();
         _getAllPkgSingleFiles(mAssetBundleResourcesPkgSinglePath);
+        mListAllPkgFoldABFold.Clear();
         _getAllPkgFoldFold(mAssetBundleResourcesPkgFoldPath);
 
         if (!Directory.Exists(mTargetPath))
@@ -528,7 +602,7 @@ public class GameCloudEditor : EditorWindow
 
     //-------------------------------------------------------------------------
     void _getAllPkgSingleFiles(string directory_path)
-    {
+    {        
         string[] ab_file = Directory.GetFiles(directory_path);
         foreach (var i in ab_file)
         {
@@ -551,7 +625,7 @@ public class GameCloudEditor : EditorWindow
 
     //-------------------------------------------------------------------------
     void _getAllPkgFoldFold(string directory_path)
-    {
+    {        
         string[] directorys = Directory.GetDirectories(directory_path);
         mListAllPkgFoldABFold.AddRange(directorys);
 
@@ -736,8 +810,17 @@ public class GameCloudEditor : EditorWindow
     //-------------------------------------------------------------------------
     static void _checkPatchData()
     {
+        _translatePatchXml(mPatchInfoPath);
+
+        PlayerSettings.bundleVersion = mBundleVersion;
+        mTargetPath = mTargetPlatformRootPath + "DataVersion_" + mDataVersion;
+    }
+
+    //-------------------------------------------------------------------------
+    static void _translatePatchXml(string path)
+    {
         XmlDocument abpath_xml = new XmlDocument();
-        abpath_xml.Load(mPatchInfoPath);
+        abpath_xml.Load(path);
 
         XmlElement root = null;
         root = abpath_xml.DocumentElement;
@@ -786,25 +869,14 @@ public class GameCloudEditor : EditorWindow
                     mDataVersion = mPCDataVersion;
                 }
             }
-            //else if (i.Name.Equals("AssetBundleResourcePath"))
-            //{
-            //    mAssetBundleResourcesPath = i.GetAttribute("ABValue");//mAssetPath + mAssetBundleDirectory;
-            //}
-            //else if (i.Name.Equals("RawResourcePath"))
-            //{
-            //    mRowAssetPath = i.GetAttribute("RawValue");//mAssetPath + mNotPackAsset;
-            //}
         }
-
-        //PlayerSettings.bundleIdentifier = "com." + PlayerSettings.companyName + "." + PlayerSettings.productName;
-        PlayerSettings.bundleVersion = mBundleVersion;
-        mTargetPath = mTargetPlatformRootPath + "DataVersion_" + mDataVersion;
     }
 
     //-------------------------------------------------------------------------
     public static void changeBundleData(string target_path, string new_bundle, bool change_allplatform = false)
     {
         string ab_pathinfo = target_path + "/" + mPatchiInfoName;
+        _translatePatchXml(ab_pathinfo);
         string file = "";
         using (StreamReader sr = new StreamReader(ab_pathinfo))
         {
@@ -834,7 +906,7 @@ public class GameCloudEditor : EditorWindow
                 replace_oldvalue = "BDAndroid=\"" + mBundleVersion + "\"";
                 replace_newvalue = "BDAndroid=\"" + new_bundle + "\"";
 #elif UNITY_STANDALONE_WIN
-                replace_oldvalue = "BDWindowsPC=\"" + mDataVersion + "\"";
+                replace_oldvalue = "BDWindowsPC=\"" + mBundleVersion + "\"";
                 replace_newvalue = "BDWindowsPC=\"" + new_bundle + "\"";
 #endif
                 file = file.Replace(replace_oldvalue, replace_newvalue);
@@ -851,6 +923,7 @@ public class GameCloudEditor : EditorWindow
     public static void changeDataData(string target_path, string new_data, bool change_allplatform = false)
     {
         string ab_pathinfo = target_path + "/" + mPatchiInfoName;
+        _translatePatchXml(ab_pathinfo);
         string file = "";
         using (StreamReader sr = new StreamReader(ab_pathinfo))
         {
@@ -967,7 +1040,7 @@ public class GameCloudEditor : EditorWindow
         bundle_version = bundle_version.Insert(1, ".").Insert(4, ".");
 
         _checkPatchData();
-        changeBundleData(mABTargetPath, bundle_version);
+        changeBundleData(mABTargetPathCurrent, bundle_version);
         _checkPatchData();
     }
 
@@ -986,7 +1059,7 @@ public class GameCloudEditor : EditorWindow
         string data_version = data.ToString();
         data_version = data_version.Insert(1, ".").Insert(4, ".");
         _checkPatchData();
-        changeDataData(mABTargetPath, data_version);
+        changeDataData(mABTargetPathCurrent, data_version);
         _checkPatchData();
     }
 }

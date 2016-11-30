@@ -1,9 +1,27 @@
 <VersionInfo>
-	<Pc BundleVersion="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/1.00.000.exe" 
-		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/DataVersion_1.00.000/DataFileList.txt" />
-	<Android BundleVersion="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/Android/1.00.000.apk" 
-		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/ANDROID/DataVersion_1.00.000/DataFileList.txt" />
-	<iOS BundleVersion="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/IOS/1.00.000.ipa" 
-		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/IOS/DataVersion_1.00.000/DataFileList.txt" />
-	<ServerState state="0" />
+  <PC>
+    <BundleVersion Version="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/1.00.000.exe"
+		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/DataVersion_1.00.000/DataFileList.txt"
+    State="1"/>
+    <BundleVersion Version="1.00.000" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/1.00.000.exe"
+		DataVersion="1.00.000" DataURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/PC/DataVersion_1.00.000/DataFileList.txt"
+    State="0"/>
+  </PC>
+  <Android>
+    <BundleVersion Version="1.00.002"  BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/Android/1.00.002.apk"
+    DataVersion="1.00.004" DataURL="https://autopatcher.oss-cn-shanghai.aliyuncs.com/ANDROID/DataVersion_1.00.004/DataFileList.txt"
+    State="1"/>
+    <BundleVersion Version="1.00.003" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/Android/1.00.003.apk"
+    DataVersion="1.00.004" DataURL="https://autopatcher.oss-cn-shanghai.aliyuncs.com/ANDROID/DataVersion_1.00.004/DataFileList.txt"
+    State="0"/>
+  </Android>
+  <IOS>
+    <BundleVersion Version="1.01.010" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/IOS/1.00.010.ipa"
+    DataVersion="1.00.006" DataURL="https://autopatcher.oss-cn-shanghai.aliyuncs.com/IOS/DataVersion_1.00.006/DataFileList.txt"
+    State="1"/>
+    <BundleVersion Version="1.01.011" BundleURL="https://tpclientpatchwus.blob.core.windows.net/autopatcher/IOS/1.00.011.ipa"
+    DataVersion="1.00.006" DataURL="https://autopatcher.oss-cn-shanghai.aliyuncs.com/IOS/DataVersion_1.00.006/DataFileList.txt"
+    State="0"/>
+  </IOS>
+  <ServerState state="0" />
 </VersionInfo>
