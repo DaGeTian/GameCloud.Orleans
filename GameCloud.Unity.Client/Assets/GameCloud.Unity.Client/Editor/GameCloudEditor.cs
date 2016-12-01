@@ -162,6 +162,7 @@ public class GameCloudEditor : EditorWindow
         mPatchInfoPath = Path.Combine(mPatchInfoPath, PatchiInfoName);
         mPatchInfoPath = mPatchInfoPath.Replace(@"\", "/");
         mABTargetPathCurrent = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
+        mABTargetPathCurrent = mABTargetPathCurrent.Replace(@"\", "/");
     }
 
     //-------------------------------------------------------------------------
@@ -543,7 +544,7 @@ public class GameCloudEditor : EditorWindow
 
             try
             {
-                copyFile(mTargetPath, persistent_data_path, mABTargetPathRoot);
+                copyFile(mTargetPath, persistent_data_path, mTargetPath);
                 ShowNotification(new GUIContent("复制AB到本地成功!"));
             }
             catch (System.Exception e)
