@@ -543,7 +543,7 @@ public class GameCloudEditor : EditorWindow
 
             try
             {
-                copyFile(mTargetPath, persistent_data_path, mTargetPath);
+                copyFile(mTargetPath, persistent_data_path, mABTargetPathRoot);
                 ShowNotification(new GUIContent("复制AB到本地成功!"));
             }
             catch (System.Exception e)
