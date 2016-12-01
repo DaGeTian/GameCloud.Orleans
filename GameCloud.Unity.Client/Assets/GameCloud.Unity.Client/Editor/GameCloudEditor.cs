@@ -32,6 +32,8 @@ public class GameCloudEditor : EditorWindow
     static BuildTarget mCurrentBuildTarget;
     static List<BuildTarget> mListNeedBuildPlatform;
     static Queue<BuildTarget> mQueueNeedBuildPlatform;
+    static List<BuildTarget> mListNeedCopyPlatform;
+    static Queue<BuildTarget> mQueueNeedCopyPlatform;
     static string mPatchInfoPath;
     static List<string> mDoNotPackFileExtention = new List<string> { ".meta", ".DS_Store" };
     static List<_InitProjectInfo> ListInitProjectInfo { get; set; }
@@ -49,12 +51,12 @@ public class GameCloudEditor : EditorWindow
 
     string mPackInfoTextName = "DataFileList.txt";
     string mDataTargetPath;
-    bool mCurrentIsBuidAndroid = false;
-    bool mCurrentIsBuidIOS = false;
-    bool mCurrentIsBuidPC = false;
     bool mBuidAndroid = false;
     bool mBuidIOS = false;
     bool mBuidPC = false;
+    bool mCopyAndroid = false;
+    bool mCopyIOS = false;
+    bool mCopyPC = false;
     List<string> mListAllPkgSingleABFile = new List<string>();
     List<string> mListAllPkgFoldABFold = new List<string>();
 
@@ -86,6 +88,8 @@ public class GameCloudEditor : EditorWindow
         mMD5 = new MD5CryptoServiceProvider();
         mListNeedBuildPlatform = new List<BuildTarget>();
         mQueueNeedBuildPlatform = new Queue<BuildTarget>();
+        mListNeedCopyPlatform = new List<BuildTarget>();
+        mQueueNeedCopyPlatform = new Queue<BuildTarget>();
     }
 
     //-------------------------------------------------------------------------
@@ -247,11 +251,8 @@ public class GameCloudEditor : EditorWindow
                 _getCurrentTargetPath();
                 _checkPatchData();
                 mBuidAndroid = false;
-                mCurrentIsBuidAndroid = false;
                 mBuidIOS = false;
-                mCurrentIsBuidIOS = false;
                 mBuidPC = false;
-                mCurrentIsBuidPC = false;
                 CurrentSelectIndex = select_index;
             }
         }
@@ -322,36 +323,28 @@ public class GameCloudEditor : EditorWindow
         EditorGUILayout.LabelField("目标路径:", mTargetPlatformRootPath);
 
         EditorGUILayout.BeginHorizontal();
-        mBuidAndroid = EditorGUILayout.Toggle("是否打AndroidAB", mBuidAndroid);
-        if (mCurrentIsBuidAndroid != mBuidAndroid)
+        bool buid_andorid = mBuidAndroid;
+        buid_andorid = EditorGUILayout.Toggle("是否打AndroidAB", buid_andorid);
+        if (buid_andorid != mBuidAndroid)
         {
-            mCurrentIsBuidAndroid = mBuidAndroid;
-            _checkIfNeePackPlatform(mCurrentIsBuidAndroid, BuildTarget.Android);
+            mBuidAndroid = buid_andorid;
+            _checkIfNeedPackPlatform(mBuidAndroid, BuildTarget.Android);
         }
-        mBuidIOS = EditorGUILayout.Toggle("是否打IOSAB", mBuidIOS);
-        if (mCurrentIsBuidIOS != mBuidIOS)
-        {
-            mCurrentIsBuidIOS = mBuidIOS;
-            _checkIfNeePackPlatform(mCurrentIsBuidIOS, BuildTarget.iOS);
-        }
-        mBuidPC = EditorGUILayout.Toggle("是否打PCAB", mBuidPC);
-        if (mCurrentIsBuidPC != mBuidPC)
-        {
-            mCurrentIsBuidPC = mBuidPC;
-            _checkIfNeePackPlatform(mCurrentIsBuidPC, BuildTarget.StandaloneWindows);
-        }
-        EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        bool copy_asset = GUILayout.Button("复制AB资源到persistentPath", GUILayout.Width(200));
-        if (copy_asset)
+        bool buid_ios = mBuidIOS;
+        buid_ios = EditorGUILayout.Toggle("是否打IOSAB", buid_ios);
+        if (buid_ios != mBuidIOS)
         {
-            _copyOrDeleteToClient(true);
+            mBuidIOS = buid_ios;
+            _checkIfNeedPackPlatform(mBuidIOS, BuildTarget.iOS);
         }
-        bool delete_asset = GUILayout.Button("删除persistentPath中的AB资源", GUILayout.Width(200));
-        if (delete_asset)
+
+        bool buid_pc = mBuidPC;
+        buid_pc = EditorGUILayout.Toggle("是否打PCAB", buid_pc);
+        if (buid_pc != mBuidPC)
         {
-            _copyOrDeleteToClient(false);
+            mBuidPC = buid_pc;
+            _checkIfNeedPackPlatform(mBuidPC, BuildTarget.StandaloneWindows);
         }
         EditorGUILayout.EndHorizontal();
 
@@ -369,6 +362,56 @@ public class GameCloudEditor : EditorWindow
             _startBuild();
         }
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("==================华丽的分割线==================");
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        bool copy_android = mCopyAndroid;
+        copy_android = EditorGUILayout.Toggle("是否复制AndroidAB", copy_android);
+        if (mCopyAndroid != copy_android)
+        {
+            mCopyAndroid = copy_android;
+            _checkIfNeedCopyPlatform(mCopyAndroid, BuildTarget.Android);
+        }
+
+        bool copy_ios = mCopyIOS;
+        copy_ios = EditorGUILayout.Toggle("是否复制IOSAB", copy_ios);
+        if (mCopyIOS != copy_ios)
+        {
+            mCopyIOS = copy_ios;
+            _checkIfNeedCopyPlatform(mCopyIOS, BuildTarget.iOS);
+        }
+
+        bool copy_pc = mCopyPC;
+        copy_pc = EditorGUILayout.Toggle("是否复制PCAB", copy_pc);
+        if (mCopyPC != copy_pc)
+        {
+            mCopyPC = copy_pc;
+            _checkIfNeedCopyPlatform(mCopyPC, BuildTarget.StandaloneWindows);
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        bool copy_asset = GUILayout.Button("复制选中平台AB资源到persistentPath", GUILayout.Width(200));
+        if (copy_asset)
+        {
+            foreach (var i in mListNeedCopyPlatform)
+            {
+                _copyOrDeleteTopersistentDataPath(i, true);
+            }            
+        }
+        bool delete_asset = GUILayout.Button("删除选中平台persistentPath中的AB资源", GUILayout.Width(200));
+        if (delete_asset)
+        {
+            foreach (var i in mListNeedCopyPlatform)
+            {
+                _copyOrDeleteTopersistentDataPath(i, false);
+            }            
+        }
+        EditorGUILayout.EndHorizontal();
+
     }
 
     ////-------------------------------------------------------------------------
@@ -390,7 +433,7 @@ public class GameCloudEditor : EditorWindow
     //}
 
     //-------------------------------------------------------------------------
-    void _checkIfNeePackPlatform(bool is_currentneed, BuildTarget build_target)
+    void _checkIfNeedPackPlatform(bool is_currentneed, BuildTarget build_target)
     {
         if (is_currentneed)
         {
@@ -421,14 +464,43 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
+    void _checkIfNeedCopyPlatform(bool is_currentneed, BuildTarget build_target)
+    {
+        if (is_currentneed)
+        {
+            _setNeedCopyPlatform(build_target);
+        }
+        else
+        {
+            _removeNeedCopyPlatform(build_target);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    void _setNeedCopyPlatform(BuildTarget build_target)
+    {
+        if (!mListNeedCopyPlatform.Contains(build_target))
+        {
+            mListNeedCopyPlatform.Add(build_target);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    void _removeNeedCopyPlatform(BuildTarget build_target)
+    {
+        if (mListNeedCopyPlatform.Contains(build_target))
+        {
+            mListNeedCopyPlatform.Remove(build_target);
+        }
+    }
+
+    //-------------------------------------------------------------------------
     void _startBuild()
     {
         foreach (var i in mListNeedBuildPlatform)
         {
             mQueueNeedBuildPlatform.Enqueue(i);
-        }
-
-        mListNeedBuildPlatform.Clear();
+        }        
 
         _startCurrentBuild();
     }
@@ -520,6 +592,68 @@ public class GameCloudEditor : EditorWindow
         foreach (var i in directorys)
         {
             _checkPackInfo(sw, i);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    void _copyOrDeleteTopersistentDataPath(BuildTarget build_target, bool is_copy)
+    {
+        //        string persistent_data_path =
+        //#if UNITY_STANDALONE_WIN && UNITY_EDITOR
+        //        Application.persistentDataPath + "/PC/";
+        //#elif UNITY_ANDROID && UNITY_EDITOR
+        // Application.persistentDataPath + "/ANDROID/";
+        //#elif UNITY_IPHONE && UNITY_EDITOR
+        //        Application.persistentDataPath + "/IOS/";
+        //#endif
+        string persistent_data_path = "";
+        string resource_path = "";
+        if (build_target == BuildTarget.iOS)
+        {
+            persistent_data_path = Application.persistentDataPath + "/IOS/";
+            resource_path = mABTargetPathCurrent + "/IOS/" + "DataVersion_" + mIOSDataVersion;
+        }
+        else if (build_target == BuildTarget.Android)
+        {
+            persistent_data_path = Application.persistentDataPath + "/ANDROID/";
+            resource_path = mABTargetPathCurrent + "/ANDROID/" + "DataVersion_" + mAndroidDataVersion;
+        }
+        else if (build_target == BuildTarget.StandaloneWindows)
+        {
+            persistent_data_path = Application.persistentDataPath + "/PC/";
+            resource_path = mABTargetPathCurrent + "/PC/" + "DataVersion_" + mPCDataVersion;
+        }
+
+        persistent_data_path = persistent_data_path.Replace(@"\", "/");
+
+        if (is_copy)
+        {
+            if (!Directory.Exists(persistent_data_path))
+            {
+                Directory.CreateDirectory(persistent_data_path);
+            }
+
+            try
+            {
+                copyFile(resource_path, persistent_data_path, resource_path);
+                ShowNotification(new GUIContent("复制AB到本地成功!"));
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning(e.Message);
+            }
+        }
+        else
+        {
+            try
+            {
+                deleteFile(persistent_data_path);
+                ShowNotification(new GUIContent("删除本地AB成功!"));
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning(e.Message);
+            }
         }
     }
 
