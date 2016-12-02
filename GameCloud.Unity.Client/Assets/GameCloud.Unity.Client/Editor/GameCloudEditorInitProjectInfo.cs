@@ -190,38 +190,8 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
                 PlayerSettings.bundleIdentifier = project_info.BundleIdentify;
             }
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("{");
-            sb.Append("    \"ProjectIndex\" : ");
-            sb.Append(project_info.ProjectIndex);
-            sb.Append(",");
-            sb.AppendLine();
-            sb.Append("    \"IsDefault\" : \"");
-            sb.Append(project_info.IsDefault);
-            sb.Append("\",");
-            sb.AppendLine();
-            sb.Append("    \"CompanyName\" : \"");
-            sb.Append(project_info.CompanyName);
-            sb.Append("\",");
-            sb.AppendLine();
-            sb.Append("    \"AppName\" : \"");
-            sb.Append(project_info.AppName);
-            sb.Append("\",");
-            sb.AppendLine();
-            sb.Append("    \"BundleIdentify\" : \"");
-            sb.Append(project_info.BundleIdentify);
-            sb.Append("\",");
-            sb.AppendLine();
-            sb.Append("    \"InitBundleVersion\" : \"");
-            sb.Append(project_info.InitBundleVersion);
-            sb.Append("\",");
-            sb.AppendLine();
-            sb.Append("    \"InitDataVersion\" : \"");
-            sb.Append(project_info.InitDataVersion);
-            sb.Append("\",");
-            sb.AppendLine();
-            sb.Append("}");
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
+            var project_info_str = getFormatProjectInfo(project_info);
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(project_info_str);
 
             string path = target_directory + "/" + PROJECT_INFO_FILE_NAME;
             using (FileStream fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
@@ -232,6 +202,44 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
             GameCloudEditor.changeBundleData(target_directory, project_info.InitBundleVersion, true);
             GameCloudEditor.changeDataData(target_directory, project_info.InitDataVersion, true);
         }
+    }
+
+    //-------------------------------------------------------------------------
+    public static string getFormatProjectInfo(_InitProjectInfo project_info)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("{");
+        sb.Append("    \"ProjectIndex\" : ");
+        sb.Append(project_info.ProjectIndex);
+        sb.Append(",");
+        sb.AppendLine();
+        sb.Append("    \"IsDefault\" : \"");
+        sb.Append(project_info.IsDefault);
+        sb.Append("\",");
+        sb.AppendLine();
+        sb.Append("    \"CompanyName\" : \"");
+        sb.Append(project_info.CompanyName);
+        sb.Append("\",");
+        sb.AppendLine();
+        sb.Append("    \"AppName\" : \"");
+        sb.Append(project_info.AppName);
+        sb.Append("\",");
+        sb.AppendLine();
+        sb.Append("    \"BundleIdentify\" : \"");
+        sb.Append(project_info.BundleIdentify);
+        sb.Append("\",");
+        sb.AppendLine();
+        sb.Append("    \"InitBundleVersion\" : \"");
+        sb.Append(project_info.InitBundleVersion);
+        sb.Append("\",");
+        sb.AppendLine();
+        sb.Append("    \"InitDataVersion\" : \"");
+        sb.Append(project_info.InitDataVersion);
+        sb.Append("\",");
+        sb.AppendLine();
+        sb.Append("}");
+
+        return sb.ToString();
     }
 }
 

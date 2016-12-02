@@ -158,7 +158,7 @@ public class GameCloudEditor : EditorWindow
         CurrentProject.IsDefault = is_default;
         using (StreamWriter sw = new StreamWriter(mABTargetPathRoot + "/" + CurrentProject.BundleIdentify + "/" + GameCloudEditorInitProjectInfo.PROJECT_INFO_FILE_NAME))
         {
-            sw.Write(EbTool.jsonSerialize(CurrentProject));
+            sw.Write(GameCloudEditorInitProjectInfo.getFormatProjectInfo(CurrentProject));
         }
     }
 
