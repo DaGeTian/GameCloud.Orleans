@@ -48,7 +48,6 @@ public class GameCloudEditor : EditorWindow
     const string PatchiInfoName = "ABPatchInfo.xml";
     const string AssetBundlePkgSingleFoldName = "PkgSingle";
     const string AssetBundlePkgFoldFoldName = "PkgFold";
-
     string mPackInfoTextName = "DataFileList.txt";
     string mDataTargetPath;
     bool mBuidAndroid = false;
@@ -65,7 +64,6 @@ public class GameCloudEditor : EditorWindow
     static void AutoPatcher()
     {
         CurrentProject = null;
-
         _checkTargetPath();
         _initCurrentBuildTarget();
 
@@ -127,10 +125,11 @@ public class GameCloudEditor : EditorWindow
         {
             var project_info_lines = File.ReadAllText(i + "/" + GameCloudEditorInitProjectInfo.PROJECT_INFO_FILE_NAME);
             _InitProjectInfo project_info = EbTool.jsonDeserialize<_InitProjectInfo>(project_info_lines);
-            if (CurrentProject == null)
+            if (project_info.IsDefault)
             {
                 CurrentProject = project_info;
             }
+
             ListInitProjectInfo.Add(project_info);
         }
 
@@ -147,7 +146,19 @@ public class GameCloudEditor : EditorWindow
         _InitProjectInfo project_info = ListInitProjectInfo.Find(x => x.ProjectIndex == project_i.Key);
         if (project_info != null)
         {
+            _changeDefaultProject(false);
             CurrentProject = project_info;
+            _changeDefaultProject(true);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    static void _changeDefaultProject(bool is_default)
+    {
+        CurrentProject.IsDefault = is_default;
+        using (StreamWriter sw = new StreamWriter(mABTargetPathRoot + "/" + CurrentProject.BundleIdentify + "/" + GameCloudEditorInitProjectInfo.PROJECT_INFO_FILE_NAME))
+        {
+            sw.Write(EbTool.jsonSerialize(CurrentProject));
         }
     }
 
@@ -320,11 +331,11 @@ public class GameCloudEditor : EditorWindow
         //}
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.LabelField("目标路径:", mTargetPlatformRootPath);
+        EditorGUILayout.LabelField("当前平台目标路径:", mTargetPlatformRootPath);
 
         EditorGUILayout.BeginHorizontal();
         bool buid_andorid = mBuidAndroid;
-        buid_andorid = EditorGUILayout.Toggle("是否打AndroidAB", buid_andorid);
+        buid_andorid = EditorGUILayout.Toggle("BuidAndroidAB", buid_andorid);
         if (buid_andorid != mBuidAndroid)
         {
             mBuidAndroid = buid_andorid;
@@ -332,7 +343,7 @@ public class GameCloudEditor : EditorWindow
         }
 
         bool buid_ios = mBuidIOS;
-        buid_ios = EditorGUILayout.Toggle("是否打IOSAB", buid_ios);
+        buid_ios = EditorGUILayout.Toggle("BuidIOSAB", buid_ios);
         if (buid_ios != mBuidIOS)
         {
             mBuidIOS = buid_ios;
@@ -340,7 +351,7 @@ public class GameCloudEditor : EditorWindow
         }
 
         bool buid_pc = mBuidPC;
-        buid_pc = EditorGUILayout.Toggle("是否打PCAB", buid_pc);
+        buid_pc = EditorGUILayout.Toggle("BuidPCAB", buid_pc);
         if (buid_pc != mBuidPC)
         {
             mBuidPC = buid_pc;
@@ -369,7 +380,7 @@ public class GameCloudEditor : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         bool copy_android = mCopyAndroid;
-        copy_android = EditorGUILayout.Toggle("是否复制AndroidAB", copy_android);
+        copy_android = EditorGUILayout.Toggle("Copy&DeleteAndroidAB", copy_android);
         if (mCopyAndroid != copy_android)
         {
             mCopyAndroid = copy_android;
@@ -377,7 +388,7 @@ public class GameCloudEditor : EditorWindow
         }
 
         bool copy_ios = mCopyIOS;
-        copy_ios = EditorGUILayout.Toggle("是否复制IOSAB", copy_ios);
+        copy_ios = EditorGUILayout.Toggle("Copy&DeleteIOSAB", copy_ios);
         if (mCopyIOS != copy_ios)
         {
             mCopyIOS = copy_ios;
@@ -385,7 +396,7 @@ public class GameCloudEditor : EditorWindow
         }
 
         bool copy_pc = mCopyPC;
-        copy_pc = EditorGUILayout.Toggle("是否复制PCAB", copy_pc);
+        copy_pc = EditorGUILayout.Toggle("Copy&DeletePCAB", copy_pc);
         if (mCopyPC != copy_pc)
         {
             mCopyPC = copy_pc;
@@ -394,24 +405,23 @@ public class GameCloudEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        bool copy_asset = GUILayout.Button("复制选中平台AB资源到persistentPath", GUILayout.Width(200));
+        bool copy_asset = GUILayout.Button("复制选中平台AB资源到persistentPath");
         if (copy_asset)
         {
             foreach (var i in mListNeedCopyPlatform)
             {
                 _copyOrDeleteTopersistentDataPath(i, true);
-            }            
+            }
         }
-        bool delete_asset = GUILayout.Button("删除选中平台persistentPath中的AB资源", GUILayout.Width(200));
+        bool delete_asset = GUILayout.Button("删除选中平台persistentPath中的AB资源");
         if (delete_asset)
         {
             foreach (var i in mListNeedCopyPlatform)
             {
                 _copyOrDeleteTopersistentDataPath(i, false);
-            }            
+            }
         }
         EditorGUILayout.EndHorizontal();
-
     }
 
     ////-------------------------------------------------------------------------
@@ -500,7 +510,7 @@ public class GameCloudEditor : EditorWindow
         foreach (var i in mListNeedBuildPlatform)
         {
             mQueueNeedBuildPlatform.Enqueue(i);
-        }        
+        }
 
         _startCurrentBuild();
     }
@@ -1223,6 +1233,16 @@ public class GameCloudEditor : EditorWindow
         }
         string data_version = data.ToString();
         data_version = data_version.Insert(1, ".").Insert(4, ".");
+        if (PlayerPrefs.HasKey(AutoPatcherStringDef.PlayerPrefsKeyLocalVersionInfo))
+        {
+            string version_info = PlayerPrefs.GetString(AutoPatcherStringDef.PlayerPrefsKeyLocalVersionInfo);
+            if (!string.IsNullOrEmpty(version_info))
+            {
+                var version = EbTool.jsonDeserialize<LocalVersionInfo>(version_info);
+                version.data_version = data_version;
+                PlayerPrefs.SetString(AutoPatcherStringDef.PlayerPrefsKeyLocalVersionInfo, EbTool.jsonSerialize(version));
+            }
+        }
         _checkPatchData();
         changeDataData(mABTargetPathCurrent, data_version);
         _checkPatchData();
