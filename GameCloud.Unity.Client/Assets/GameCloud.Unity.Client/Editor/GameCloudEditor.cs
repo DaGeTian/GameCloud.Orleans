@@ -255,6 +255,8 @@ public class GameCloudEditor : EditorWindow
             mTargetPlatformRootPath = CurrentProjectABTargetPath + "/PC/";
             CurrentBuildProjectPlatformInfo = MapProjectPlatformInfo["PC"];
         }
+
+        PlayerSettings.bundleVersion = CurrentBuildProjectPlatformInfo.BundleVersion;
     }
 
     //-------------------------------------------------------------------------
@@ -317,9 +319,7 @@ public class GameCloudEditor : EditorWindow
         //}
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("==================华丽的分割线==================");
-        EditorGUILayout.EndHorizontal();
+        _drawSplitLine();
 
         MapProjectPlatformInfoChanged.Clear();
         foreach (var item in MapProjectPlatformInfo)
@@ -353,9 +353,7 @@ public class GameCloudEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("==================华丽的分割线==================");
-        EditorGUILayout.EndHorizontal();
+        _drawSplitLine();
 
         EditorGUILayout.BeginHorizontal();
         bool copy_android = mCopyAndroid;
@@ -453,11 +451,17 @@ public class GameCloudEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
 
+        _drawSplitLine();
+
+        return platform_infoex;
+    }
+
+    //-------------------------------------------------------------------------
+    void _drawSplitLine()
+    {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("==================华丽的分割线==================");
         EditorGUILayout.EndHorizontal();
-
-        return platform_infoex;
     }
 
     ////-------------------------------------------------------------------------
