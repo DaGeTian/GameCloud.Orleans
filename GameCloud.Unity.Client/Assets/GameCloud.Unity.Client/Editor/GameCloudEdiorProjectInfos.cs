@@ -246,8 +246,8 @@ public class GameCloudEdiorProjectInfos : EditorWindow
             fs.Write(bytes, 0, bytes.Length);
         }
 
-        GameCloudEditor.changeBundleData(target_directory, AddProject.InitBundleVersion, true);
-        GameCloudEditor.changeDataData(target_directory, AddProject.InitDataVersion, true);
+        GameCloudEditor.changeBundleData(_ePlatform.None, target_directory, AddProject.InitBundleVersion, true);
+        GameCloudEditor.changeDataData(_ePlatform.None, target_directory, AddProject.InitDataVersion, true);
 
         ListInitProjectInfo.Add(AddProject);
         _combineProjectIndexWithSelectIndex();

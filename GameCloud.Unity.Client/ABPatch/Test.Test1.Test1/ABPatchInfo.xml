@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ABPatchInfo>
-  <BundleData BDAndroid="1.00.002" BDIOS="1.00.001" BDWindowsPC="1.00.001"/>
-  <DataData DDAndroid="1.00.002" DDIOS="1.00.001" DDWindowsPC="1.00.001"/>
+<ABPatchInfo>  
+<Platform PlatformKey="1" PlatformName="ANDROID" BundleVersion="1.00.002" DataVersion="1.00.007" BuildTarget="13"/>   
+<Platform PlatformKey="2" PlatformName="IOS" BundleVersion="1.00.002" DataVersion="1.00.008" BuildTarget="9"/>   
+<Platform PlatformKey="3" PlatformName="PC" BundleVersion="1.00.003" DataVersion="1.00.009" BuildTarget="19"/>   
 </ABPatchInfo>
