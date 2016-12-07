@@ -47,7 +47,7 @@ namespace GameCloud.Orleans.Gateway
         }
 
         //---------------------------------------------------------------------
-        public override void connect(string ip, int port, bool is_dns)
+        public override void connect(string ip, int port)
         {
         }
 
