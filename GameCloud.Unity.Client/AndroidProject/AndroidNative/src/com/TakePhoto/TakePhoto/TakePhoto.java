@@ -24,6 +24,7 @@ public class TakePhoto {
 	public int mPhotoHeight = 150;
 	public static String mSuccessMethodName = "";
 	public static String mFailMethodName = "";
+	public String mPhotoFinalPath="";
 	public String mPhotoName = "";
 
 	// public int QUALITY = 60;
@@ -31,16 +32,16 @@ public class TakePhoto {
 	// -------------------------------------------------------------------------
 	public static TakePhoto Instantce(int photo_width, int photo_height,
 			String success_methodname, String fail_methodname,
-			String photo_name, String pay_resultreceiver) {
+			String photo_name,String photo_final_path, String pay_resultreceiver) {
 		mResultReceiver = pay_resultreceiver;
 		mSuccessMethodName = success_methodname;
-		mFailMethodName = fail_methodname;
+		mFailMethodName = fail_methodname;		
 		if (mTakePhoto == null) {
 			mAndroidToUnityMsgBridge = AndroidToUnityMsgBridge
 					.Instance(mResultReceiver);
 			mTakePhoto = new TakePhoto(photo_width, photo_height,
 					success_methodname, fail_methodname, photo_name,
-					pay_resultreceiver);
+					photo_final_path,pay_resultreceiver);
 		}
 
 		return mTakePhoto;
@@ -49,10 +50,11 @@ public class TakePhoto {
 	// -------------------------------------------------------------------------
 	private TakePhoto(int photo_width, int photo_height,
 			String success_methodname, String fail_methodname,
-			String photo_name, String pay_resultreceiver) {
+			String photo_name, String photo_final_path,String pay_resultreceiver) {
 		this.mPhotoWidth = photo_width;
 		this.mPhotoHeight = photo_height;
 		this.mPhotoName = photo_name;
+		this.mPhotoFinalPath = photo_final_path;
 		mUnityActivity = mAndroidToUnityMsgBridge.getActivity();
 	}
 
@@ -63,12 +65,8 @@ public class TakePhoto {
 		} else {
 			Log.e("TakePhoto", "takeExistPhoto::mTakePhoto::NotNUll");
 		}
-		Intent intent = new Intent(mUnityActivity, TakePhotoActivity.class);
-		intent.putExtra("PhotoWidth", mPhotoWidth);
-		intent.putExtra("PhotoHeight", mPhotoHeight);
-		intent.putExtra("PhotoName", mPhotoName);
-		intent.putExtra("TakePhotoType", _ERESULT.getPicFromPicture.toString());		
-		mUnityActivity.startActivity(intent);
+		
+		_startTakePhotoActivity(_ERESULT.getPicFromPicture);		
 	}
 
 	// -------------------------------------------------------------------------
@@ -78,12 +76,8 @@ public class TakePhoto {
 		} else {
 			Log.e("TakePhoto", "takeNewPhoto::mTakePhoto::NotNUll");
 		}
-		Intent intent = new Intent(mUnityActivity, TakePhotoActivity.class);
-		intent.putExtra("PhotoWidth", mPhotoWidth);
-		intent.putExtra("PhotoHeight", mPhotoHeight);
-		intent.putExtra("PhotoName", mPhotoName);
-		intent.putExtra("TakePhotoType", _ERESULT.getPicFromCamera.toString());
-		mUnityActivity.startActivity(intent);
+	
+		_startTakePhotoActivity(_ERESULT.getPicFromCamera);
 	}
 
 	// -------------------------------------------------------------------------
@@ -115,36 +109,6 @@ public class TakePhoto {
 		getPicStringThread(pic_uri);
 		// _decodeUriAsBitmap(pic_uri);
 	}
-
-	// //
-	// -------------------------------------------------------------------------
-	// private static Bitmap _decodeUriAsBitmap(Uri uri) {
-	//
-	// Bitmap bitmap = null;
-	//
-	// try {
-	// Log.e("TakePhoto", "_decodeUriAsBitmap");
-	// bitmap = BitmapFactory.decodeFile(uri.getPath());
-	// Log.e("TakePhoto", "_decodeUriAsBitmap111");
-	// // .decodeStream(mAndroidToUnityMsgBridge.mUnityPlayerActivity
-	// // .getContentResolver().openInputStream(uri));
-	// // 创建一个字节数组输出流,流的大小为size
-	// ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	// // 设置位图的压缩格式，质量为100%，并放入字节数组输出流中
-	// bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-	// // 将字节数组输出流转化为字节数组byte[]
-	// byte[] imagedata = baos.toByteArray();
-	//
-	// String icon = Base64.encodeToString(imagedata, Base64.DEFAULT);
-	// Log.e("TakePhotoActivity", "icon:: " + icon);
-	// sendToUnity(true, icon);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// return null;
-	// }
-	//
-	// return bitmap;
-	// }
 
 	// -------------------------------------------------------------------------
 	private static void _decodeUriAsBitmap(Uri uri) {
@@ -197,6 +161,18 @@ public class TakePhoto {
 				_decodeUriAsBitmap(image_uri);
 			}
 		})).start();
+	}
+	
+	// -------------------------------------------------------------------------
+	void _startTakePhotoActivity(_ERESULT takephoto_type)
+	{
+		Intent intent = new Intent(mUnityActivity, TakePhotoActivity.class);
+		intent.putExtra("PhotoWidth", mPhotoWidth);
+		intent.putExtra("PhotoHeight", mPhotoHeight);
+		intent.putExtra("PhotoName", mPhotoName);
+		intent.putExtra("PhotoFinalPath", mPhotoFinalPath);
+		intent.putExtra("TakePhotoType", takephoto_type.toString());
+		mUnityActivity.startActivity(intent);
 	}
 
 	// ----------------------------------------------------------------------

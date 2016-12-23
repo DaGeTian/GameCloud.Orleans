@@ -103,7 +103,20 @@ public class WWWAsyncAssetLoader : IAsyncAssetLoader
 
             foreach (var asset_loadrequest in i.Value)
             {
-                UnityEngine.Object load_asset = mAsyncAssetWWW.texture;
+                UnityEngine.Object load_asset = null;
+                if (mAsyncAssetWWW.texture != null)
+                {
+                    load_asset = mAsyncAssetWWW.texture;
+                }
+                else if (mAsyncAssetWWW.audioClip != null)
+                {
+                    load_asset = mAsyncAssetWWW.audioClip;
+                }              
+                else if (mAsyncAssetWWW.assetBundle != null)
+                {
+                    load_asset = mAsyncAssetWWW.assetBundle;
+                }
+
                 if (must_copyasset)
                 {
                     asset_loadrequest.LoadedAction(GameObject.Instantiate(load_asset));

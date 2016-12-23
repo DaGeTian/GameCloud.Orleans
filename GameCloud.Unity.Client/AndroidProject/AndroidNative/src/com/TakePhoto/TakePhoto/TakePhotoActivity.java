@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.ContactsContract.Directory;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class TakePhotoActivity extends Activity {
 	public int mPhotoWidth = 150;
 	public int mPhotoHeight = 150;
 	public String mPhotoName = "";
+	public String mPhotoFinalPath="";
 	boolean mAlreadyTakePhoto = false;
 
 	// -------------------------------------------------------------------------
@@ -40,11 +42,11 @@ public class TakePhotoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		Log.e("TakePhotoActivity", "onCreate");
-
-		checkTakePhoto();
+		
 		mPhotoWidth = this.getIntent().getIntExtra("PhotoWidth", 150);
 		mPhotoHeight = this.getIntent().getIntExtra("PhotoHeight", 150);
 		mPhotoName = this.getIntent().getStringExtra("PhotoName");
+		mPhotoFinalPath = this.getIntent().getStringExtra("PhotoFinalPath");
 		String take_phototype = this.getIntent()
 				.getStringExtra("TakePhotoType");
 
@@ -54,9 +56,7 @@ public class TakePhotoActivity extends Activity {
 			File photo_file = new File(
 					Environment.getExternalStorageDirectory(), mPhotoName);
 			if (photo_file.exists()) {
-				photo_file.delete();
-				photo_file = new File(
-						Environment.getExternalStorageDirectory(), mPhotoName);
+				photo_file.delete();			
 			}
 			mImageUri = Uri.fromFile(photo_file);
 			if (take_phototype.equals(TakePhoto._ERESULT.getPicFromPicture
@@ -132,6 +132,7 @@ public class TakePhotoActivity extends Activity {
 		outState.putString("SuccessMethodName", TakePhoto.mSuccessMethodName);
 		outState.putString("FailMethodName", TakePhoto.mFailMethodName);
 		outState.putString("PhotoName", mPhotoName);
+		outState.putString("PhotoFinalPath", mPhotoFinalPath);
 		outState.putInt("PhotoWidth", mPhotoWidth);
 		outState.putInt("PhotoHeight", mPhotoHeight);
 	}
@@ -153,13 +154,18 @@ public class TakePhotoActivity extends Activity {
 			this.mImageUri = savedInstanceState.getParcelable("ImageUri");
 			this.mAlreadyTakePhoto = savedInstanceState
 					.getBoolean("AlreadyTakePhoto");
+			this.mPhotoWidth = savedInstanceState.getInt("PhotoWidth");
+			this.mPhotoHeight = savedInstanceState.getInt("PhotoHeight");
+			this.mPhotoName = savedInstanceState.getString("PhotoName");
+			this.mPhotoFinalPath = savedInstanceState.getString("PhotoFinalPath");
 
 			if (TakePhoto.mTakePhoto == null) {
-				TakePhoto.Instantce(savedInstanceState.getInt("PhotoWidth"),
-						savedInstanceState.getInt("PhotoHeight"),
+				TakePhoto.Instantce(mPhotoWidth,
+						mPhotoHeight,
 						savedInstanceState.getString("SuccessMethodName"),
 						savedInstanceState.getString("FailMethodName"),
-						savedInstanceState.getString("PhotoName"),
+						mPhotoName,
+						mPhotoFinalPath,
 						savedInstanceState.getString("ResultReceiver"));
 			}
 		}
@@ -178,7 +184,7 @@ public class TakePhotoActivity extends Activity {
 	private void startImagePick() {
 		Intent intent = new Intent(Intent.ACTION_PICK, null);
 		intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				IMAGE_UNSPECIFIED);
+				IMAGE_UNSPECIFIED);		
 		this.startActivityForResult(intent,
 				TakePhoto._ERESULT.getPicFromPicture.ordinal());
 	}
@@ -207,11 +213,12 @@ public class TakePhotoActivity extends Activity {
 		// outputX outputY 是裁剪图片宽高
 		intent.putExtra("outputX", mPhotoWidth);
 		intent.putExtra("outputY", mPhotoHeight);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 		TakePhoto._ERESULT request_code = TakePhoto._ERESULT.getPicFromCameraSuccess;
 		if (is_camera) {
 			intent.putExtra("return-data", false);
 		} else {
-			intent.putExtra("return-data", true);
+			intent.putExtra("return-data", false);
 			request_code = TakePhoto._ERESULT.getPicFromPictureSuccess;
 		}
 		Log.d("TakePhotoActivity",
@@ -256,13 +263,9 @@ public class TakePhotoActivity extends Activity {
 		if (requestCode == TakePhoto._ERESULT.getPicFromCamera.ordinal()) {
 			if (resultCode == 0) {
 				bIsPhotoHandle = true;
-			} else {
-				File picture = new File(
-						Environment.getExternalStorageDirectory() + "/"
-								+ mPhotoName);
-				__PictureScaleHandle(Uri.fromFile(picture), true);
+			} else {			
+				__PictureScaleHandle(mImageUri, true);
 			}
-
 		}
 
 		// 相册缩放图片
@@ -270,7 +273,8 @@ public class TakePhotoActivity extends Activity {
 			if (null == data) {
 				bIsPhotoHandle = true;
 			} else {
-				__PictureScaleHandle(data.getData(), false);
+				mImageUri = data.getData();
+				__PictureScaleHandle(mImageUri, false);
 			}
 		}
 
@@ -286,35 +290,20 @@ public class TakePhotoActivity extends Activity {
 		if (requestCode == TakePhoto._ERESULT.getPicFromCameraSuccess.ordinal()) {
 			Log.e("TakePhotoActivity", "getPicFromCameraSuccess");
 			_decodeUriAsBitmap(this.mImageUri);
-			// _sendThread(this.mImageUri);
-			// Bitmap photo = _decodeUriAsBitmap(this.mImageUri);
-			// Bundle extras = data.getExtras();
-			// if (null != extras) {
-
-			// Bitmap photo = extras.getParcelable("data");
-			// String photo_str = "";
-			// try {
-			// // __SavePicture(photo);
-			//
-			// photo_str = _picToString(photo);
-			// } catch (Exception e) {// catch (IOException e) {
-			// e.printStackTrace();
-			// }
-
-			// Log.e("TakePhotoActivity", "photo_str:: " + photo_str);
-			// TakePhoto.sendToUnity(TakePhoto._ERESULT.getPicSuccess
-			// .toString());
-			// TakePhoto.sendToUnity(true, photo_str);
+			
 			finish();
 		} else if (requestCode == TakePhoto._ERESULT.getPicFromPictureSuccess
 				.ordinal()) {
 			Log.e("TakePhotoActivity", "getPicFromPictureSuccess");
-			Bundle extras = data.getExtras();
-			if (extras != null) {
-				Bitmap photo = extras.getParcelable("data");
-				_picToString(photo);
-			}
+			
+			_decodeUriAsBitmap(this.mImageUri);
 
+//			Bundle extras = data.getExtras();
+//			if (extras != null) {
+//				Bitmap photo = extras.getParcelable("data");
+//				_saveBitMapToFinalPath(photo);
+//			}
+			
 			finish();
 		}
 		// }
@@ -326,24 +315,35 @@ public class TakePhotoActivity extends Activity {
 	private void _decodeUriAsBitmap(Uri uri) {
 
 		// Bitmap bitmap = null;
-		Log.e("TakePhotoActivity", "_decodeUriAsBitmap");
-		InputStream in = null;
-		byte[] data = null;
-		// 读取图片字节数组
-		try {
-			in = new FileInputStream(uri.getPath());
-			data = new byte[in.available()];
-			in.read(data);
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		Bitmap bitmap = null;
 
-		Log.e("TakePhotoActivity", "imagedata：：Length::" + data.length);
-		// 对字节数组Base64编码
-		String image_str = Base64Coder.encodeLines(data);
-		TakePhoto.sendToUnity(true, image_str);
-		Log.e("TakePhotoActivity", "image_str:: " + image_str);
+		try {
+			Log.e("TakePhotoActivity", "_decodeUriAsBitmap");		
+			bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		_saveBitMapToFinalPath(bitmap);
+//		InputStream in = null;
+//		byte[] data = null;
+//		// 读取图片字节数组
+//		try {
+//			in = new FileInputStream(uri.getPath());
+//			data = new byte[in.available()];
+//			in.read(data);
+//			in.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		Log.e("TakePhotoActivity", "imagedata：：Length::" + data.length);
+//		// 对字节数组Base64编码
+//		String image_str = Base64Coder.encodeLines(data);
+//		TakePhoto.sendToUnity(true, image_str);
+//		Log.e("TakePhotoActivity", "image_str:: " + image_str);
 		/*
 		 * try { BitmapFactory.Options options = new BitmapFactory.Options();
 		 * options.inPreferredConfig = Config.RGB_565; bitmap =
@@ -353,6 +353,39 @@ public class TakePhotoActivity extends Activity {
 		 */
 
 		// _picToString(bitmap);
+	}
+	
+	// -------------------------------------------------------------------------
+	void _saveBitMapToFinalPath(Bitmap bit_map)
+	{	
+		FileOutputStream file_out_stream = null;
+		 
+		try {										
+			  File destDir = new File(mPhotoFinalPath);
+			  if (!destDir.exists())
+			  { 				  
+				  destDir.mkdirs();
+			  }			 
+ 
+			  file_out_stream = new FileOutputStream(mPhotoFinalPath + "/" + mPhotoName) ;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		//将Bitmap对象写入本地路径中，Unity在去相同的路径来读取这个文件
+		bit_map.compress(Bitmap.CompressFormat.JPEG, 100, file_out_stream);
+		try {
+			file_out_stream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			file_out_stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
+		TakePhoto.sendToUnity(true, "0");		
 	}
 
 	// -------------------------------------------------------------------------
