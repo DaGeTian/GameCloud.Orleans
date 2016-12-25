@@ -149,6 +149,11 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("项目名:");
+        project_infoex.ProjectSourceFolderName = EditorGUILayout.TextField(project_infoex.ProjectSourceFolderName);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("==================华丽的分割线==================");
         EditorGUILayout.EndHorizontal();
 
@@ -237,6 +242,10 @@ public class GameCloudEditorInitProjectInfo : EditorWindow
         sb.Append(project_info.InitDataVersion);
         sb.Append("\",");
         sb.AppendLine();
+        sb.Append("    \"ProjectSourceFolderName\" : \"");
+        sb.Append(project_info.ProjectSourceFolderName);
+        sb.Append("\",");
+        sb.AppendLine();
         sb.Append("}");
 
         return sb.ToString();
@@ -250,6 +259,7 @@ public class _InitProjectInfo
     public bool IsDefault;
     public string CompanyName;
     public string AppName;
+    public string ProjectSourceFolderName;
     public string BundleIdentify;
     public string InitBundleVersion;
     public string InitDataVersion;
@@ -258,6 +268,7 @@ public class _InitProjectInfo
     public void cloneData(_InitProjectInfo project_info)
     {
         this.AppName = project_info.AppName;
+        this.ProjectSourceFolderName = project_info.ProjectSourceFolderName;
         this.BundleIdentify = project_info.BundleIdentify;
         this.InitBundleVersion = project_info.InitBundleVersion;
         this.CompanyName = project_info.CompanyName;

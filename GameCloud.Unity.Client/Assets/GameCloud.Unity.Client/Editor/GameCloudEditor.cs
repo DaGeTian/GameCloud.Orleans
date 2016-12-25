@@ -40,7 +40,7 @@ public class GameCloudEditor : EditorWindow
     //const string mAssetBundleDirectory = "NeedPackAsset";
     public const string AssetBundleTargetDirectory = "ABPatch";
     public const string ABPathInfoResourceDirectory = "GameCloud.Unity.Client/AutoPatcherInfo";
-    const string PatchiInfoName = "ABPatchInfo.xml";
+    const string PatchInfoName = "ABPatchInfo.xml";
     const string AssetBundlePkgSingleFoldName = "PkgSingle";
     const string AssetBundlePkgFoldFoldName = "PkgFold";
     string mPackInfoTextName = "DataFileList.txt";
@@ -187,7 +187,7 @@ public class GameCloudEditor : EditorWindow
         PlayerSettings.productName = CurrentProject.AppName;
         PlayerSettings.bundleIdentifier = CurrentProject.BundleIdentify;
         mPatchInfoPath = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
-        mPatchInfoPath = Path.Combine(mPatchInfoPath, PatchiInfoName);
+        mPatchInfoPath = Path.Combine(mPatchInfoPath, PatchInfoName);
         mPatchInfoPath = mPatchInfoPath.Replace(@"\", "/");
         CurrentProjectABTargetPath = Path.Combine(mABTargetPathRoot, CurrentProject.BundleIdentify);
         CurrentProjectABTargetPath = CurrentProjectABTargetPath.Replace(@"\", "/");
@@ -207,10 +207,9 @@ public class GameCloudEditor : EditorWindow
 
     //-------------------------------------------------------------------------
     void _checkResourcesPath()
-    {
-        string id = PlayerSettings.bundleIdentifier;
-        string folder_suffix = PlayerSettings.bundleIdentifier.Substring(id.LastIndexOf('.'));
-        mAssetBundleResourcesPath = mAssetPath + "/Resources" + folder_suffix;
+    {        
+        string folder_suffix = CurrentProject.ProjectSourceFolderName;
+        mAssetBundleResourcesPath = mAssetPath + "/Resources." + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + AssetBundlePkgSingleFoldName;
         mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + AssetBundlePkgFoldFoldName;
         if (!Directory.Exists(mAssetBundleResourcesPath))
@@ -226,15 +225,15 @@ public class GameCloudEditor : EditorWindow
             Directory.CreateDirectory(mAssetBundleResourcesPkgFoldPath);
         }
 
-        mAssetBundleResourcesPath = "Assets/Resources" + folder_suffix;
+        mAssetBundleResourcesPath = "Assets/Resources." + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + AssetBundlePkgSingleFoldName;
         mAssetBundleResourcesPkgFoldPath = mAssetBundleResourcesPath + "/" + AssetBundlePkgFoldFoldName;
-        mRowAssetPath = mAssetPath + "/Resources" + folder_suffix + "Raw";
+        mRowAssetPath = mAssetPath + "/Resources." + folder_suffix + "Raw";
         if (!Directory.Exists(mRowAssetPath))
         {
             Directory.CreateDirectory(mRowAssetPath);
         }
-        mRowAssetPath = "Assets/Resources" + folder_suffix + "Raw";
+        mRowAssetPath = "Assets/Resources." + folder_suffix + "Raw";
     }
 
     //-------------------------------------------------------------------------
@@ -387,6 +386,7 @@ public class GameCloudEditor : EditorWindow
         {
             foreach (var i in ListNeedCopyPlatform)
             {
+                _copyOrDeleteTopersistentDataPath(i, false);
                 _copyOrDeleteTopersistentDataPath(i, true);
             }
         }
@@ -995,7 +995,7 @@ public class GameCloudEditor : EditorWindow
     //-------------------------------------------------------------------------
     public static void changeBundleData(_ePlatform platform, string target_path, string new_bundle, bool change_allplatform = false)
     {
-        string ab_pathinfo = target_path + "/" + PatchiInfoName;
+        string ab_pathinfo = target_path + "/" + PatchInfoName;
         var infos = File.ReadAllLines(ab_pathinfo);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < infos.Length; i++)
@@ -1033,7 +1033,7 @@ public class GameCloudEditor : EditorWindow
     //-------------------------------------------------------------------------
     public static void changeDataData(_ePlatform platform, string target_path, string new_data, bool change_allplatform = false)
     {
-        string ab_pathinfo = target_path + "/" + PatchiInfoName;
+        string ab_pathinfo = target_path + "/" + PatchInfoName;
         var infos = File.ReadAllLines(ab_pathinfo);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < infos.Length; i++)

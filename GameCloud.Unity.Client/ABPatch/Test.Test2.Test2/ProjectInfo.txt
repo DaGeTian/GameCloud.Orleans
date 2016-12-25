@@ -6,4 +6,5 @@
     "BundleIdentify" : "Test.Test2.Test2",
     "InitBundleVersion" : "1.00.001",
     "InitDataVersion" : "1.00.001",
+    "ProjectSourceFolderName" : "Test2",
 }

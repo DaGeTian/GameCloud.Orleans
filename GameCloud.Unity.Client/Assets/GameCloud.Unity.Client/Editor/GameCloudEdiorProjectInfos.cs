@@ -108,7 +108,11 @@ public class GameCloudEdiorProjectInfos : EditorWindow
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("当前项目名:", CurrentProject.AppName);
+                EditorGUILayout.LabelField("当前项目名:", CurrentProject.ProjectSourceFolderName);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("当前项目App名:", CurrentProject.AppName);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
@@ -237,6 +241,10 @@ public class GameCloudEdiorProjectInfos : EditorWindow
         sb.Append(AddProject.InitDataVersion);
         sb.Append("\",");
         sb.AppendLine();
+        sb.Append("    \"ProjectSourceFolderName\" : \"");
+        sb.Append(AddProject.ProjectSourceFolderName);
+        sb.Append("\",");
+        sb.AppendLine();
         sb.Append("}");
         byte[] bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
 
@@ -303,6 +311,11 @@ public class GameCloudEdiorProjectInfos : EditorWindow
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("初始资源版本号(请以*.**.***，其中*为数字来设置):");
         AddProject.InitDataVersion = EditorGUILayout.TextField(AddProject.InitDataVersion);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("项目名:");
+        AddProject.ProjectSourceFolderName = EditorGUILayout.TextField(AddProject.ProjectSourceFolderName);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
