@@ -23,6 +23,7 @@ public class GameCloudEditor : EditorWindow
     static List<string> mDoNotPackFileExtention = new List<string> { ".meta", ".DS_Store" };
     MD5 MD5 { get; set; }
     List<ProjectPlatformInfo> ListNeedBuildPlatform { get; set; }
+    List<ProjectPlatformInfo> ListNeedCopyRawPlatform { get; set; }
     Queue<ProjectPlatformInfo> QueueNeedBuildPlatform { get; set; }
     List<ProjectPlatformInfo> ListNeedCopyPlatform { get; set; }
     Queue<ProjectPlatformInfo> QueueNeedCopyPlatform { get; set; }
@@ -43,11 +44,13 @@ public class GameCloudEditor : EditorWindow
     const string PatchInfoName = "ABPatchInfo.xml";
     const string AssetBundlePkgSingleFoldName = "PkgSingle";
     const string AssetBundlePkgFoldFoldName = "PkgFold";
+    const string AssetRoot = "Assets/";
     string mPackInfoTextName = "DataFileList.txt";
     string mDataTargetPath;
     bool mCopyAndroid = false;
     bool mCopyIOS = false;
     bool mCopyPC = false;
+    bool mIsPackSelectItem = true;
     List<string> mListAllPkgSingleABFile = new List<string>();
     List<string> mListAllPkgFoldABFold = new List<string>();
 
@@ -78,6 +81,7 @@ public class GameCloudEditor : EditorWindow
     {
         MD5 = new MD5CryptoServiceProvider();
         ListNeedBuildPlatform = new List<ProjectPlatformInfo>();
+        ListNeedCopyRawPlatform = new List<ProjectPlatformInfo>();
         QueueNeedBuildPlatform = new Queue<ProjectPlatformInfo>();
         ListNeedCopyPlatform = new List<ProjectPlatformInfo>();
         QueueNeedCopyPlatform = new Queue<ProjectPlatformInfo>();
@@ -116,7 +120,7 @@ public class GameCloudEditor : EditorWindow
     {
         string current_dir = System.Environment.CurrentDirectory;
         current_dir = current_dir.Replace(@"\", "/");
-        mAssetPath = current_dir + "/Assets/";
+        mAssetPath = current_dir + "/" + AssetRoot;
 
         mABTargetPathRoot = Path.Combine(current_dir, AssetBundleTargetDirectory);
         mABTargetPathRoot = mABTargetPathRoot.Replace(@"\", "/");
@@ -207,7 +211,7 @@ public class GameCloudEditor : EditorWindow
 
     //-------------------------------------------------------------------------
     void _checkResourcesPath()
-    {        
+    {
         string folder_suffix = CurrentProject.ProjectSourceFolderName;
         mAssetBundleResourcesPath = mAssetPath + "/Resources." + folder_suffix;
         mAssetBundleResourcesPkgSinglePath = mAssetBundleResourcesPath + "/" + AssetBundlePkgSingleFoldName;
@@ -280,8 +284,13 @@ public class GameCloudEditor : EditorWindow
                 _translatePatchXml(mPatchInfoPath);
                 CurrentSelectIndex = select_index;
                 ListNeedBuildPlatform.Clear();
+                ListNeedCopyRawPlatform.Clear();
             }
         }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        mIsPackSelectItem = EditorGUILayout.Toggle("BuildSelectItems", mIsPackSelectItem);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -350,6 +359,12 @@ public class GameCloudEditor : EditorWindow
         {
             _startBuild();
         }
+
+        bool click_build_copy_raw = GUILayout.Button("CopyAssetsRawFoldToABFold", GUILayout.Width(200));
+        if (click_build_copy_raw)
+        {
+            _startCopyRaw();
+        }
         EditorGUILayout.EndHorizontal();
 
         _drawSplitLine();
@@ -386,8 +401,8 @@ public class GameCloudEditor : EditorWindow
         {
             foreach (var i in ListNeedCopyPlatform)
             {
-                _copyOrDeleteTopersistentDataPath(i, false);
-                _copyOrDeleteTopersistentDataPath(i, true);
+                _copyOrDeleteToPersistentDataPath(i, false);
+                _copyOrDeleteToPersistentDataPath(i, true);
             }
         }
         bool delete_asset = GUILayout.Button("删除选中平台persistentPath中的AB资源");
@@ -395,7 +410,7 @@ public class GameCloudEditor : EditorWindow
         {
             foreach (var i in ListNeedCopyPlatform)
             {
-                _copyOrDeleteTopersistentDataPath(i, false);
+                _copyOrDeleteToPersistentDataPath(i, false);
             }
         }
         EditorGUILayout.EndHorizontal();
@@ -447,7 +462,7 @@ public class GameCloudEditor : EditorWindow
         if (buid_andorid != platform_infoex.IsBuildPlatform)
         {
             platform_infoex.IsBuildPlatform = buid_andorid;
-            _checkIfNeedPackPlatform(platform_infoex.IsBuildPlatform, platform_infoex);
+            _checkIfNeedPackOrCopyRawPlatform(platform_infoex.IsBuildPlatform, platform_infoex);
         }
         EditorGUILayout.EndHorizontal();
 
@@ -483,34 +498,37 @@ public class GameCloudEditor : EditorWindow
     //}
 
     //-------------------------------------------------------------------------
-    void _checkIfNeedPackPlatform(bool is_currentneed, ProjectPlatformInfo build_target)
+    void _checkIfNeedPackOrCopyRawPlatform(bool is_currentneed, ProjectPlatformInfo build_target)
     {
         if (is_currentneed)
         {
-            _setNeedPackPlatform(build_target);
+            _setNeedPackOrCopyRawPlatform(build_target);
         }
         else
         {
-            _removeNeedPackPlatform(build_target);
+            _removeNeedPackOrCopyRawPlatform(build_target);
         }
     }
 
     //-------------------------------------------------------------------------
-    void _setNeedPackPlatform(ProjectPlatformInfo build_target)
+    void _setNeedPackOrCopyRawPlatform(ProjectPlatformInfo build_target)
     {
         if (!ListNeedBuildPlatform.Contains(build_target))
         {
             ListNeedBuildPlatform.Add(build_target);
         }
+
+        if (!ListNeedCopyRawPlatform.Contains(build_target))
+        {
+            ListNeedCopyRawPlatform.Add(build_target);
+        }
     }
 
     //-------------------------------------------------------------------------
-    void _removeNeedPackPlatform(ProjectPlatformInfo build_target)
+    void _removeNeedPackOrCopyRawPlatform(ProjectPlatformInfo build_target)
     {
-        if (ListNeedBuildPlatform.Contains(build_target))
-        {
-            ListNeedBuildPlatform.Remove(build_target);
-        }
+        ListNeedBuildPlatform.Remove(build_target);
+        ListNeedCopyRawPlatform.Remove(build_target);
     }
 
     //-------------------------------------------------------------------------
@@ -545,6 +563,26 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
+    void _startCopyRaw()
+    {
+        foreach (var i in ListNeedCopyRawPlatform)
+        {
+            string target_path = i.PlatformTargetRootPath + i.DataVersion;
+            if (!Directory.Exists(target_path))
+            {
+                Directory.CreateDirectory(target_path);
+            }
+
+            if (Directory.Exists(mRowAssetPath))
+            {
+                copyFile(mRowAssetPath, target_path, "Assets/");
+            }
+        }
+
+        Debug.Log("裸资源复制完毕!");
+    }
+
+    //-------------------------------------------------------------------------
     void _startBuild()
     {
         foreach (var i in ListNeedBuildPlatform)
@@ -562,15 +600,28 @@ public class GameCloudEditor : EditorWindow
         {
             mCurrentBuildTargetPlatform = QueueNeedBuildPlatform.Dequeue().BuildTarget;
             _getCurrentTargetPath();
-            _packAssetBundleCompress();
+            string target_path = CurrentBuildProjectPlatformInfo.PlatformTargetRootPath + CurrentBuildProjectPlatformInfo.DataVersion;
+            if (!Directory.Exists(target_path))
+            {
+                Directory.CreateDirectory(target_path);
+            }
+
+            if (mIsPackSelectItem)
+            {
+                _packAssetBundleCompressSelect();
+            }
+            else
+            {
+                _packAssetBundleCompressAll(target_path);
+            }
+
+            _packResources(target_path);
         }
         else
         {
             ShowNotification(new GUIContent("打包完成!"));
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(mInitBuildTargetPlatform);
-            //changeAssetBundleResourcePath();
-            //changeRowResourcePath();
         }
     }
 
@@ -580,14 +631,12 @@ public class GameCloudEditor : EditorWindow
         StreamWriter sw;
         string info = pack_infopath + "/" + mPackInfoTextName;
 
-        if (!File.Exists(info))
+        if (File.Exists(info))
         {
-            sw = File.CreateText(info);
+            File.Delete(info);
         }
-        else
-        {
-            sw = new StreamWriter(info);
-        }
+
+        sw = File.CreateText(info);
 
         using (sw)
         {
@@ -622,21 +671,7 @@ public class GameCloudEditor : EditorWindow
             string target_path = file_directory.Replace(CurrentBuildProjectPlatformInfo.PlatformTargetRootPath + CurrentBuildProjectPlatformInfo.DataVersion, "");
             target_path = target_path.Replace(@"\", "/");
             string file_path = i;
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(target_path + "/" + file_name + " ");
-
-                using (FileStream sr = File.OpenRead(file_path))
-                {
-                    byte[] new_bytes = MD5.ComputeHash(sr);
-                    foreach (var bytes in new_bytes)
-                    {
-                        sb.Append(bytes.ToString("X2"));
-                    }
-                }
-
-                sw.WriteLine(sb.ToString());
-            }
+            sw.WriteLine(_getFilePackInfo(target_path, file_name, file_path));
         }
 
         string[] directorys = Directory.GetDirectories(path);
@@ -647,7 +682,25 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
-    void _copyOrDeleteTopersistentDataPath(ProjectPlatformInfo build_target, bool is_copy)
+    string _getFilePackInfo(string target_path, string file_name, string file_path)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append(target_path + "/" + file_name + " ");
+
+        using (FileStream sr = File.OpenRead(file_path))
+        {
+            byte[] new_bytes = MD5.ComputeHash(sr);
+            foreach (var bytes in new_bytes)
+            {
+                sb.Append(bytes.ToString("X2"));
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    //-------------------------------------------------------------------------
+    void _copyOrDeleteToPersistentDataPath(ProjectPlatformInfo build_target, bool is_copy)
     {
         string persistent_data_path = "";
         string resource_path = "";
@@ -723,7 +776,7 @@ public class GameCloudEditor : EditorWindow
     }
 
     //-------------------------------------------------------------------------
-    void _packAssetBundleCompress()
+    void _packAssetBundleCompressAll(string target_path)
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(mCurrentBuildTargetPlatform);
         deleteFile(mTargetPlatformRootPath);
@@ -735,12 +788,6 @@ public class GameCloudEditor : EditorWindow
         mListAllPkgFoldABFold.Clear();
         _getAllPkgFoldFold(mAssetBundleResourcesPkgFoldPath);
 
-        string target_path = CurrentBuildProjectPlatformInfo.PlatformTargetRootPath + CurrentBuildProjectPlatformInfo.DataVersion;
-        if (!Directory.Exists(target_path))
-        {
-            Directory.CreateDirectory(target_path);
-        }
-
         _pakABSingle();
         _pakABFold();
 
@@ -750,8 +797,78 @@ public class GameCloudEditor : EditorWindow
         }
 
         Debug.Log("裸资源复制完毕!");
+    }
 
-        _packResources(target_path);
+    //-------------------------------------------------------------------------
+    void _packAssetBundleCompressSelect()
+    {
+        EditorUserBuildSettings.SwitchActiveBuildTarget(mCurrentBuildTargetPlatform);
+
+        Object[] select_objs = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+
+        List<string> list_single_pkg = new List<string>();
+        Dictionary<string, List<string>> map_fold_pkg = new Dictionary<string, List<string>>();
+
+        foreach (var i in select_objs)
+        {
+            string path_asset = AssetDatabase.GetAssetPath(i);
+            bool is_directory = Directory.Exists(path_asset);
+            if (is_directory)
+            {
+                continue;
+            }
+
+            string path_full = Path.GetFullPath(path_asset);
+            string extension = Path.GetExtension(path_asset);
+            if (mDoNotPackFileExtention.Contains(extension))
+            {
+                continue;
+            }
+
+            string file_name = Path.GetFileName(path_asset);
+
+            if (path_asset.Contains(AssetBundlePkgSingleFoldName))
+            {
+                list_single_pkg.Add(path_asset);
+            }
+            else if (path_asset.Contains(AssetBundlePkgFoldFoldName))
+            {
+                string fold = path_asset;
+                fold = fold.Replace(AssetRoot, "");
+                fold = fold.Replace(AssetBundlePkgFoldFoldName + "/", "");
+                fold = CurrentBuildProjectPlatformInfo.PlatformTargetRootPath + CurrentBuildProjectPlatformInfo.DataVersion + "/" + fold;
+                fold = fold.Replace(file_name, "");
+                List<string> list_directory = null;
+                map_fold_pkg.TryGetValue(fold, out list_directory);
+                if (list_directory == null)
+                {
+                    list_directory = new List<string>();
+                    map_fold_pkg[fold] = list_directory;
+                }
+
+                list_directory.Add(path_asset);
+            }
+        }
+
+        string path_assetex = "";
+        foreach (var i in list_single_pkg)
+        {
+            path_assetex = i;
+            path_assetex = path_assetex.Replace(AssetRoot, "");
+            path_assetex = path_assetex.Replace(AssetBundlePkgSingleFoldName + "/", "");
+            path_assetex = CurrentBuildProjectPlatformInfo.PlatformTargetRootPath + CurrentBuildProjectPlatformInfo.DataVersion + "/" + path_assetex;
+            string file_name = Path.GetFileName(path_assetex);
+            string obj_dir = path_assetex.Replace(file_name, "");
+            var names = AssetDatabase.GetDependencies(i);
+            string ab_name = Path.GetFileNameWithoutExtension(path_assetex);
+            _pakABSingleEx(ab_name, names, obj_dir);
+        }
+
+        foreach (var i in map_fold_pkg)
+        {
+            List<string> list_samefold_file = i.Value;
+            _pakABFoldEx(i.Key, list_samefold_file);
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -811,41 +928,46 @@ public class GameCloudEditor : EditorWindow
                 path = CurrentBuildProjectPlatformInfo.PlatformTargetRootPath + CurrentBuildProjectPlatformInfo.DataVersion + "/" + path;
                 string file_name = Path.GetFileName(obj);
                 string obj_dir = path.Replace(file_name, "");
-                if (!Directory.Exists(obj_dir))
-                {
-                    Directory.CreateDirectory(obj_dir);
-                }
                 var names = AssetDatabase.GetDependencies(obj);
-
-                AssetBundleBuild abb;
-                abb.assetBundleName = Path.GetFileNameWithoutExtension(obj) + ".ab";
-                abb.assetBundleVariant = "";
-                int asset_index = 0;
-                List<string> list_needbuildassetname = new List<string>();
-                //list_needbuildassetname.Add(obj.Replace(mAssetPath, "Assets/"));
-                foreach (var j in names)
-                {
-                    //Debug.Log("Asset: " + j);
-                    if (j.EndsWith(".cs") || j.EndsWith(".ttf")) continue;
-                    if (list_needbuildassetname.Contains(j))
-                    {
-                        continue;
-                    }
-                    list_needbuildassetname.Add(j);
-                }
-                abb.assetNames = new string[list_needbuildassetname.Count];
-
-                foreach (var i in list_needbuildassetname)
-                {
-                    abb.assetNames[asset_index++] = i;
-                }
-
-                AssetBundleBuild[] arr_abb = new AssetBundleBuild[1];
-                arr_abb[0] = abb;
-
-                _buildAssetBundleCompressed(arr_abb, obj_dir, mCurrentBuildTargetPlatform);
+                string ab_name = Path.GetFileNameWithoutExtension(obj);
+                _pakABSingleEx(ab_name, names, obj_dir);
             }
         }
+    }
+
+    //-------------------------------------------------------------------------
+    void _pakABSingleEx(string ab_name, string[] dependence_name, string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        AssetBundleBuild abb;
+        abb.assetBundleName = ab_name + ".ab";
+        abb.assetBundleVariant = "";
+        int asset_index = 0;
+        List<string> list_needbuildassetname = new List<string>();
+        foreach (var j in dependence_name)
+        {
+            if (j.EndsWith(".cs") || j.EndsWith(".ttf")) continue;
+            if (list_needbuildassetname.Contains(j))
+            {
+                continue;
+            }
+            list_needbuildassetname.Add(j);
+        }
+        abb.assetNames = new string[list_needbuildassetname.Count];
+
+        foreach (var i in list_needbuildassetname)
+        {
+            abb.assetNames[asset_index++] = i;
+        }
+
+        AssetBundleBuild[] arr_abb = new AssetBundleBuild[1];
+        arr_abb[0] = abb;
+
+        _buildAssetBundleCompressed(arr_abb, path, mCurrentBuildTargetPlatform);
     }
 
     //-------------------------------------------------------------------------
@@ -853,7 +975,6 @@ public class GameCloudEditor : EditorWindow
     {
         foreach (var i in mListAllPkgFoldABFold)
         {
-            string fold_name = "";
             if (Directory.Exists(i))
             {
                 string path = Path.GetFullPath(i);
@@ -879,50 +1000,60 @@ public class GameCloudEditor : EditorWindow
                     list_samefold_file.Add(obj);
                 }
 
-                AssetBundleBuild[] arr_abb = new AssetBundleBuild[list_samefold_file.Count];
-                int index = 0;
-                foreach (var file in list_samefold_file)
-                {
-                    if (File.Exists(file))
-                    {
-                        if (string.IsNullOrEmpty(fold_name))
-                        {
-                            fold_name = Path.GetFileNameWithoutExtension(file);
-                        }
-
-                        var names = AssetDatabase.GetDependencies(file);
-
-                        AssetBundleBuild abb;
-                        abb.assetBundleName = fold_name + ".ab";
-                        abb.assetBundleVariant = "";
-                        int asset_index = 0;
-                        List<string> list_needbuildassetname = new List<string>();
-                        //list_needbuildassetname.Add(obj.Replace(mAssetPath, "Assets/"));
-                        foreach (var j in names)
-                        {
-                            //Debug.Log("Asset: " + j);
-                            if (j.EndsWith(".cs") || j.EndsWith(".ttf")) continue;
-                            if (list_needbuildassetname.Contains(j))
-                            {
-                                continue;
-                            }
-                            list_needbuildassetname.Add(j);
-                        }
-                        abb.assetNames = new string[list_needbuildassetname.Count];
-
-                        foreach (var asset in list_needbuildassetname)
-                        {
-                            abb.assetNames[asset_index++] = asset;
-                        }
-
-                        arr_abb[index] = abb;
-                        index++;
-                    }
-                }
-
-                _buildAssetBundleCompressed(arr_abb, path, mCurrentBuildTargetPlatform);
+                _pakABFoldEx(path, list_samefold_file);
             }
         }
+    }
+
+    //-------------------------------------------------------------------------
+    void _pakABFoldEx(string path, List<string> list_samefold_file)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        AssetBundleBuild[] arr_abb = new AssetBundleBuild[list_samefold_file.Count];
+        int index = 0;
+        string fold_name = "";
+        foreach (var file in list_samefold_file)
+        {
+            if (File.Exists(file))
+            {
+                if (string.IsNullOrEmpty(fold_name))
+                {
+                    fold_name = Directory.GetParent(file).Name;
+                }
+
+                var names = AssetDatabase.GetDependencies(file);
+
+                AssetBundleBuild abb;
+                abb.assetBundleName = fold_name + ".ab";
+                abb.assetBundleVariant = "";
+                int asset_index = 0;
+                List<string> list_needbuildassetname = new List<string>();
+                foreach (var j in names)
+                {
+                    if (j.EndsWith(".cs") || j.EndsWith(".ttf")) continue;
+                    if (list_needbuildassetname.Contains(j))
+                    {
+                        continue;
+                    }
+                    list_needbuildassetname.Add(j);
+                }
+                abb.assetNames = new string[list_needbuildassetname.Count];
+
+                foreach (var asset in list_needbuildassetname)
+                {
+                    abb.assetNames[asset_index++] = asset;
+                }
+
+                arr_abb[index] = abb;
+                index++;
+            }
+        }
+
+        _buildAssetBundleCompressed(arr_abb, path, mCurrentBuildTargetPlatform);
     }
 
     //-------------------------------------------------------------------------
