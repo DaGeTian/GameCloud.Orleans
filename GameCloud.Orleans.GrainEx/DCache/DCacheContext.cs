@@ -2,7 +2,6 @@
 
 namespace GameCloud.Orleans
 {
-    //-------------------------------------------------------------------------
     public class DCacheContext : IDCacheContext
     {
         public int DCacheMapCount { get; set; }

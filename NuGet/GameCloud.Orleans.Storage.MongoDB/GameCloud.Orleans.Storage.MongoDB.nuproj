@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>GameCloud.Orleans.Storage.MongoDB</Id>
-    <Version>1.00.027</Version>
+    <Version>1.00.028</Version>
     <Title>GameCloud.Orleans.Storage.MongoDB</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
