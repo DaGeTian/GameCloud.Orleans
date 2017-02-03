@@ -49,12 +49,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GameCloud.CfgCenter.SDK\GameCloud.CfgCenter.SDK.csproj">
-      <Project>{c0453e38-8074-48ad-b407-4ddf40388e8c}</Project>
-      <Name>GameCloud.CfgCenter.SDK</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
