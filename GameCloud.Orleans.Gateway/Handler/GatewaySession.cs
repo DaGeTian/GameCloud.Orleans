@@ -33,7 +33,7 @@ namespace GameCloud.Orleans.Gateway
             listener.GatewaySession = this;
 
             var ep = (IPEndPoint)context.Channel.RemoteAddress;
-            string client_ip = ep.Address.ToString();
+            string client_ip = ep.Address.MapToIPv4().ToString();
 
             await this.listener.OnSessionCreate(client_ip);
         }
