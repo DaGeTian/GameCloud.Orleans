@@ -13,7 +13,7 @@ namespace GameCloud.Orleans.Gateway
     {
         public GatewaySession GatewaySession { get; set; }
 
-        public abstract Task OnSessionCreate();
+        public abstract Task OnSessionCreate(string client_ip);
 
         public abstract Task OnSessionDestroy();
 

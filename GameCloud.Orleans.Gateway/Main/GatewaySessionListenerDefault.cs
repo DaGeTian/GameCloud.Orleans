@@ -12,7 +12,7 @@ namespace GameCloud.Orleans.Gateway
     public class GatewaySessionListenerDefault : IGatewaySessionListener
     {
         //---------------------------------------------------------------------
-        public override Task OnSessionCreate()
+        public override Task OnSessionCreate(string client_ip)
         {
             Console.WriteLine("GatewaySessionListenerDefault.OnSessionCreate()");
 

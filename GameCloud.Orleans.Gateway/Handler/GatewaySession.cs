@@ -5,6 +5,7 @@ namespace GameCloud.Orleans.Gateway
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
@@ -31,7 +32,10 @@ namespace GameCloud.Orleans.Gateway
             this.context = context;
             listener.GatewaySession = this;
 
-            await this.listener.OnSessionCreate();
+            var ep = (IPEndPoint)context.Channel.RemoteAddress;
+            string client_ip = ep.Address.ToString();
+
+            await this.listener.OnSessionCreate(client_ip);
         }
 
         //---------------------------------------------------------------------
