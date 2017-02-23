@@ -10,7 +10,7 @@ public delegate void OnAutoPatcherIsNeedBundlePatcher(bool is_need, string local
 public delegate void OnAutoPatcherIsNeedDataPatcher(bool is_need, string local_data_version, string remote_data_version);// 判定是否需要Data包更新
 public delegate void OnAutoPatcherGetRemoteDataFileList();// 从自动更新服务器获取数据文件列表
 public delegate void OnAutoPatcherGetRemoteDataFileListResult(AutoPatcherResult r, string error);// 从自动更新服务器获取数据文件列表的结果
-public delegate void OnAutoPatcherDataPatcher(string info);// 更新数据文件
+public delegate void OnAutoPatcherDataPatcher(float progress, string info);// 更新数据文件
 public delegate void OnAutoPatcherFinished();// 从自动更新服务器结束
 
 public class ClientAutoPatcher<TDef> : Component<TDef> where TDef : DefAutoPatcher, new()
@@ -249,17 +249,15 @@ public class ClientAutoPatcher<TDef> : Component<TDef> where TDef : DefAutoPatch
             else
             {
                 float progress = mAutoPatcherDataFileList.CurrentLoadProgress;
-                progress *= 100f;
-
                 string info = string.Format("({0:00.0}%)正在下载数据文件{1}({2}/{3})",
                     progress,
                     mAutoPatcherDataFileList.CurrentDataFile,
                     mAutoPatcherDataFileList.CurrentIndex,
-                    mAutoPatcherDataFileList.TotalCount);
-
+                    mAutoPatcherDataFileList.TotalCount);                                
+                float pro = progress * ((1.0f) * mAutoPatcherDataFileList.CurrentIndex / mAutoPatcherDataFileList.TotalCount);
                 if (OnAutoPatcherDataPatcher != null)
                 {
-                    OnAutoPatcherDataPatcher(info);
+                    OnAutoPatcherDataPatcher(pro, info);
                 }
             }
         }

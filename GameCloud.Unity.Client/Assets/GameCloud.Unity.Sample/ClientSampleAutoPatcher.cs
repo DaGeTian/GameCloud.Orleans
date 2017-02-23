@@ -114,7 +114,7 @@ public class ClientSampleAutoPatcher<TDef> : Component<TDef> where TDef : DefSam
 
 
         co_autopatcher.OnAutoPatcherDataPatcher =
-            (info) =>
+            (progress, info) =>
             {
                 //UiMbLoading loading = UiMgr.Instance.createUi<UiMbLoading>(_eUiLayer.Loading);
                 //loading.setLoadProgress(progress, msg);
