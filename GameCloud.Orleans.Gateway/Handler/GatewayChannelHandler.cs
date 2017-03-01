@@ -11,6 +11,7 @@ namespace GameCloud.Orleans.Gateway
     using System.Threading.Tasks;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
+    using DotNetty.Transport.Channels.Groups;
     using GameCloud.Unity.Common;
 
     public class GatewayChannelHandler : ChannelHandlerAdapter
@@ -31,13 +32,29 @@ namespace GameCloud.Orleans.Gateway
             this.session = (GatewaySession)this.factory.createRpcSession(null);
             this.session.ChannelActive(context);
 
-            Gateway.Instance.addSession(context, this.session);
+            IChannelGroup g = Gateway.Instance.ChannelGroup;
+            if (g == null)
+            {
+                lock (this)
+                {
+                    if (Gateway.Instance.ChannelGroup == null)
+                    {
+                        g = Gateway.Instance.ChannelGroup = new DefaultChannelGroup(context.Executor);
+                    }
+                }
+            }
+
+            Gateway.Instance.ChannelGroup.Add(context.Channel);
         }
 
         //---------------------------------------------------------------------
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            Gateway.Instance.removeSession(context);
+            IChannelGroup g = Gateway.Instance.ChannelGroup;
+            if (g != null)
+            {
+                g.Remove(context.Channel);
+            }
 
             if (this.session != null)
             {
@@ -77,7 +94,11 @@ namespace GameCloud.Orleans.Gateway
         //---------------------------------------------------------------------
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            Gateway.Instance.removeSession(context);
+            IChannelGroup g = Gateway.Instance.ChannelGroup;
+            if (g != null)
+            {
+                g.Remove(context.Channel);
+            }
 
             if (exception is System.ObjectDisposedException)
             {
