@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>GameCloud.Orleans.GrainEx</Id>
-    <Version>1.00.088</Version>
+    <Version>1.00.091</Version>
     <Title>GameCloud.Orleans.GrainEx</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>
