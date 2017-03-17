@@ -18,22 +18,60 @@ namespace GameCloud.Unity.Common
     public class EbDataMgr
     {
         //---------------------------------------------------------------------
-        static EbDataMgr mDataMgr;
-        EbFileStream mFileStream = new EbFileStreamDefault();
-        EbDb mDb = new EbDb();
-        ISqlite mSqlite;
-        Dictionary<string, Dictionary<int, EbData>> mMapData = new Dictionary<string, Dictionary<int, EbData>>();
+        static EbDataMgr DataMgr;
+        EbFileStream FileStream = new EbFileStreamDefault();
+        EbDb Db = new EbDb();
+        ISqlite Sqlite;
+        Dictionary<string, Dictionary<int, EbData>> MapData = new Dictionary<string, Dictionary<int, EbData>>();
+        Queue<string> QueLoadTbName { get; set; }
+        Action<int, int> UpdateCallBack { get; set; }
+        Action FinishedCallBack { get; set; }
+        int TotalTbCount { get; set; }
 
         //---------------------------------------------------------------------
         static public EbDataMgr Instance
         {
-            get { return mDataMgr; }
+            get { return DataMgr; }
         }
 
         //---------------------------------------------------------------------
         public EbDataMgr()
         {
-            mDataMgr = this;
+            DataMgr = this;
+            QueLoadTbName = new Queue<string>();
+        }
+
+        //---------------------------------------------------------------------
+        public void setup(string db_name, string db_filename, Action<int, int> update_callback, Action finished_callback)
+        {
+            UpdateCallBack = update_callback;
+            FinishedCallBack = finished_callback;
+
+#if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
+            mSqlite = new SqliteUnity(db_filename);
+#else
+            Sqlite = new SqliteWin(db_filename);
+#endif
+            if (!Sqlite.openDb())
+            {
+                EbLog.Note("EbDataMgr.setup() failed! Can not Open File! db_filename=" + db_filename);
+                return;
+            }
+
+            try
+            {
+                // 加载所有Table数据
+                HashSet<string> list_tablename = _loadAllTableName();
+                foreach (var i in list_tablename)
+                {
+                    QueLoadTbName.Enqueue(i);
+                }
+                TotalTbCount = QueLoadTbName.Count;
+            }
+            catch (Exception e)
+            {
+                EbLog.Note(e.ToString());
+            }
         }
 
         //---------------------------------------------------------------------
@@ -42,9 +80,9 @@ namespace GameCloud.Unity.Common
 #if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
             mSqlite = new SqliteUnity(db_filename);
 #else
-            mSqlite = new SqliteWin(db_filename);
+            Sqlite = new SqliteWin(db_filename);
 #endif
-            if (!mSqlite.openDb())
+            if (!Sqlite.openDb())
             {
                 EbLog.Note("EbDataMgr.setup() failed! Can not Open File! db_filename=" + db_filename);
                 return;
@@ -59,7 +97,36 @@ namespace GameCloud.Unity.Common
                     _loadTable(i);
                 }
 
-                mSqlite.closeDb();
+                Sqlite.closeDb();
+            }
+            catch (Exception e)
+            {
+                EbLog.Note(e.ToString());
+            }
+        }
+
+        //---------------------------------------------------------------------
+        public void update(float tm)
+        {
+            try
+            {
+                if (QueLoadTbName.Count > 0)
+                {
+                    var tb_name = QueLoadTbName.Dequeue();
+                    _loadTable(tb_name);
+                    UpdateCallBack(TotalTbCount - QueLoadTbName.Count, TotalTbCount);
+                }
+                else
+                {
+                    if (FinishedCallBack != null)
+                    {
+                        FinishedCallBack();
+                        FinishedCallBack = null;
+
+                        Sqlite.closeDb();
+
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -72,7 +139,7 @@ namespace GameCloud.Unity.Common
         {
             string key = typeof(T).Name;
             Dictionary<int, EbData> map_data = new Dictionary<int, EbData>();
-            mMapData[key] = map_data;
+            MapData[key] = map_data;
 
             EbTable table = getTable(table_name);
             Dictionary<int, EbPropSet> map_propset = table.getAllPropSet();
@@ -91,7 +158,7 @@ namespace GameCloud.Unity.Common
             string key = typeof(T).Name;
             Dictionary<int, EbData> map_data = null;
 
-            mMapData.TryGetValue(key, out map_data);
+            MapData.TryGetValue(key, out map_data);
             if (map_data == null)
             {
                 EbLog.Error("EbDataMgr.getData() Error, can't found EbData Type=" + key);
@@ -110,14 +177,14 @@ namespace GameCloud.Unity.Common
             string key = typeof(T).Name;
             Dictionary<int, EbData> map_data = null;
 
-            mMapData.TryGetValue(key, out map_data);
+            MapData.TryGetValue(key, out map_data);
             return map_data;
         }
 
         //---------------------------------------------------------------------
         public EbTable getTable(string table_name)
         {
-            return mDb._getTable(table_name);
+            return Db._getTable(table_name);
         }
 
         //---------------------------------------------------------------------
@@ -126,7 +193,7 @@ namespace GameCloud.Unity.Common
         {
             HashSet<string> list_tablename = new HashSet<string>();
             string str_query = string.Format("SELECT * FROM {0};", "sqlite_master");
-            list_tablename = mSqlite.getAllTableName(str_query);
+            list_tablename = Sqlite.getAllTableName(str_query);
             return list_tablename;
         }
 
@@ -134,7 +201,7 @@ namespace GameCloud.Unity.Common
         void _loadTable(string table_name)
         {
             string str_query_select = string.Format("SELECT * FROM {0};", table_name);
-            Dictionary<int, List<DataInfo>> map_data = mSqlite.getTableData(str_query_select);
+            Dictionary<int, List<DataInfo>> map_data = Sqlite.getTableData(str_query_select);
             if (map_data.Count <= 0)
             {
                 return;
@@ -208,7 +275,7 @@ namespace GameCloud.Unity.Common
                 table._addPropSet(prop_set);
             }
 
-            mDb._addTable(table);
+            Db._addTable(table);
         }
     }
 }
