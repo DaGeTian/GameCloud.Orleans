@@ -4,6 +4,7 @@ namespace GameCloud.Unity.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text;
 
     public abstract class EbData
@@ -12,133 +13,137 @@ namespace GameCloud.Unity.Common
         public int Id { get; internal set; }
 
         //---------------------------------------------------------------------
-        public abstract void load(EbPropSet prop_set);
-    }
-
-    public class EbPropSet
-    {
-        //---------------------------------------------------------------------
-        // key=prop_name
-        Dictionary<string, IProp> mMapProp = new Dictionary<string, IProp>();
-
-        //---------------------------------------------------------------------
-        public int Id { get; internal set; }
-
-        //---------------------------------------------------------------------
-        public IProp getProp(string key)
+        public virtual void load(EbTableBuffer table_buf)
         {
-            IProp prop;
-            mMapProp.TryGetValue(key, out prop);
-            return prop;
-        }
-
-        //---------------------------------------------------------------------
-        public Prop<int> getPropInt(string key)
-        {
-            IProp prop;
-            mMapProp.TryGetValue(key, out prop);
-            if (prop == null) return null;
-            Prop<int> p = (Prop<int>)prop;
-            return p;
-        }
-
-        //---------------------------------------------------------------------
-        public Prop<float> getPropFloat(string key)
-        {
-            IProp prop;
-            mMapProp.TryGetValue(key, out prop);
-            if (prop == null) return null;
-            Prop<float> p = (Prop<float>)prop;
-            return p;
-        }
-
-        //---------------------------------------------------------------------
-        public Prop<string> getPropString(string key)
-        {
-            IProp prop;
-            mMapProp.TryGetValue(key, out prop);
-            if (prop == null) return null;
-            Prop<string> p = (Prop<string>)prop;
-            return p;
-        }
-
-        //---------------------------------------------------------------------
-        internal void _addProp(string key, IProp prop)
-        {
-            mMapProp[key] = prop;
+            Id = table_buf.ReadInt();
         }
     }
 
-    public class EbTable
+    public class EbTableBuffer
     {
         //---------------------------------------------------------------------
-        // key=prop_name
-        Dictionary<string, PropDef> mMapPropDef = new Dictionary<string, PropDef>();
-        Dictionary<int, EbPropSet> mMapPropSet = new Dictionary<int, EbPropSet>();
+        MemoryStream MemoryStream { get; set; }
+        byte[] Buffer { get; set; }
+        string mTableName;
+        int mRecordCount;
 
         //---------------------------------------------------------------------
-        public string Name { get; internal set; }
+        public string TableName { get { return mTableName; } }
 
         //---------------------------------------------------------------------
-        public PropDef getPropDef(string key)
+        public EbTableBuffer(string tb_name)
         {
-            PropDef prop_def;
-            mMapPropDef.TryGetValue(key, out prop_def);
-            return prop_def;
+            MemoryStream = new MemoryStream();
+            Buffer = new byte[1024];
+            mTableName = tb_name;
+            mRecordCount = 0;
         }
 
         //---------------------------------------------------------------------
-        public EbPropSet getPropSet(int id)
+        public EbTableBuffer(byte[] buf, string tb_name)
         {
-            EbPropSet prop_set;
-            mMapPropSet.TryGetValue(id, out prop_set);
-            if (prop_set == null)
+            MemoryStream = new MemoryStream(buf);
+            Buffer = new byte[1024];
+            mTableName = tb_name;
+            mRecordCount = 0;
+        }
+
+        //---------------------------------------------------------------------
+        public void Close()
+        {
+            if (MemoryStream != null)
             {
-                EbLog.Error("EbTable.getPropSet() Error! not exist prop_set,id=" + id);
+                MemoryStream.Close();
+                MemoryStream = null;
             }
-            return prop_set;
+            Buffer = null;
         }
 
         //---------------------------------------------------------------------
-        public Dictionary<int, EbPropSet> getAllPropSet()
+        public byte[] GetTableData()
         {
-            return mMapPropSet;
+            return MemoryStream.ToArray();
         }
 
         //---------------------------------------------------------------------
-        internal void _addPropDef(PropDef prop_def)
+        public void RecordCountIncrease()
         {
-            mMapPropDef[prop_def.getKey()] = prop_def;
+            mRecordCount++;
         }
 
         //---------------------------------------------------------------------
-        internal void _addPropSet(EbPropSet prop_set)
+        public int GetRecordCount()
         {
-            mMapPropSet[prop_set.Id] = prop_set;
+            return mRecordCount;
         }
-    }
-
-    public class EbDb
-    {
-        //---------------------------------------------------------------------
-        Dictionary<string, EbTable> mMapTable = new Dictionary<string, EbTable>();
 
         //---------------------------------------------------------------------
-        internal EbTable _getTable(string table_name)
+        public void WriteInt(int value)
         {
-            EbTable table;
-            mMapTable.TryGetValue(table_name, out table);
-            if (table == null)
+            var data = BitConverter.GetBytes(value);
+            MemoryStream.Write(data, 0, data.Length);
+        }
+
+        //---------------------------------------------------------------------
+        public void WriteFloat(float value)
+        {
+            var data = BitConverter.GetBytes(value);
+            MemoryStream.Write(data, 0, data.Length);
+        }
+
+        //---------------------------------------------------------------------
+        public void WriteString(string value)
+        {
+            short str_len = 0;
+            if (!string.IsNullOrEmpty(value))
             {
-                EbLog.Error("EbDb.getTable() Error! not exist table,table_name=" + table_name);
+                str_len = (short)value.Length;
             }
-            return table;
+
+            var data = BitConverter.GetBytes(str_len);
+            MemoryStream.Write(data, 0, data.Length);
+
+            if (str_len > 0)
+            {
+                byte[] data_str = System.Text.Encoding.UTF8.GetBytes(value);
+                MemoryStream.Write(data_str, 0, data_str.Length);
+            }
         }
 
         //---------------------------------------------------------------------
-        internal void _addTable(EbTable table)
+        public int ReadInt()
         {
-            mMapTable[table.Name] = table;
+            MemoryStream.Read(Buffer, 0, sizeof(int));
+            return BitConverter.ToInt32(Buffer, 0);
+        }
+
+        //---------------------------------------------------------------------
+        public float ReadFloat()
+        {
+            MemoryStream.Read(Buffer, 0, sizeof(float));
+            return BitConverter.ToSingle(Buffer, 0);
+        }
+
+        //---------------------------------------------------------------------
+        public string ReadString()
+        {
+            MemoryStream.Read(Buffer, 0, sizeof(short));
+            short str_len = BitConverter.ToInt16(Buffer, 0);
+            if (str_len > 0)
+            {
+                if (str_len > Buffer.Length)
+                {
+                    Buffer = new byte[str_len + 128];
+                }
+
+                MemoryStream.Read(Buffer, 0, str_len);
+
+                return System.Text.Encoding.UTF8.GetString(Buffer, 0, (int)str_len);
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }

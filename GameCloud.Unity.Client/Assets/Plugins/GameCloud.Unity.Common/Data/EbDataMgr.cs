@@ -18,37 +18,29 @@ namespace GameCloud.Unity.Common
     public class EbDataMgr
     {
         //---------------------------------------------------------------------
-        static EbDataMgr DataMgr;
-        EbFileStream FileStream = new EbFileStreamDefault();
-        EbDb Db = new EbDb();
-        ISqlite Sqlite;
+        Dictionary<string, EbTableBuffer> mMapTable = new Dictionary<string, EbTableBuffer>();
         Dictionary<string, Dictionary<int, EbData>> MapData = new Dictionary<string, Dictionary<int, EbData>>();
+        ISqlite Sqlite;
+        EbFileStream FileStream = new EbFileStreamDefault();
         Queue<string> QueLoadTbName { get; set; }
         Action<int, int> UpdateCallBack { get; set; }
         Action FinishedCallBack { get; set; }
         int TotalTbCount { get; set; }
 
         //---------------------------------------------------------------------
-        static public EbDataMgr Instance
-        {
-            get { return DataMgr; }
-        }
-
-        //---------------------------------------------------------------------
         public EbDataMgr()
         {
-            DataMgr = this;
             QueLoadTbName = new Queue<string>();
         }
 
         //---------------------------------------------------------------------
-        public void setup(string db_name, string db_filename, Action<int, int> update_callback, Action finished_callback)
+        public void Setup(string db_filename, Action<int, int> update_callback, Action finished_callback)
         {
             UpdateCallBack = update_callback;
             FinishedCallBack = finished_callback;
 
 #if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
-            mSqlite = new SqliteUnity(db_filename);
+            Sqlite = new SqliteUnity(db_filename);
 #else
             Sqlite = new SqliteWin(db_filename);
 #endif
@@ -75,10 +67,10 @@ namespace GameCloud.Unity.Common
         }
 
         //---------------------------------------------------------------------
-        public void setup(string db_name, string db_filename)
+        public void Setup(string db_filename)
         {
 #if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
-            mSqlite = new SqliteUnity(db_filename);
+            Sqlite = new SqliteUnity(db_filename);
 #else
             Sqlite = new SqliteWin(db_filename);
 #endif
@@ -106,7 +98,17 @@ namespace GameCloud.Unity.Common
         }
 
         //---------------------------------------------------------------------
-        public void update(float tm)
+        public void Close()
+        {
+            foreach (var i in mMapTable)
+            {
+                i.Value.Close();
+            }
+            mMapTable.Clear();
+        }
+
+        //---------------------------------------------------------------------
+        public void Update(float tm)
         {
             try
             {
@@ -120,11 +122,10 @@ namespace GameCloud.Unity.Common
                 {
                     if (FinishedCallBack != null)
                     {
-                        FinishedCallBack();
-                        FinishedCallBack = null;
-
                         Sqlite.closeDb();
-
+                        var call_back = FinishedCallBack;
+                        FinishedCallBack = null;
+                        call_back();
                     }
                 }
             }
@@ -135,25 +136,80 @@ namespace GameCloud.Unity.Common
         }
 
         //---------------------------------------------------------------------
-        public void loadData<T>(string table_name) where T : EbData, new()
+        public EbTableBuffer GetTable(string table_name)
+        {
+            EbTableBuffer table = null;
+            mMapTable.TryGetValue(table_name, out table);
+            if (table == null)
+            {
+                EbLog.Error("EbDb.getTable() Error! not exist table,table_name=" + table_name);
+            }
+            return table;
+        }
+
+        //---------------------------------------------------------------------
+        public byte[] GetTableAsBytes(string table_name)
+        {
+            EbTableBuffer table = null;
+            mMapTable.TryGetValue(table_name, out table);
+            if (table == null)
+            {
+                EbLog.Error("EbDb.getTable() Error! not exist table,table_name=" + table_name);
+            }
+            return table.GetTableData();
+        }
+
+        //---------------------------------------------------------------------
+        public Dictionary<string, byte[]> GetAllTableAsBytes()
+        {
+            Dictionary<string, byte[]> m = new Dictionary<string, byte[]>();
+            foreach (var i in mMapTable)
+            {
+                m[i.Key] = i.Value.GetTableData();
+            }
+            return m;
+        }
+
+        //---------------------------------------------------------------------
+        public void ParseTableAllData<T>(string table_name) where T : EbData, new()
         {
             string key = typeof(T).Name;
             Dictionary<int, EbData> map_data = new Dictionary<int, EbData>();
             MapData[key] = map_data;
 
-            EbTable table = getTable(table_name);
-            Dictionary<int, EbPropSet> map_propset = table.getAllPropSet();
-            foreach (var i in map_propset)
+            EbTableBuffer table = GetTable(table_name);
+            int record_count = table.GetRecordCount();
+            for (int i = 0; i < record_count; ++i)
             {
                 T data = new T();
-                data.Id = i.Value.Id;
-                data.load(i.Value);
+                data.Id = table.ReadInt();
+                data.load(table);
                 map_data[data.Id] = data;
             }
         }
 
         //---------------------------------------------------------------------
-        public T getData<T>(int id) where T : EbData
+        public void ParseTableFromBytes<T>(string table_name, byte[] table_buf) where T : EbData, new()
+        {
+            EbTableBuffer table = new EbTableBuffer(table_buf, table_name);
+            mMapTable[table.TableName] = table;
+
+            string key = typeof(T).Name;
+            Dictionary<int, EbData> map_data = new Dictionary<int, EbData>();
+            MapData[key] = map_data;
+
+            int record_count = table.GetRecordCount();
+            for (int i = 0; i < record_count; ++i)
+            {
+                T data = new T();
+                data.Id = table.ReadInt();
+                data.load(table);
+                map_data[data.Id] = data;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        public T GetData<T>(int id) where T : EbData
         {
             string key = typeof(T).Name;
             Dictionary<int, EbData> map_data = null;
@@ -172,19 +228,13 @@ namespace GameCloud.Unity.Common
         }
 
         //---------------------------------------------------------------------
-        public Dictionary<int, EbData> getMapData<T>() where T : EbData
+        public Dictionary<int, EbData> GetMapData<T>() where T : EbData
         {
             string key = typeof(T).Name;
             Dictionary<int, EbData> map_data = null;
 
             MapData.TryGetValue(key, out map_data);
             return map_data;
-        }
-
-        //---------------------------------------------------------------------
-        public EbTable getTable(string table_name)
-        {
-            return Db._getTable(table_name);
         }
 
         //---------------------------------------------------------------------
@@ -201,81 +251,48 @@ namespace GameCloud.Unity.Common
         void _loadTable(string table_name)
         {
             string str_query_select = string.Format("SELECT * FROM {0};", table_name);
-            Dictionary<int, List<DataInfo>> map_data = Sqlite.getTableData(str_query_select);
-            if (map_data.Count <= 0)
+            try
             {
-                return;
-            }
-
-            EbTable table = new EbTable();
-            table.Name = table_name;
-
-            foreach (var i in map_data)
-            {
-                EbPropSet prop_set = new EbPropSet();
-                int data_id = i.Key;
-                List<DataInfo> list_data_info = i.Value;
-                foreach (var data_info in list_data_info)
+                Dictionary<int, List<DataInfo>> map_data = Sqlite.getTableData(str_query_select);
+                if (map_data.Count <= 0)
                 {
-                    object data_value = data_info.data_value;
-                    string data_name = data_info.data_name;
+                    return;
+                }
 
-                    switch (data_info.data_type)
+                EbTableBuffer table = new EbTableBuffer(table_name);
+
+                foreach (var i in map_data)
+                {
+                    int data_id = i.Key;
+                    table.WriteInt(data_id);
+
+                    List<DataInfo> list_data_info = i.Value;
+                    foreach (var data_info in list_data_info)
                     {
-                        case 1:
-                            {
-                                PropDef prop_def = table.getPropDef(data_name);
-                                if (prop_def == null)
-                                {
-                                    PropDef d = new PropDef(data_name, typeof(int), false);
-                                    table._addPropDef(d);
-                                }
-                                Prop<int> prop = new Prop<int>(null, prop_def, 0);
-                                prop.set((int)data_value);
-                                prop_set._addProp(data_name, prop);
-                            }
-                            break;
-                        case 2:
-                            {
-                                PropDef prop_def = table.getPropDef(data_name);
-                                if (prop_def == null)
-                                {
-                                    PropDef d = new PropDef(data_name, typeof(float), false);
-                                    table._addPropDef(d);
-                                }
-                                Prop<float> prop = new Prop<float>(null, prop_def, 0f);
-                                prop.set(((float)(double)data_value));
-                                prop_set._addProp(data_name, prop);
-                            }
-                            break;
-                        case 3:
-                            {
-                                PropDef prop_def = table.getPropDef(data_name);
-                                if (prop_def == null)
-                                {
-                                    PropDef d = new PropDef(data_name, typeof(string), false);
-                                    table._addPropDef(d);
-                                }
-                                Prop<string> prop = new Prop<string>(null, prop_def, "");
-                                prop.set((string)data_value);
-                                prop_set._addProp(data_name, prop);
-                            }
-                            break;
+                        object data_value = data_info.data_value;
+                        string data_name = data_info.data_name;
+
+                        switch (data_info.data_type)
+                        {
+                            case 1:
+                                table.WriteInt((int)data_value);
+                                break;
+                            case 2:
+                                table.WriteFloat((float)(double)data_value);
+                                break;
+                            case 3:
+                                table.WriteString((string)data_value);
+                                break;
+                        }
                     }
                 }
 
-                IProp prop_id = prop_set.getProp("Id");
-                if (prop_id == null)
-                {
-                    EbLog.Error("EbDataMgr._loadTable() Error! Key=Id not exist, TableName=" + table_name);
-                    continue;
-                }
-                Prop<int> p = (Prop<int>)prop_id;
-                prop_set.Id = data_id;
-                table._addPropSet(prop_set);
+                mMapTable[table.TableName] = table;
             }
-
-            Db._addTable(table);
+            catch (Exception e)
+            {
+                EbLog.Error(str_query_select + "_______" + e.ToString());
+            }
         }
     }
 }
