@@ -97,7 +97,7 @@ namespace GameCloud.Unity.Common
             if (!string.IsNullOrEmpty(value))
             {
                 str_data = System.Text.Encoding.UTF8.GetBytes(value);
-                str_len = (short)value.Length;
+                str_len = (short)str_data.Length;
             }
 
             mWriteLen += sizeof(short);

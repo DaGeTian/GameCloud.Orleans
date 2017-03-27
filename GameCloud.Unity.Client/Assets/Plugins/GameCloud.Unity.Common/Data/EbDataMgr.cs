@@ -312,8 +312,8 @@ namespace GameCloud.Unity.Common
 
                 foreach (var i in map_data)
                 {
-                    int data_id = i.Key;
-                    table.WriteInt(data_id);
+                    //int data_id = i.Key;
+                    //table.WriteInt(data_id);
 
                     List<DataInfo> list_data_info = i.Value;
                     foreach (var data_info in list_data_info)
