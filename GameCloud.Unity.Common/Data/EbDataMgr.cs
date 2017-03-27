@@ -42,9 +42,9 @@ namespace GameCloud.Unity.Common
 #if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
             Sqlite = new SqliteUnity(db_filename);
 #else
-            Sqlite = new SqliteWin(db_filename);
+            Sqlite = new SqliteWin();
 #endif
-            if (!Sqlite.openDb())
+            if (!Sqlite.openDb(db_filename))
             {
                 EbLog.Note("EbDataMgr.setup() failed! Can not Open File! db_filename=" + db_filename);
                 return;
@@ -72,9 +72,9 @@ namespace GameCloud.Unity.Common
 #if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
             Sqlite = new SqliteUnity(db_filename);
 #else
-            Sqlite = new SqliteWin(db_filename);
+            Sqlite = new SqliteWin();
 #endif
-            if (!Sqlite.openDb())
+            if (!Sqlite.openDb(db_filename))
             {
                 EbLog.Note("EbDataMgr.setup() failed! Can not Open File! db_filename=" + db_filename);
                 return;
@@ -95,6 +95,39 @@ namespace GameCloud.Unity.Common
             {
                 EbLog.Note(e.ToString());
             }
+        }
+
+        //---------------------------------------------------------------------
+        public Dictionary<string, byte[]> Setup(string db_name, byte[] db_data)
+        {
+            Dictionary<string, byte[]> map_table = new Dictionary<string, byte[]>();
+
+#if UNITY_IPHONE || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_LINUX || UNITY_WEBPLAYER
+            Sqlite = new SqliteUnity(db_filename);
+#else
+            Sqlite = new SqliteWin();
+#endif
+
+            MemoryStream ms = new MemoryStream(db_data);
+            if (!Sqlite.openDb(db_name, ms))
+            {
+                EbLog.Note("EbDataMgr.setup() failed! Can not Open Stream!");
+                ms.Close();
+                return map_table;
+            }
+
+            // 加载所有Table数据
+            HashSet<string> list_tablename = _loadAllTableName();
+            foreach (var i in list_tablename)
+            {
+                _loadTable(i);
+                map_table[i] = GetTableAsBytes(i);
+            }
+
+            Sqlite.closeDb();
+            ms.Close();
+
+            return map_table;
         }
 
         //---------------------------------------------------------------------

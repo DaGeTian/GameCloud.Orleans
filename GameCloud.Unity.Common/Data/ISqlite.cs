@@ -4,6 +4,7 @@ namespace GameCloud.Unity.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Runtime.InteropServices;
 
     public class DataInfo
@@ -16,7 +17,10 @@ namespace GameCloud.Unity.Common
     public abstract class ISqlite
     {
         //---------------------------------------------------------------------
-        public abstract bool openDb();
+        public abstract bool openDb(string file_path);
+
+        //---------------------------------------------------------------------
+        public abstract bool openDb(string db_name, Stream stream);
 
         //---------------------------------------------------------------------
         public abstract void closeDb();
@@ -57,14 +61,15 @@ public class SqliteUnity : ISqlite
     private string mFilePath;
 
     //---------------------------------------------------------------------
-    public SqliteUnity(string file_path)
+    public SqliteUnity()
     {
-        mFilePath = file_path;
     }
 
     //---------------------------------------------------------------------
-    public override bool openDb()
+    public override bool openDb(string file_path)
     {
+        mFilePath = file_path;
+
         if (!fileExists(mFilePath))
         {
             return false;
@@ -79,6 +84,16 @@ public class SqliteUnity : ISqlite
         return true;
     }
 
+    //---------------------------------------------------------------------
+    public override bool openDb(string db_name, Stream stream)
+    {
+        if (sqlite3_open(mFilePath, out connection) != SQLITE_OK)
+        {
+            EbLog.Note("Could not open database file:" + mFilePath);
+            return false;
+        }
+    }
+    
     //---------------------------------------------------------------------
     public override void closeDb()
     {
@@ -243,21 +258,29 @@ public class SqliteUnity : ISqlite
         private SQLiteDB mSQLiteDB;
 
         //---------------------------------------------------------------------
-        public SqliteWin(string file_path)
+        public SqliteWin()
         {
-            mFilePath = file_path;
             mSQLiteDB = new SQLiteDB();
         }
 
         //---------------------------------------------------------------------
-        public override bool openDb()
+        public override bool openDb(string file_path)
         {
+            mFilePath = file_path;
+
             if (!fileExists(mFilePath))
             {
                 return false;
             }
 
             mSQLiteDB.Open(mFilePath);
+            return true;
+        }
+
+        //---------------------------------------------------------------------
+        public override bool openDb(string db_name, Stream stream)
+        {
+            mSQLiteDB.OpenStream(db_name, stream);
             return true;
         }
 

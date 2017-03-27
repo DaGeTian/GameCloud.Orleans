@@ -13,10 +13,7 @@ namespace GameCloud.Unity.Common
         public int Id { get; internal set; }
 
         //---------------------------------------------------------------------
-        public virtual void load(EbTableBuffer table_buf)
-        {
-            Id = table_buf.ReadInt();
-        }
+        public abstract void load(EbTableBuffer table_buf);
     }
 
     public class EbTableBuffer
