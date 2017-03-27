@@ -266,8 +266,7 @@ namespace GameCloud.Unity.Common
             MapData.TryGetValue(key, out map_data);
             if (map_data == null)
             {
-                EbLog.Error("EbDataMgr.getData() Error, can't found EbData Type=" + key);
-                return default(T);
+                throw new Exception();
             }
 
             EbData data = null;
