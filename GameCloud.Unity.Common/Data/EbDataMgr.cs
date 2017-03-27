@@ -253,9 +253,7 @@ namespace GameCloud.Unity.Common
             int record_count = table.GetRecordCount();
             for (int i = 0; i < record_count; ++i)
             {
-                var data = (EbData)t.Assembly.CreateInstance(t.Name);
-
-                //T data = new T();
+                var data = (EbData)Activator.CreateInstance(t);
                 data.Id = table.ReadInt();
                 data.load(table);
                 map_data[data.Id] = data;
