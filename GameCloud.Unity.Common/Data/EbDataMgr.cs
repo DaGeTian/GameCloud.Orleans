@@ -211,8 +211,7 @@ namespace GameCloud.Unity.Common
             MapData[key] = map_data;
 
             EbTableBuffer table = GetTable(table_name);
-            int record_count = table.GetRecordCount();
-            for (int i = 0; i < record_count; ++i)
+            while(!table.IsReadEnd())
             {
                 T data = new T();
                 data.Id = table.ReadInt();
@@ -231,8 +230,7 @@ namespace GameCloud.Unity.Common
             Dictionary<int, EbData> map_data = new Dictionary<int, EbData>();
             MapData[key] = map_data;
 
-            int record_count = table.GetRecordCount();
-            for (int i = 0; i < record_count; ++i)
+            while (!table.IsReadEnd())
             {
                 T data = new T();
                 data.Id = table.ReadInt();
@@ -250,8 +248,7 @@ namespace GameCloud.Unity.Common
             Dictionary<int, EbData> map_data = new Dictionary<int, EbData>();
             MapData[t.Name] = map_data;
 
-            int record_count = table.GetRecordCount();
-            for (int i = 0; i < record_count; ++i)
+            while (!table.IsReadEnd())
             {
                 var data = (EbData)Activator.CreateInstance(t);
                 data.Id = table.ReadInt();

@@ -22,7 +22,8 @@ namespace GameCloud.Unity.Common
         MemoryStream MemoryStream { get; set; }
         byte[] Buffer { get; set; }
         string mTableName;
-        int mRecordCount;
+        int mReadPos;
+        int mWriteLen;
 
         //---------------------------------------------------------------------
         public string TableName { get { return mTableName; } }
@@ -33,7 +34,8 @@ namespace GameCloud.Unity.Common
             MemoryStream = new MemoryStream();
             Buffer = new byte[1024];
             mTableName = tb_name;
-            mRecordCount = 0;
+            mReadPos = 0;
+            mWriteLen = 0;
         }
 
         //---------------------------------------------------------------------
@@ -42,7 +44,8 @@ namespace GameCloud.Unity.Common
             MemoryStream = new MemoryStream(buf);
             Buffer = new byte[1024];
             mTableName = tb_name;
-            mRecordCount = 0;
+            mReadPos = 0;
+            mWriteLen = buf.Length;
         }
 
         //---------------------------------------------------------------------
@@ -54,6 +57,8 @@ namespace GameCloud.Unity.Common
                 MemoryStream = null;
             }
             Buffer = null;
+            mReadPos = 0;
+            mWriteLen = 0;
         }
 
         //---------------------------------------------------------------------
@@ -63,20 +68,15 @@ namespace GameCloud.Unity.Common
         }
 
         //---------------------------------------------------------------------
-        public void RecordCountIncrease()
+        public bool IsReadEnd()
         {
-            mRecordCount++;
-        }
-
-        //---------------------------------------------------------------------
-        public int GetRecordCount()
-        {
-            return mRecordCount;
+            return mReadPos >= mWriteLen;
         }
 
         //---------------------------------------------------------------------
         public void WriteInt(int value)
         {
+            mWriteLen += sizeof(int);
             var data = BitConverter.GetBytes(value);
             MemoryStream.Write(data, 0, data.Length);
         }
@@ -84,6 +84,7 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public void WriteFloat(float value)
         {
+            mWriteLen += sizeof(float);
             var data = BitConverter.GetBytes(value);
             MemoryStream.Write(data, 0, data.Length);
         }
@@ -91,25 +92,29 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public void WriteString(string value)
         {
+            byte[] str_data = null;
             short str_len = 0;
             if (!string.IsNullOrEmpty(value))
             {
+                str_data = System.Text.Encoding.UTF8.GetBytes(value);
                 str_len = (short)value.Length;
             }
 
+            mWriteLen += sizeof(short);
             var data = BitConverter.GetBytes(str_len);
             MemoryStream.Write(data, 0, data.Length);
 
             if (str_len > 0)
             {
-                byte[] data_str = System.Text.Encoding.UTF8.GetBytes(value);
-                MemoryStream.Write(data_str, 0, data_str.Length);
+                mWriteLen += sizeof(short);
+                MemoryStream.Write(str_data, 0, str_data.Length);
             }
         }
 
         //---------------------------------------------------------------------
         public int ReadInt()
         {
+            mReadPos += sizeof(int);
             MemoryStream.Read(Buffer, 0, sizeof(int));
             return BitConverter.ToInt32(Buffer, 0);
         }
@@ -117,6 +122,7 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public float ReadFloat()
         {
+            mReadPos += sizeof(float);
             MemoryStream.Read(Buffer, 0, sizeof(float));
             return BitConverter.ToSingle(Buffer, 0);
         }
@@ -124,6 +130,7 @@ namespace GameCloud.Unity.Common
         //---------------------------------------------------------------------
         public string ReadString()
         {
+            mReadPos += sizeof(short);
             MemoryStream.Read(Buffer, 0, sizeof(short));
             short str_len = BitConverter.ToInt16(Buffer, 0);
             if (str_len > 0)
@@ -133,6 +140,7 @@ namespace GameCloud.Unity.Common
                     Buffer = new byte[str_len + 128];
                 }
 
+                mReadPos += str_len;
                 MemoryStream.Read(Buffer, 0, str_len);
 
                 return System.Text.Encoding.UTF8.GetString(Buffer, 0, (int)str_len);
