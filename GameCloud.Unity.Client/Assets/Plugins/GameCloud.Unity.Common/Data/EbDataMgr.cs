@@ -242,6 +242,27 @@ namespace GameCloud.Unity.Common
         }
 
         //---------------------------------------------------------------------
+        public void ParseTableFromBytes(Type t, string table_name, byte[] table_buf)
+        {
+            EbTableBuffer table = new EbTableBuffer(table_buf, table_name);
+            mMapTable[table.TableName] = table;
+
+            Dictionary<int, EbData> map_data = new Dictionary<int, EbData>();
+            MapData[t.Name] = map_data;
+
+            int record_count = table.GetRecordCount();
+            for (int i = 0; i < record_count; ++i)
+            {
+                var data = (EbData)t.Assembly.CreateInstance(t.Name);
+
+                //T data = new T();
+                data.Id = table.ReadInt();
+                data.load(table);
+                map_data[data.Id] = data;
+            }
+        }
+
+        //---------------------------------------------------------------------
         public T GetData<T>(int id) where T : EbData
         {
             string key = typeof(T).Name;
