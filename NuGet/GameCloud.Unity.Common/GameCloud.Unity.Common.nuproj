@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>GameCloud.Unity.Common</Id>
-    <Version>1.00.105</Version>
+    <Version>1.00.106</Version>
     <Title>GameCloud.Unity.Common</Title>
     <Authors>Cragon</Authors>
     <Owners>Cragon</Owners>

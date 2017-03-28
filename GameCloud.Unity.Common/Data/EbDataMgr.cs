@@ -211,7 +211,7 @@ namespace GameCloud.Unity.Common
             MapData[key] = map_data;
 
             EbTableBuffer table = GetTable(table_name);
-            while(!table.IsReadEnd())
+            while (!table.IsReadEnd())
             {
                 T data = new T();
                 data.Id = table.ReadInt();
@@ -334,6 +334,8 @@ namespace GameCloud.Unity.Common
                         }
                     }
                 }
+
+                table.WriteEnd();
 
                 mMapTable[table.TableName] = table;
             }

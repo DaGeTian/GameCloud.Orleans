@@ -106,9 +106,15 @@ namespace GameCloud.Unity.Common
 
             if (str_len > 0)
             {
-                mWriteLen += sizeof(short);
+                mWriteLen += str_len;
                 MemoryStream.Write(str_data, 0, str_data.Length);
             }
+        }
+
+        //---------------------------------------------------------------------
+        public void WriteEnd()
+        {
+            MemoryStream.Seek(0, SeekOrigin.Begin);
         }
 
         //---------------------------------------------------------------------
