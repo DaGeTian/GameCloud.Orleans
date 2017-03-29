@@ -81,10 +81,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main\BaseJSONStorageProvider.cs" />
-    <Compile Include="Main\FileStorageProvider.cs" />
-    <Compile Include="Main\IJSONStateDataManager.cs" />
-    <Compile Include="Main\MongoDBStorageProvider.cs" />
+    <Compile Include="Orleans.Storage.MongoDB\BaseJSONStorageProvider.cs" />
+    <Compile Include="Orleans.Storage.MongoDB\FileStorageProvider.cs" />
+    <Compile Include="Orleans.Storage.MongoDB\IJSONStateDataManager.cs" />
+    <Compile Include="Orleans.Storage.MongoDB\MongoDBStorageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

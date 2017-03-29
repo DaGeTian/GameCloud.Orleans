@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Orleans.Storage.MongoDB", "GameCloud.Orleans.Storage.MongoDB\GameCloud.Orleans.Storage.MongoDB.csproj", "{82DDC043-35EB-4D2C-88BB-1566114872AE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Gateway.Client", "Test.Gateway.Client\Test.Gateway.Client.csproj", "{95777C31-1698-4EB5-B86E-1394DB9FBF76}"
-EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.Storage.MongoDB", "NuGet\GameCloud.Orleans.Storage.MongoDB\GameCloud.Orleans.Storage.MongoDB.nuproj", "{62BF4149-0FA0-4986-A937-4B18D22A1C71}"
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.Gateway", "NuGet\GameCloud.Orleans.Gateway\GameCloud.Orleans.Gateway.nuproj", "{20BF1364-332F-4D82-A989-036F5C7EDE09}"
 EndProject
@@ -23,28 +19,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unity.Common", "Test.U
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Unity.Common", "NuGet\GameCloud.Unity.Common\GameCloud.Unity.Common.nuproj", "{5D96F951-8832-4E76-91E3-78AEA6A4BB07}"
 EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "GameCloud.Orleans.GrainEx", "NuGet\GameCloud.Orleans.GrainEx\GameCloud.Orleans.GrainEx.nuproj", "{6D68FE7C-50C0-41CE-9611-B40628CE3A42}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCloud.Orleans.GrainEx", "GameCloud.Orleans.GrainEx\GameCloud.Orleans.GrainEx.csproj", "{1DE832DF-27A2-4A1A-A686-A2CE68F4F8EE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{82DDC043-35EB-4D2C-88BB-1566114872AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82DDC043-35EB-4D2C-88BB-1566114872AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82DDC043-35EB-4D2C-88BB-1566114872AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82DDC043-35EB-4D2C-88BB-1566114872AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{95777C31-1698-4EB5-B86E-1394DB9FBF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95777C31-1698-4EB5-B86E-1394DB9FBF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95777C31-1698-4EB5-B86E-1394DB9FBF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95777C31-1698-4EB5-B86E-1394DB9FBF76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62BF4149-0FA0-4986-A937-4B18D22A1C71}.Release|Any CPU.Build.0 = Release|Any CPU
 		{20BF1364-332F-4D82-A989-036F5C7EDE09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20BF1364-332F-4D82-A989-036F5C7EDE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20BF1364-332F-4D82-A989-036F5C7EDE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,23 +53,13 @@ Global
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D68FE7C-50C0-41CE-9611-B40628CE3A42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DE832DF-27A2-4A1A-A686-A2CE68F4F8EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DE832DF-27A2-4A1A-A686-A2CE68F4F8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DE832DF-27A2-4A1A-A686-A2CE68F4F8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DE832DF-27A2-4A1A-A686-A2CE68F4F8EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{62BF4149-0FA0-4986-A937-4B18D22A1C71} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{20BF1364-332F-4D82-A989-036F5C7EDE09} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 		{5D96F951-8832-4E76-91E3-78AEA6A4BB07} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
-		{6D68FE7C-50C0-41CE-9611-B40628CE3A42} = {46C1C240-9478-401B-B6C2-3BFC9F9FB0A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
